@@ -1,1 +1,1 @@
-echo "hello" > hello.text
+echo "hello, goodbye" > hello.text
