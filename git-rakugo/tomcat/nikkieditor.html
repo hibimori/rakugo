@@ -1,0 +1,172 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta name="GENERATOR" content="IBM WebSphere Studio Homepage Builder Version 7.0.1.0 for Windows">
+<meta http-equiv="Content-Style-Type" content="text/css">
+<link rel="stylesheet" type="text/css" href="makerakugo.css">
+<title>落語DB管理ツール 日記エディタ</title>
+<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+<script language="JavaScript">
+<!--
+// ホストのURL
+var hostLocal = "http://localhost:8888/";
+var hostDomain = "http://192.168.255.";
+// 落語DBのURLとパラメタ
+var rakugoURL = "rakugo/makerakugo.jsp";
+var rakugoPar = "?inpID=&inpSeq=001&inpTitleID=&inpTitle=&inpTitleSeq=&selKeyword=GE&inpSubID=&inpSub=&inpKeyword=&inpKeyword2=&inpP1ID=&inpP1Sei=&inpP1Mei=&selKeywordT=T&inpP2ID=&inpP2Sei=&inpP2Mei=&inpP3ID=&inpP3Sei=&inpP3Mei=&inpProgramID=&inpProgram=&inpSourceID=&selSource1=&selSource2=&inpSource=&inpRecDate=&inpRecTime=&inpRecLen=&selAttCat=&selAttMed=G&selAttCh=&selAttCo=&selAttNR=&inpMemo=&inpRnwDate=&formBtnType=dummy";
+// 演者マスタのURLとパラメタ
+var playerURL = "rakugo/makeplayer.jsp";
+var playerPar = "?formID=&formSei=&formSeiSort=&formModeSei=GE&formMei=&formMeiSort=&formModeMei=GE&formFull=&selNameFlg=A&formGroup=&formGroupSort=&formModeGroup=GE&formSeq=&formKanrenID=&formMemo=&formRnwDate=&formBtnType=dummy&tarCtrl=start.html";
+// 演題マスタのURLとパラメタ
+var titleURL = "rakugo/maketitle.jsp";
+var titlePar = "?inpID=&inpTitle=&inpTitleSort=&inpModeTitle=GE&inpSub=&inpModeSub=GE&inpSubSort=&selCat=&inpSeq=&inpMemo=&formBtnType=dummy&tarCtrl=start.html";
+// BookDBのURLとパラメタ
+var bookURL = "rakugo/makebook.jsp";
+var bookPar = "?inpID=&inpSeq=000&inpTitleID=&inpTitle=&inpTitleSort=&inpTitleSeq=&selKeyword=GE&inpKeyword=&inpKeyword2=&selKeywordT=T&inpP1ID=&inpP1Sei=&inpP1Mei=&inpP2ID=&inpP2Sei=&inpP2Mei=&inpP3ID=&inpP3Sei=&inpP3Mei=&inpSourceID=&inpSource=&inpGetDate=&chkGetDate=&inpMemo=&inpRnwDate=&inpISBN=&inpURLA=&inpImgA=&inpURLB=&inpImgB=&inpURLC=&inpImgC=&selImg=B&formBtnType=dummy";
+// 書影TableのURLとパラメタ
+var tableURL = "rakugo/viewbook.jsp";
+var tablePar = "?startVal=000&inpID=&inpSeq=&formBtnType=btnSel";
+// BookDBタイトル修正のURLとパラメタ
+var bookTitleURL = "rakugo/modifydb.jsp";
+
+// 最終更新CheckerのURLとパラメタ
+var lastURL = "rakugo/checklast.jsp";
+
+// ServletテストのURLとパラメタ
+var rakugosrvURL = "rakugoweb/rakugosrv";
+var rakugosrvPar = "";
+
+function openWindow(tarType) {
+//alert(tarType);
+	var wkURL;
+	if (document.formStart.selHost.value == "L") {
+		wkURL = hostLocal;
+	} else {
+		wkURL = hostDomain + document.formStart.selHost.value + "/";
+	}
+	if (tarType == "rakugo") {
+		wkURL = wkURL + rakugoURL + rakugoPar;
+	}
+	if (tarType == "player") {
+		wkURL = wkURL + playerURL + playerPar;
+	}
+	if (tarType == "title") {
+		wkURL = wkURL + titleURL + titlePar;
+	}
+	if (tarType == "book") {
+		wkURL = wkURL + bookURL + bookPar;
+	}
+	if (tarType == "table") {
+		wkURL = wkURL + tableURL + tablePar;
+	}
+	if (tarType == "bookTitle") {
+		wkURL = wkURL + bookTitleURL + bookPar;
+	}
+	if (tarType == "try") {
+		wkURL = wkURL + "rakugo/trylogic.jsp?formBtnType=Dummy&inpRecDate=&inpRecTime=&inpRecLen=";
+	}
+	if (tarType == "last") {
+		wkURL = wkURL + lastURL;
+	}
+	if (tarType == "rakugosrv") {
+		wkURL = wkURL + rakugosrvURL + rakugosrvPar;
+	}
+	var rtn = window.open(wkURL, '_blank', 'toolbar=no,location=no,resizable=yes,status=yes,menubar=no,scrollbars=yes');
+/* 落語ツール Open */
+
+}
+//-->
+</script> </head>
+<body>
+<form name="formStart">
+<div align="center">
+<select name="selHost">
+	<option value="L" selected>localhost</option>
+	<!--option value="1">AMALTHEA</option>
+	<option value="3">IO</option-->
+	<option value="12">HARPALYKE</option>
+	<option value="2">GANYMEDE</option>
+	<option value="10">GANYMEDE-Air</option>
+	<option value="4">HIMALIA</option>
+	<option value="7">HIMALIA-Air</option>
+	<option value="5">ANANKE</option>
+	<option value="6">ANANKE-Air</option>
+	<option value="9">THEMISTO</option>
+	<option value="100">PASIPHAE</option>
+</select>
+</div>
+<h1>落語管理ツール</h1>
+<table width="100%">
+  <tbody>
+    <tr>
+      <td width="16%"></td>
+      <td  width="32%">
+      	<input type="button" onclick="javascript:openWindow('rakugo')" name="btnStartRakugo" value="落語ツール"></td>
+      <td><input type="button" onclick="javascript:openWindow('title')" name="btnStartTitle" value="演題マスタ"></td>
+    </tr>
+    <tr>
+      <td></td>
+      <td></td>
+      <td><input type="button" onclick="javascript:openWindow('player')" name="btnStartPlayer" value="演者マスタ"></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+<hr>
+<h1>BookDB管理ツール</h1>
+<form>
+<table width="100%">
+  <tbody>
+    <tr>
+      <td width="16%"></td>
+      <td  width="32%">
+      	<input type="button" onclick="javascript:openWindow('book')" name="btnStartBook" value="BookDBツール"></td>
+      <td><input type="button" onclick="javascript:openWindow('table')" name="btnStartTable" value="書影Table"></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+<hr>
+<h1>共通ツール</h1>
+<form>
+<table width="100%">
+  <tbody>
+    <tr>
+      <td width="16%"></td>
+      <td  width="64%">
+      	<input type="button" onclick="javascript:openWindow('last')" name="btnStartLast" value="最終更新Check"></td>
+      <td><input type="button" onclick="javascript:openWindow('try')" name="btnStartTry" value="Logicテスト"></td>
+    </tr>
+    <tr>
+      <td width="16%"></td>
+      <td  width="64%">
+      	<input type="button" onclick="javascript:openWindow('bookTitle')" name="btnStartBook" value="一括修正"></td>
+      <td><input type="button" onclick="javascript:openWindow('rakugosrv')" name="btnStartTry" value="Servletテスト"></td>
+    </tr>
+  </tbody>
+</table>
+</form>
+<hr>
+<div class="fontSmall divShort">
+<ul>
+  <li>ver 3.30 09.11/15</li>
+  <li>ver 3.20 09.7/26</li>
+  <li>ver 3.10 08.12/6</li>
+  <li>ver 3.00 07.1/23</li>
+  <li>ver 2.80 06.11/21</li>
+  <li>ver 2.70 06.9/18</li>
+  <li>ver 2.60 06.2/20</li>
+  <li>ver 2.50 06.1/6</li>
+  <li>ver 2.40 05.12/21</li>
+  <li>ver 2.30 05.7/17</li>
+  <li>ver 2.21 05.5/14</li>
+  <li>ver 2.20 05.2/22</li>
+  <li>ver 2.00 05.1/1</li>
+  <li>ver 1.00 03.6/7</li>
+</ul>
+</div>
+<hr>
+<address>&copy; copyright 2003, 2005-2009; nii.n All rights reserved.</address>
+</body>
+</html>

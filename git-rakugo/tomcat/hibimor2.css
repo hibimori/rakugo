@@ -1,0 +1,248 @@
+/* 目次などの寄せ */
+.divFloatL {
+	float: left;
+	padding-bottom: 3%;
+	padding-right: 5%;
+}
+.divFloatR {
+	float: right;
+	padding-left: 5%;
+}
+.divFloatN {
+	clear: both;
+}
+/* 日曜祝日のテイブル定義 */
+div.dailyDivSun {
+	border-color: red;
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: thick;
+}
+.dailyDivSun2 {
+	border-color: red;
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 12px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	padding-left: 2%;
+}
+div.dailyDivSunFooter {
+	border-color: red;
+	border-style: solid;
+	border-top-width: 0px;
+	border-left-width: thick;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	height: 20px;
+}
+table.dateTableSun {
+/*	border-collapse: collapse;	*/
+	border-color: red;
+	text-align: right;
+/*		width: 50%;	*/
+}
+.dateSun {
+    color: #fff8e7;
+    background-color: red;
+    font-weight: bold;
+	text-align: center;
+	/*
+	width: 111px;
+	*/
+}
+/* 月曜金曜のテイブル定義 */
+div.dailyDivMon {
+	border-color: #000099;
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: thick;
+}
+.dailyDivMon2 {
+	border-color: #000099;
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 12px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	padding-left: 2%;
+}
+div.dailyDivMonFooter {
+	border-color: #000099;
+	border-style: solid;
+	border-top-width: 0px;
+	border-left-width: thick;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	height: 20px;
+}
+table.dateTableMon {
+	border-color: #000099;
+	text-align: right;
+}
+.dateMon {
+    color: lime;
+    background-color: #000099;
+    font-weight: bold;
+	text-align: center;
+/*	width: 111px;
+*/
+}
+/* 土曜のテイブル定義 */
+div.dailyDivSat {
+	border-color: blue;
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 0px;
+	border-bottom-width: 0px;
+	border-right-width: thick;
+}
+.dailyDivSat2 {
+	border-color: blue;
+	border-style: solid;
+	border-top-width: 1px;
+	border-left-width: 12px;
+	border-bottom-width: 0px;
+	border-right-width: 0px;
+	padding-left: 2%;
+}
+div.dailyDivSatFooter {
+	border-color: blue;
+	border-style: solid;
+	border-top-width: 0px;
+	border-left-width: thick;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	height: 20px;
+}
+table.dateTableSat {
+	border-color: blue;
+	text-align: right;
+}
+.dateSat {
+    color: #fff8e7;
+    background-color: blue;
+    font-weight: bold;
+	text-align: center;
+/*	width: 111px;
+*/
+}
+/* ジュリアン日付セルの定義 */
+td.dateJulian {
+	width: 30px;
+}
+/* ［∨∧｜▽△］の定義 */
+td.dateLink {
+	text-align: left;
+}
+/* ［▼aiboYYMMDD▲］Boxの定義 */
+div.aiboDiv {
+	border-style: dotted;
+	border-color: #cccccc;
+/*	background-color: silver; */
+}
+/* やや小さい文字 */
+.fontSmall {
+	font-size: 80%;
+}
+/* 小さい文字 */
+.fontXSmall {
+	font-size: 60%;
+}
+/* 太字 */
+.fontBold {
+	font-weight: bold;
+}
+.fontGoBold {
+  font-family : "ＭＳ ゴシック";
+  font-weight : 900;
+}
+/* 中央寄せ */
+.divCenter {
+	text-align: center;
+}
+/* 左寄せ */
+.divLeft {
+	text-align: left;
+}
+/* 右寄せ */
+.divRight {
+	text-align: right;
+}
+/* float右寄せ */
+.floatRight {
+	float: right;
+}
+.fontStrong{
+  font-weight : 400;
+}
+q {
+	color: #000096;
+	font-style: italic;
+}
+/* ハイパーリンクにマウスが乗ったとき */
+a:hover {
+	background-color: #afffda;
+}
+.divQuote {
+	color: brown;
+	background-color: white;
+	line-height: 128%;
+}
+.table1 {
+	border: 1px solid #000064;
+	border-collapse: collapse;
+	font-family: "Georgia";
+}
+.td0 {
+	background-color: #eeeeee;
+	border: 1px solid silver;
+}
+.td1 {
+	background-color: #e6e6fa;	/* lavender */
+	border: 1px solid silver;
+}
+.td2 {
+	background-color: white;
+	border: 1px solid silver;
+}
+.spanUL {
+	text-decoration: underline;
+}
+.ulNone {
+	list-style-type: none;
+}
+.divShort {
+  height: 128px;
+  overflow: scroll;
+}
+.spanBare {
+  color: #fff8e7;
+}
+.listSq {
+	background-color: white;
+  list-style-type: square;
+}
+.bookPhoto {
+  text-align: center;
+  vertical-align: bottom;
+}
+.hr50 {
+	margin-left: 0;
+	text-align: left;
+	width: 50%
+}
+.hr25 {
+	margin-left: 0;
+	text-align: left;
+	width: 25%
+}
+.hr16 {
+	margin-left: 0;
+	text-align: left;
+	width: 16%
+}

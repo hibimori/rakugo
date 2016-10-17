@@ -1,0 +1,74 @@
+/* 落語DBスタイルシート */
+/* View落語のCSS */
+body {
+	background-color: white;
+	color: black;
+	font-family: 'ＭＳ ゴシック';
+/*
+font-family: 'ＥＧ勘亭流Ｈ';
+*/
+}
+td,th {
+	border: 1px solid #cccccc;
+	empty-cells: hide;
+}
+.volID {
+/* 見出しのVolID */
+	text-align: center;
+	padding-left: 1%;
+	padding-right: 1%;
+	background-color: #000064;
+	color: white;
+	font-family: 'Georgia';
+	font-size: 111%;
+	font-weight: bold
+}
+.indexCard {
+/* IncexCard */
+	border-top: 1px solid black;
+	border-bottom: 1px solid black;
+	border-left: 1px solid black;
+	padding: 3% 0% 5% 3%;
+	width: 96%;
+}
+.komidasi {
+	background-color: #eeeeee;
+	border-bottom: 1px solid #000064;
+	color: #999999;
+	font-family: 'Lucida Console';
+/*	font-family: 'Lucida Bright';	*/
+	text-align: center;
+}
+.cellLen {
+	padding-right: 1%;
+}
+.table1 {
+	border: 1px solid #000064;
+	border-collapse: collapse;
+	font-size: 100%;
+}
+.table2 {
+	border: 1px solid silver;
+	border-collapse: collapse;
+	width: 100%;
+}
+.caseVolID {
+/* 背表紙のVolID */
+/*	background-color: #eeeeee;
+	color: gold;
+	font-family: 'Georgia';
+	text-align: center;
+*/
+	text-align: center;
+	background-color: #000064;
+	color: white;
+	font-family: 'Georgia';
+	padding: 0%;
+	width: 60px;
+}
+.divFloatR {
+	float: right;
+}
+.fontSmall {
+  font-size: 90%;
+}

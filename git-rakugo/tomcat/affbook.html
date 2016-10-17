@@ -1,0 +1,39 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>affliate2.0検索用ダミー頁</title>
+<script language="JavaScript" type="text/javascript">
+<!--
+function getKwd() {
+	var uri = document.URL;
+	var c = "?kwd=";
+	var p = uri.indexOf(c);
+	if (p > 0) {
+		return uri.substring(p + c.length, uri.length);
+	} else {
+		return "";
+	}
+}
+function sendQuery() {
+		document.formBook.method = "post";
+		document.formBook.action = "affbook.jsp";
+		document.formBook.submit();
+}
+// -->
+</script>
+</head>
+<body>
+	loading Affliate2.0 data...
+<form name="formBook">
+	<input id="hdnKwd" name="kwd" type="hidden" value="">
+</form>
+<script language="JavaScript" type="text/javascript">
+<!--
+	var obj = document.getElementById("hdnKwd");
+	obj.value = getKwd();
+	sendQuery();
+// -->
+</script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+/* 落語DBスタイルシート */
+/* Make落語のCSS */
+a:hover {
+	background-color: #afffda;
+}
+.div1 {
+/* 時刻入力窓 */
+	background-color: lavender;
+	border-top: 1px solid silver;
+	border-right: 4px solid silver;
+	border-bottom: 4px solid silver;
+	border-left: 1px solid silver;
+	display: none;
+	font-weight: normal;
+	padding: 2%;
+	position:absolute;
+	text-align: center;
+}
+.div2 {
+/* 時刻選択窓 */
+	background-color: #fff8e7;
+	border-top: 1px solid silver;
+	border-right: 4px solid silver;
+	border-bottom: 4px solid silver;
+	border-left: 1px solid silver;
+	display: none;
+	font-weight: normal;
+	padding: 1%;
+/*	position:absolute;
+*/
+	text-align: center;
+}
+.table1 {
+	border: 0px;
+	margin: auto;
+	text-align: center;
+}
+.cellDate {
+/* 日付選択セル */
+	background-color: khaki;
+	border: 1px solid silver;
+	color: green;
+	font-weight: bolder;
+	text-align: center;
+	vertical-align: middle;
+	width: 32px;
+}
+.cellTime {
+/* 時刻選択セル */
+	background-color: white;
+	border: 1px solid silver;
+/*	cursor: pointer;
+	*/
+	text-align: center;
+	vertical-align: middle;
+	width: 24px;
+}
+.cellPointer {
+/* onclickするセル */
+	background-color: white;
+	border: 1px solid silver;
+	color: gray;
+	cursor: pointer;
+	text-align: center;
+	vertical-align: middle;
+	width: 24px;
+}
+.cellHit {
+/* 選択済みセル */
+	background-color: khaki;
+	border: 1px solid silver;
+	color: darkblue;
+	font-weight: bolder;
+	text-align: center;
+	vertical-align: middle;
+	width: 24px;
+}
+.cellToday {
+/* 本日セル */
+	background-color: #bbffbb;
+	border: 1px solid silver;
+	color: green;
+	font-weight: bolder;
+	text-align: center;
+	vertical-align: middle;
+	width: 24px;
+}
+.cellWeekday {
+/* 曜日セル */
+	background-color: silver;
+	border: 1px solid silver;
+	font-size: 80%;
+	text-align: center;
+	width: 24px;
+}
+.cellSunday {
+/* 日曜日セル */
+	background-color: mistyrose;
+	border: 1px solid silver;
+	text-align: center;
+	width: 24px;
+}
+.cellSatday {
+/* 土曜日セル */
+	background-color: lightcyan;
+	border: 1px solid silver;
+	text-align: center;
+	width: 24px;
+}
+.cellOutMonth {
+/* 当月以外日セル */
+	border: 1px dashed #fff8e7;
+	text-align: center;
+	width: 24px;
+}
+/* やや小さい文字 */
+.fontSmall {
+	font-size: 90%;
+}
+.divShort {
+  height: 128px;
+  overflow: scroll;
+}
+/* 右寄せ */
+.divRight {
+	text-align: right;
+}
+/* 中央寄せ */
+.divCenter {
+	text-align: center;
+}

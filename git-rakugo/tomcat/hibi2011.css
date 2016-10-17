@@ -1,0 +1,66 @@
+/* 日記頁（yyyyMM.html）追加CSS */
+
+body {
+/*
+  background-color: #dba96a;
+*/
+/* ↓chelesta 
+  background-color: #83C2B2;
+  background-color: #66c1ba;
+  background-color: #8bddd1;
+  */
+  background-color: #fff8e7;
+  color: #000066;
+  line-height: 138%;
+}
+a:link {
+  color: #0000dd;
+}
+h1 {
+	text-align: center;
+	font-size: medium;
+}
+h2 {
+	font-size: medium;
+}
+h3 {
+	font-size: smaller;
+}
+h4 {
+  text-align: center;
+  text-decoration: underline;
+}
+.divTopic {
+	margin-left: 1%;
+	margin-bottom: 1%;
+	border-color: silver;
+	border-style: solid;
+	border-top-width: 0px;
+	border-left-width: 2px;
+	border-bottom-width: 1px;
+	border-right-width: 0px;
+	padding-left: 2%;
+}
+.divFR50 {
+	float: right;
+	padding-left: 5%;
+	width: 50%;
+}
+.hrMon {
+	border-color: #000099;
+	border-style: solid;
+	border-width: 0px 0px 1px 2px;
+	height: 4px;
+}
+.hrSat {
+	border-color: blue;
+	border-style: solid;
+	border-width: 0px 0px 1px 2px;
+	height: 4px;
+}
+.hrSun {
+	border-color: red;
+	border-style: solid;
+	border-width: 0px 0px 1px 2px;
+	height: 4px;
+}
