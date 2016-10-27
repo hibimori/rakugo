@@ -1,5 +1,6 @@
 //*****************************************************************
 //  入力項目の補正とクリア for BookDB Tool
+//    1.71 2016.10/27 HontoのDVD商品のURL変更に対応
 //    1.70 2014.5/4 税込み購入額から税抜き価格を算出する関数を追加
 //    1.61 2013.5/5 ReaderStoreのID冒頭に"LT0000"が追加された件の対応
 //    1.60 2012.11/17 文字列検索Checkboxの変更時対応
@@ -472,7 +473,8 @@ function getItemUri(s, m) {
 		""];
 	if ((m === "8") || (m === "H")) {
 		//honto
-        if (s.indexOf("pd-book") >= 0) {
+        if ((s.indexOf("pd-book") >= 0) ||
+            (s.indexOf("pd-dvd")  >= 0)   ) {
             return aryUri[i] + "netstore/" + s + ".html" + aryUri2[i];
         } else {
             return aryUri[i] + "ebook/pd_" +  s + ".html" + aryUri2[i];
