@@ -1,5 +1,6 @@
 //*****************************************************************
 //	各種Windowの表示 for BookDB Tool
+//		1.20	2016.12/17	[AB検索]の結果表示をiFrameから別窓に変更。
 //		1.10	12.5/26		bk1→honto移行対応
 //		1.00	05.1/31		本体から分離
 //*****************************************************************
@@ -41,7 +42,7 @@ var openSearchURL = "searchbook.htm";
 	var openIfrE = "http://www.google.co.jp/search";
 		openIfrE += "?hl=ja&ie=UTF-8";
 		openIfrE += "&q=";
-	var openIfrER = "http://ebookstore.sony.jp/";
+	var openIfrER = "http://ebookstore.sony.jp/search/?q=";
 	var openIfrF = "affbook.html";
 		openIfrF += "?kwd=";
 
@@ -204,6 +205,7 @@ function searchAB() {
     var titleSeq = document.getElementById("titleSeq").value;
 	var kwd = title;
     var seq;
+    var rtn;
     try {
         if (titleSeq.length > 0) {
             kwd += " " + parseInt(titleSeq, 10);
@@ -217,11 +219,18 @@ function searchAB() {
 		}
 	}
 	if (kwd != "") {
+		/*
 		setIfr("bk1", openIfrB + encodeURIComponent(kwd, true) + ".html", true);
 		setIfr("ama", encodeURI(openIfrA) + encodeURIComponent(kwd, true), true);
 		setIfr("oth", openIfrC + kwd, true);
 		setIfr("ebk", openIfrE + kwd + " site:" + openIfrER, true);
+		*/
 //		setIfr("aff", openIfrF + encodeURIComponent(title, true), true);
+		//iFrameはたいがいのブラウザが無効にするので別窓で開く
+		openStore("bk1", kwd);
+		openStore("ama", kwd);
+		openStore("ebk", kwd);
+		openStore("oth", kwd);
 	}
 }
 function openIfr(tar) {
@@ -263,6 +272,7 @@ function setIfr(tar, kwd, disp) {
 	kwd: iframe表示uri
 	disp: iframe内包divのdisplay ON/OFF: true, false
 */
+//alert(tar + "," + kwd + "," + disp);
 	var mode;
 	if (tar == "ama") {
 		mode = "A";
@@ -301,6 +311,37 @@ function setIfr(tar, kwd, disp) {
 		if (mode == "B") {
 			ifrF.src = "";
 			divF.style.display = "none";
+		}
+	}
+}
+function openStore(tar, kwd) {
+/*
+	Uri文字列によるbk1・amazon・その他の検索結果を
+	別窓に表示/消去する。
+	tar: 店種別; "bk1","ama","oth","ebk"
+*/
+	var mode = "";
+	var uri = "";
+	if (tar == "ama") {
+		mode = "A";
+		uri = encodeURI(openIfrA) + encodeURIComponent(kwd, true);
+	} else if (tar == "bk1") {
+		mode = "B";
+		uri = openIfrB + encodeURIComponent(kwd, true) + ".html";
+	} else if (tar == "oth") {
+		mode = "C";
+		uri = openIfrC + encodeURIComponent(kwd, true);
+	} else if (tar == "ebk") {
+		mode = "E";
+		uri = openIfrER + encodeURIComponent(kwd, true);
+	} else {
+		return false;
+	}
+	if (document.getElementById("url" + mode).value == "") {
+		return true;
+	} else {
+		if (window.confirm("Window.open " + tar + "?") == true) {
+			rtn = window.open(uri, '_' + tar, parYesToolbar);
 		}
 	}
 }
