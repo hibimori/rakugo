@@ -1,5 +1,6 @@
 //*****************************************************************
 //	各種Windowの表示 for BookDB Tool
+//		1.21	2016.12/22	[AB検索]はURI欄が空白でも行なう。
 //		1.20	2016.12/17	[AB検索]の結果表示をiFrameから別窓に変更。
 //		1.10	12.5/26		bk1→honto移行対応
 //		1.00	05.1/31		本体から分離
@@ -337,11 +338,11 @@ function openStore(tar, kwd) {
 	} else {
 		return false;
 	}
-	if (document.getElementById("url" + mode).value == "") {
-		return true;
-	} else {
+//	if (document.getElementById("url" + mode).value == "") {
+//		return true;
+//	} else {
 		if (window.confirm("Window.open " + tar + "?") == true) {
 			rtn = window.open(uri, '_' + tar, parYesToolbar);
 		}
-	}
+//	}
 }
