@@ -599,7 +599,10 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		//rakugo_w 全件よみ
 		rkS.selectWK(parSelectW, parDistinct);
 	}
-	if (rkS.getResultCount() > 0) {
+
+	try {
+
+	 if (rkS.getResultCount() > 0) {
 		i = 0;
 		sch_id = rkS.getVolId(i);							/* ID */
 		break_id = sch_id;							/* Break用にID退避 */
@@ -683,6 +686,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			query = new StringBuffer();
 			query.append("WHERE vol_id = '").append(sch_id).append("'");
 		}
+	 }
+	} catch (Exception e) {
+		out.println("Catch Exception");
 	}
 	if (sBfTitleBar.toString().equals("")) {
 		sBfTitleBar.append(strTitleBar).append(sch_id);
@@ -972,11 +978,16 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				query2 = new StringBuffer();
 				query2.append("WHERE id = '").append(sch_sourceID).append("'");
 				tmS.selectDB(query2.toString(), "");
-				if (tmS.getResultCount() > 0) {
+				try {
+				 if (tmS.getResultCount() > 0) {
 					sch_source = tmS.getTitle(0);
-				} else {
+				 } else {
+					sch_source = "";
+				 }
+				} catch (Exception e) {
 					sch_source = "";
 				}
+
 				sch_sourceS1 = "";
 				sch_sourceS2 = "";
 			} else {
@@ -1124,6 +1135,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 	String strLine1 = "bgcolor=white";
 	String strLine2 = "bgcolor=lavender";
 	String clsLine = "";
+	
+	try {
+	
 	for (i = 0; i < rkS.getResultCount(); i++) {
 		row = row + 1;
 		if (clsLine.equals(strLine1) == true) {
@@ -1388,6 +1402,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		 	<td><%= sch_modDate %></td>
 		</tr>
 <%
+	}
+	} catch (Exception e) {
+		out.println("Catch Exception");
 	}
 //rs.close();
 //rs2.close();

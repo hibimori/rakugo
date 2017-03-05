@@ -685,6 +685,7 @@ int i;
 %>
 <%
 	//ヘッダ用に１件だけ抽出
+	try {
 	if (bkS.getResultCount() > 0) {
 		//項目待避
 		sch_id = bkS.getVolId(0);
@@ -769,6 +770,10 @@ int i;
 		if (sch_btn.indexOf("Seq") >= 0) {
 			sBfTitleBar.append("/").append(sch_seq);
 		}
+	}
+	} catch (Exception e) {
+		//		alert("bkS.getResultCount() is null");
+		out.println("bkS.getResultCount() is null");
 	}
 %>
 <form name="formBook">
@@ -1066,10 +1071,14 @@ int i;
 			query2.append("WHERE id = '");
 			query2.append(sch_sourceID).append("'");
 			tmS.selectDB(query2.toString(), "");
-			if (tmS.getResultCount() > 0) {
-				sch_source = tmS.getTitle(0);
-			} else {
-				sch_source = "";
+			try {
+				if (tmS.getResultCount() > 0) {
+					sch_source = tmS.getTitle(0);
+				} else {
+					sch_source = "";
+				}
+			} catch (Exception e) {
+				out.println("tms.getResultCount() is null");
 			}
 		%>
 		<th bgcolor="#cccccc">
@@ -1383,6 +1392,7 @@ int i;
 		//book_w 全件よみ
 		bkS.selectWK(parSelectW, parDistinct);
 	}
+	try {
 	for (i = 0; i < bkS.getResultCount(); i++) {
 		row = row + 1;
 		if (clsLine.equals(strLine1) == true) {
@@ -1653,6 +1663,9 @@ int i;
 				out.print(sch_memo);
 				out.print("</td></tr>");
 			}
+	}
+	} catch (Exception e) {
+		out.println("bkS.getResultCount() is null");
 	}
 	cmR.closeJdbc();
 %>

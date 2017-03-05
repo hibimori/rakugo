@@ -453,6 +453,9 @@ String ctrl_volID;						//管理Rec退避用
 	float nowWeight;
 	float diffWeight;
 	cdS.selectDB("WHERE vol_id='0000W0' AND seq='0'", "");
+
+	try {
+
 	if (cdS.getResultCount() > 0) {
 		nowWeight = Float.valueOf(cdS.getInt0(0)).floatValue() / 1000;
 		baseWeight = Float.valueOf(cdS.getInt1(0)).floatValue() / 1000;
@@ -473,12 +476,22 @@ String ctrl_volID;						//管理Rec退避用
 			diffWeight = 0;
 		}
 	}
+	
+	} catch (Exception e) {
+		nowWeight = 0;
+		baseWeight = 0;
+		diffWeight = 0;
+		out.println("cdS.getResultCount is null");
+	}
+
 	diffWeight = nowWeight - baseWeight;
 	sch_viewS = decFmtW.format(baseWeight);
 	sch_viewW = decFmtW.format(nowWeight);
 	sch_viewM = decFmtW.format(diffWeight);
 	//aiBo日付を取得
 	cdS.selectDB("WHERE vol_id='0000A0' AND seq='0'", "");
+	try {
+
 	if (cdS.getResultCount() > 0) {
 		try {
 			sch_lastA = dateFmt.format(cdS.getDatetime2(0));
@@ -506,8 +519,20 @@ String ctrl_volID;						//管理Rec退避用
 		sch_viewB = strDate;
 		sch_modA = strDate;
 	}
+	} catch (Exception e) {
+		strDate = "";
+		sch_lastA = strDate;
+		sch_lastB = strDate;
+		sch_viewA = strDate;
+		sch_viewB = strDate;
+		sch_modA = strDate;
+		out.println("cdS.getResultCount is null");
+	}
+
 	//書影Table前回情報を取得
 	cdS.selectDB("WHERE vol_id='000000' AND seq='0'", "");
+	try {
+
 	if (cdS.getResultCount() > 0) {
 		sch_lastVal = decFmt3.format(cdS.getInt0(0));
 		sch_lastRows = decFmt.format(cdS.getInt1(0));
@@ -519,6 +544,9 @@ String ctrl_volID;						//管理Rec退避用
 			}
 			strCo[7] = "";
 		}
+	}
+	} catch (Exception e) {
+		out.println("cdS.getResultCount is null");
 	}
 %>
 <form name="formBook">
@@ -569,10 +597,16 @@ String ctrl_volID;						//管理Rec退避用
 	String clsLine = "";
 	/* 書影TableDBを全件読む */
 	bvS.selectDB("ORDER BY title_sort,title_seq,vol_id,seq", "");
+	try {
+
 	if (bvS.getResultCount() > 0) {
 		rows = bvS.getResultCount();
 	} else {
 		rows = 0;
+	}
+	} catch (Exception e) {
+		rows = 0;
+		out.println("bvS.getResultCount is null");
 	}
 	//書影TableDBの退避場所
 	String aryTitle[] = new String[rows];
@@ -593,6 +627,8 @@ String ctrl_volID;						//管理Rec退避用
 	rows = 0;							//書影有無配列のサイズを決めたらまた初期化。
 %>
 <%
+	try {
+
 	for (i = 0; i < bvS.getResultCount(); i++) {
 		sch_incID = decFmt.format(bvS.getIncId(i));			/* incID */
 		sch_id = cmR.convertNullToString(bvS.getVolId(i));				/* ID */
@@ -821,6 +857,9 @@ String ctrl_volID;						//管理Rec退避用
 		</tr>
 <%
 	}
+	} catch (Exception e) {
+		out.println("vbS.getResultCount is null");
+	}
 %>
 	</table>
 <input name="formBtnType" type="hidden" value="<%= sch_btn %>">
@@ -944,9 +983,13 @@ String ctrl_volID;						//管理Rec退避用
 				type="button" value="前前日">
 		</td>
 		<td>
-			<input maxlength="10"
+<!--			<input maxlength="10"
  				id="inpViewA"
   			name="inpViewA" size="12" type="text"
+				value="<%= sch_viewA %>">
+				-->
+			<input id="inpViewA"
+  			 type="date"
 				value="<%= sch_viewA %>">
 		</td>
 		<td id="thViewB">
