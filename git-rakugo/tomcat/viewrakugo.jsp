@@ -444,7 +444,7 @@ StringBuffer sBfCase;			//ケース背表紙タイトル
 					(parSubC.equals("1"))     ) {
 				out.println("<th class='komidasi' id='colTitle' width='");
 				out.println(parTitleW);
-				out.println("'>Title</th>");
+				out.println(" nowrap'>Title</th>");
 			}
 //			if (parSubC.equals("1")) { out.println("<th class='komidasi'>SubTitle</th>"); }
 			if ((parP1C.equals("1")) ||
@@ -716,7 +716,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			sch_player1Name, cmF.getPlayerPart(rkS.getPlayer1Sin(i)),
 			sch_player2Name, cmF.getPlayerPart(rkS.getPlayer2Sin(i)),
 			sch_player3Name, cmF.getPlayerPart(rkS.getPlayer3Sin(i)),
-			sch_player4, "・"));
+			sch_player4, "<br />"));
 /*		if (sch_player4.equals("1")) {
 			sBfPlayer.append("<span class='fontSmall'>ほか</span>");
 		}
@@ -782,13 +782,13 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 					sBfTitle.append(" ").append(sch_titleSeq);
 				}
 			}
-			out.println("<td id='cellTitle" + String.valueOf(i) + "'>");
+			out.println("<td id='cellTitle" + String.valueOf(i) + "' nowrap>");
 			out.println(sBfTitle.toString() + "</td>");
 		}
 		if ((parP1C.equals("1")) ||
 				(parP2C.equals("1")) ||
 				(parP3C.equals("1"))   ) {
-			out.println("<td id='cellPlayer" + String.valueOf(i) + "'>");
+			out.println("<td id='cellPlayer" + String.valueOf(i) + "' nowrap>");
 			if (sBfPlayer.length() == 0) {
 				out.println("&nbsp;</td>");
 			} else {
@@ -796,7 +796,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			}
 		}
 		if (parProC.equals("1")) {
-			out.println("<td id='cellProgram" + String.valueOf(i) + "'>");
+			out.println("<td id='cellProgram" + String.valueOf(i) + "' nowrap>");
 			if (sch_program.length() == 0) {
 				out.println("&nbsp;</td>");
 			} else {
@@ -804,7 +804,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			}
 		}
 		if (parLenC.equals("1")) {
-			out.println("<td style='white-space: nowrap;' align='right' class='cellLen'>");
+			out.println("<td style='white-space: nowrap;' align='right' class='cellLen' nowrap>");
 			if (sch_recLen.length() == 0) {
 				out.println("&nbsp;</td>");
 			} else {
@@ -813,7 +813,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 		}
 		if ((parDateC.equals("1")) ||
 				(parTimeC.equals("1"))   ) {
-			out.println("<td nowrap class='fontSmall'>");
+			out.println("<td nowrap class='fontSmall' nowrap>");
 			if (sBfRecDate.length() == 0) {
 				out.println("&nbsp;</td>");
 			} else {
