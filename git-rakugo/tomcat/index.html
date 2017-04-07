@@ -9,7 +9,8 @@
 <script language="JavaScript">
 <!--
 // ホストのURL
-var hostLocal = "http://localhost:8888/";
+//var hostLocal = "http://localhost:8888/";
+var hostLocal = "https://localhost:8443/";
 var hostDomain = "http://192.168.255.";
 // 落語DBのURLとパラメタ
 var rakugoURL = "rakugo/makerakugo.jsp";
@@ -27,6 +28,7 @@ var bookPar = "?inpID=&inpSeq=000&inpTitleID=&inpTitle=&inpTitleSort=&inpTitleSe
 var tableURL = "rakugo/viewbook.jsp";
 var tableURL5 = "rakugo/viewbook5.jsp";
 var tablePar = "?startVal=000&inpID=&inpSeq=&formBtnType=btnSel";
+var tablePar2 = "?startVal=000&inpID=&inpSeq=&formBtnType=btnSel&selViewN=1";	//書影なし
 // BookDBタイトル修正のURLとパラメタ
 var bookTitleURL = "rakugo/modifydb.jsp";
 
@@ -62,6 +64,9 @@ function openWindow(tarType) {
 	}
 	if (tarType == "table5") {
 		wkURL = wkURL + tableURL5 + tablePar;
+	}
+	if (tarType == "table5_2") {
+		wkURL = wkURL + tableURL5 + tablePar2;
 	}
 	if (tarType == "bookTitle") {
 		wkURL = wkURL + bookTitleURL + bookPar;
@@ -131,6 +136,11 @@ function openWindow(tarType) {
       <td  width="32%"-->
       <td><input type="button" onclick="javascript:openWindow('table5')" name="btnStartTable5" value="書影Table5"></td>
     </tr>
+    <tr>
+      <td width="16%"></td>
+      <td  width="32%">
+      <td><input type="button" onclick="javascript:openWindow('table5_2')" name="btnStartTable5_2" value="書影なしTable5"></td>
+    </tr>
   </tbody>
 </table>
 </form>
@@ -157,6 +167,7 @@ function openWindow(tarType) {
 <hr>
 <div class="fontSmall divShort">
 <ul>
+  <li>ver 3.60 17.04/07</li>
   <li>ver 3.50 16.01/05</li>
   <li>ver 3.40 11.11/25</li>
   <li>ver 3.30 09.11/15</li>
