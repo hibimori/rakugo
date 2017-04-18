@@ -46,7 +46,7 @@ public class CommonRakugo implements Serializable {
 			"KALYKE", "AITNE", "reserved",
 			"PASIPHAE"};
 		for (int i = 0; i < aryIP.length; i++) {
-			if (uri.toLowerCase().indexOf("http://" + aryIP[i]) >= 0) {
+			if (uri.toLowerCase().indexOf("://" + aryIP[i]) > 0) {
 				return aryHost[i];
 			}
 		}
