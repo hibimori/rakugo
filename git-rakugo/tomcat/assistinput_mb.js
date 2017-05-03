@@ -241,8 +241,9 @@ function addSeq(idx, ctrl) {
   }
 }
 
-function clearInpData(strCtrl) {
+function clearInpData(strCtrl, opt) {
 /* 入力文字列クリア */
+  var elm;
   if (strCtrl == "Keyword") {    //検索キーワード クリア
     document.formBook.inpKeyword.value = "";
     //document.formBook.inpKeyword2.value = "";
@@ -288,6 +289,11 @@ function clearInpData(strCtrl) {
   if (strCtrl == "URLE") {    //電子本URLクリア
     document.formBook.inpURLE.value = "";
     document.formBook.inpImgE.value = "";
+    if (opt == "1") {
+    //Store名も消す。
+      elm = document.formBook.selStore;
+      elm.options[0].selected = true;
+    }
   }
   if (strCtrl == "memo") {    //Memoクリア
     document.formBook.inpMemo.value = "";
@@ -338,7 +344,8 @@ function copyInpData() {
   }
   clearInpData("URLA");
   clearInpData("URLB");
-//  clearInpData("URLC");
+  clearInpData("URLE");
+  clearInpData("URLC");
   clearInpData("memo");
 //document.formBook.selImg[3].selected = true;
   document.formBook.inpISBN.value = "";

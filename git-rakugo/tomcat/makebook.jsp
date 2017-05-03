@@ -1246,7 +1246,7 @@ int i;
 		</td>
 		<td align="center">
 			<input type="button" name="btnURLEClear"
-				onclick="javascript: clearInpData('URLE')" value="クリア">
+				onclick="javascript: clearInpData('URLE','1')" value="クリア">
 		</td>
 	</tr>
 <!-- その他URL制御列 -->
