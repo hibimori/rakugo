@@ -3,11 +3,19 @@
  */
 package jp.rakugo.nii;
 
-import java.io.*;
-import java.text.*;
-import java.util.*;
-import javax.servlet.*;
-import javax.servlet.http.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author nii
@@ -318,6 +326,12 @@ public class CalendarAssist extends HttpServlet {
 						addArrH(wkY, wkM, getHappyMonday(wkY, wkM, 3), 0);
 					} else if (wkY >= 1996) {
 						addArrH(wkY, wkM, 20, 1);
+					}
+					break;
+				case 8:		//８月
+					//山の日
+					if (wkY >= 2016) {
+						addArrH(wkY, wkM, 11, 1);
 					}
 					break;
 				case 9:		//９月
