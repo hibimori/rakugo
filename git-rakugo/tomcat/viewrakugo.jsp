@@ -1,4 +1,4 @@
-<%@ page buffer="140kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+<%@ page buffer="255kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*, java.sql.*,java.text.*,org.apache.xerces.parsers.*,org.xml.sax.*,org.w3c.dom.*"
 %>
 <jsp:useBean id="rkS" class="jp.rakugo.nii.RakugoTableSelect" scope="page" />
