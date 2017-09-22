@@ -495,7 +495,8 @@ function getItemUri(s, m) {
     if ((m === "8") || (m === "H")) {
         //honto
         if ((s.indexOf("pd-book") >= 0) ||
-            (s.indexOf("pd-dvd") >= 0)) {
+            (s.indexOf("pd-cd")   >= 0) ||
+            (s.indexOf("pd-dvd")  >= 0)) {
             return aryUri[i] + "netstore/" + s + ".html" + aryUri2[i];
         } else {
             return aryUri[i] + "ebook/pd_" + s + ".html" + aryUri2[i];
