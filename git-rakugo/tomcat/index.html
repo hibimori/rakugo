@@ -31,6 +31,7 @@
         var tablePar = "?startVal=000&inpID=&inpSeq=&formBtnType=btnSel";
         var tablePar2 = "?startVal=000&inpID=&inpSeq=&formBtnType=btnSel&selViewN=1"; //書影なし
         var tablePar3 = "&chkViewD=1&rdoViewD=1";	//祝日
+        var tablePar4 = "&chkViewA=1";				//aiBo日付
         // BookDBタイトル修正のURLとパラメタ
         var bookTitleURL = "rakugo/modifydb.jsp";
 
@@ -66,15 +67,11 @@
             }
             if (tarType == "table5") {
                 wkURL = wkURL + tableURL5 + tablePar;
-                if (document.formBook.chkStartTable5.checked === true) {
-                	wkURL = wkURL + tablePar3;
-                }
+                wkURL = addOptHTML5(wkURL);
             }
             if (tarType == "table5_2") {
                 wkURL = wkURL + tableURL5 + tablePar2;
-                if (document.formBook.chkStartTable5.checked === true) {
-                	wkURL = wkURL + tablePar3;
-                }
+                wkURL = addOptHTML5(wkURL);
             }
             if (tarType == "bookTitle") {
                 wkURL = wkURL + bookTitleURL + bookPar;
@@ -91,6 +88,18 @@
             var rtn = window.open(wkURL, '_blank', 'toolbar=no,location=no,resizable=yes,status=yes,menubar=no,scrollbars=yes');
             /* 落語ツール Open */
 
+        }
+        function addOptHTML5(wkURL) {
+        //ViewBook.jspに渡すオプションを付加
+        	//祝日指定
+            if (document.formBook.chkStartTable5.checked === true) {
+              	wkURL = wkURL + tablePar3;
+            }
+        	//aiBo日付指定
+            if (document.formBook.chkStartTable5a.checked === true) {
+               	wkURL = wkURL + tablePar4;
+            }
+        	return wkURL;
         }
         //-->
     </script>
@@ -144,14 +153,17 @@
     <tr>
       <td width="16%"></td>
       <td  width="32%"-->
-                    <td><input type="button" onclick="javascript:openWindow('table5')" name="btnStartTable5" value="書影Table5"></td>
+                    <td width="8%"><input type="button" onclick="javascript:openWindow('table5')" name="btnStartTable5" value="書影Table5"></td>
+                    <td rowspan="2" style="text-align:left">
+                    	<input type="checkbox" name="chkStartTable5" value="1">祝日<br />
+                    	<input type="checkbox" name="chkStartTable5a" value="1">aiBo
+                    </td>
                 </tr>
                 <tr>
                     <td width="16%"></td>
                     <td width="32%">
                         <td>
                             <input type="button" onclick="javascript:openWindow('table5_2')" name="btnStartTable5_2" value="書影なしTable5">
-                            <input type="checkbox" name="chkStartTable5" value="1">祝日
                         </td>
                 </tr>
             </tbody>
@@ -180,6 +192,7 @@
     <hr>
     <div class="fontSmall divShort">
         <ul>
+            <li>ver 3.80 17.10/08</li>
             <li>ver 3.70 17.09/18</li>
             <li>ver 3.60 17.04/07</li>
             <li>ver 3.50 16.01/05</li>

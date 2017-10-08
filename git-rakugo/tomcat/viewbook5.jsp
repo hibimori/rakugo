@@ -983,14 +983,13 @@ String ctrl_volID;						//管理Rec退避用
 				type="button" value="前前日">
 		</td>
 		<td>
-<!--			<input maxlength="10"
+			<input maxlength="10"
  				id="inpViewA"
   			name="inpViewA" size="12" type="text"
 				value="<%= sch_viewA %>">
-				-->
-			<input id="inpViewA"
+			<!-- input id="inpViewA"
   			 type="date"
-				value="<%= sch_viewA %>">
+				value="<%= sch_viewA %>"-->
 		</td>
 		<td id="thViewB">
 			<input name="btnViewB"
@@ -1161,18 +1160,19 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 	java.util.Date adtDateB = tarDateB.getTime();
 
 	//今回分のTable
-//	adtTable.append("<h3 id='aibo").append(dateFmtYMD.format(adtDate)).append("' class='fontSmall'>");
+	adtTable.append("<h3 id='aibo").append(dateFmtYMD.format(adtDate)).append("'>");
 	adtTable.append("【<a href='").append(adtPath).append(dateFmtYM.format(adtDateB)).append(".html");
 	adtTable.append("#aibo").append(dateFmtYMD.format(adtDateB)).append("'>");
-	adtTable.append("＜</a>aiBo").append(dateFmtYMD.format(adtDate)).append("＞】</h3><p>。</p>");
-	//前回分のTable
-	adtTable.append("<h3 id='aibo").append(dateFmtYMD.format(adtDateB)).append(" class='fontSmall'>");
+	adtTable.append("＜</a>aiBo").append(dateFmtYMD.format(adtDate)).append("＞】</h3>");
+/*	//前回分のTable
+	adtTable.append("<h3 id='aibo").append(dateFmtYMD.format(adtDateB)).append("'>");
 	adtTable.append("【<a href='").append(adtPath).append(dateFmtYM.format(adtDateA)).append(".html");
 	adtTable.append("#aibo").append(dateFmtYMD.format(adtDateA)).append("'>");
 	adtTable.append("＜</a>aiBo").append(dateFmtYMD.format(adtDateB));
 	adtTable.append("<a href='").append(adtPath).append(dateFmtYM.format(adtDate)).append(".html");
 	adtTable.append("#aibo").append(dateFmtYMD.format(adtDate)).append("'>＞</a>】</h3>");
-	adtTable.append("<p>。</p><p>。</p><p>。</p><p>。</p>");
+*/
+	adtTable.append("<ul class='listSq'><li>　</li></ul><p>。</p><p>。</p>");
 	return adtTable.toString();
 }
 %>
@@ -1354,7 +1354,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 	}
 	if ((wkCol > 0) && (!(sch_selViewN.equals("1")))) {		//書影のあるときのみ
 		if (!(sch_selViewN.equals("2"))) {		//書影のみのときタイトルなし
-			sbfHTML.append("<div class='divTopic'>");
+			sbfHTML.append("<div class='divTopic' id='tnsm").append(nowD).append("'>");
 			sbfHTML.append("<h3>【");
     /*<a href='http://graph.hatena.ne.jp/nii/graph?graphname=");
 			sbfHTML.append("%E3%81%8D%E3%82%87%E3%81%86%E3%81%AE%E6%84%89%E3%81%97%E3%81%BF");
