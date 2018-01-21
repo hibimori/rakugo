@@ -5,12 +5,12 @@
 //		1.10	12.5/26		bk1→honto移行対応
 //		1.00	05.1/31		本体から分離
 //*****************************************************************
-var rtn;
-var wkURL;
+    var rtn;
+    var wkURL;
 // カレンダのURLとパラメタ
-var openCalendar = "inpcalendar.jsp";
+    var openCalendar = "inpcalendar.jsp";
 // クロックのURLとパラメタ
-var openClock = "inpclock.jsp";
+    var openClock = "inpclock.jsp";
 // タイトルマスタメンテのURLとパラメタ
 var openTitle = "maketitle.jsp";
 var openTitlePar = "?inpTitle=&inpTitleSort=&inpModeTitle=GE&inpSub=&inpModeSub=GE&inpSubSort=&selCat=&inpSeq=&inpMemo=";

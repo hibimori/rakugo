@@ -577,11 +577,14 @@ String nowDate = dateFmt.format(parToday.getTime());
 	</tr>
 <!-- 検索条件の制御 -->
 	<tr>
-		<th bgcolor="silver">
-			<input name="btnCalKrnID" type="button" onclick="javascript: openCalendarWindow('formKanrenID')" value="関連ID">
+		<th bgcolor="silver" width="96" id="thKanrenID">
+			<input name="btnCalKrnID" type="button" onclick="javascript: openCalendarWindow('KanrenID')" value="関連ID">
 		</th>
 		<td>
-			<input size="8" type="text" maxlength="6" name="formKanrenID" value="<%= search_krnID %>">
+			<input size="8" type="text" maxlength="6"
+				 name="formKanrenID"
+				 id="inpKanrenID" 
+				value="<%= search_krnID %>">
 		</td>
 		<td>
 <%

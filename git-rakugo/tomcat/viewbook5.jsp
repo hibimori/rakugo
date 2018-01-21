@@ -85,7 +85,12 @@ function sendQuery(tarType) {
 		document.formBook.formBtnType.value = tarType;
 		document.formBook.inpIncIDTbl.value = wkDelInc;
 		document.formBook.method = "post";
-		document.formBook.action = "viewbook5.jsp";
+		if (document.location.toString().indexOf("viewbook5b.jsp") >= 0) {
+			document.formBook.action = "viewbook5.jsp";
+		} else {
+			var rtn = window.open(document.location.toString(), '_blank', parNoToolbar);
+			document.formBook.action = "viewbook5b.jsp";
+		}
 		document.formBook.submit();
 	}
 }
@@ -481,7 +486,7 @@ String ctrl_volID;						//管理Rec退避用
 		nowWeight = 0;
 		baseWeight = 0;
 		diffWeight = 0;
-		out.println("cdS.getResultCount is null");
+		out.println("cdS.getResultCount is null 1");
 	}
 
 	diffWeight = nowWeight - baseWeight;
@@ -526,7 +531,7 @@ String ctrl_volID;						//管理Rec退避用
 		sch_viewA = strDate;
 		sch_viewB = strDate;
 		sch_modA = strDate;
-		out.println("cdS.getResultCount is null");
+		out.println("cdS.getResultCount is null 2");
 	}
 
 	//書影Table前回情報を取得
@@ -546,7 +551,7 @@ String ctrl_volID;						//管理Rec退避用
 		}
 	}
 	} catch (Exception e) {
-		out.println("cdS.getResultCount is null");
+		out.println("cdS.getResultCount is null 3");
 	}
 %>
 <form name="formBook">
@@ -606,7 +611,7 @@ String ctrl_volID;						//管理Rec退避用
 	}
 	} catch (Exception e) {
 		rows = 0;
-		out.println("bvS.getResultCount is null");
+		out.println("bvS.getResultCount is null 4");
 	}
 	//書影TableDBの退避場所
 	String aryTitle[] = new String[rows];
@@ -858,7 +863,7 @@ String ctrl_volID;						//管理Rec退避用
 <%
 	}
 	} catch (Exception e) {
-		out.println("vbS.getResultCount is null");
+		out.println("vbS.getResultCount is null 5");
 	}
 %>
 	</table>
