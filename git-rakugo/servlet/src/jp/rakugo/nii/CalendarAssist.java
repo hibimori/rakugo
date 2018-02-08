@@ -277,6 +277,10 @@ public class CalendarAssist extends HttpServlet {
 					if (wkY >= 1967) {
 						addArrH(wkY, wkM, 11, 1);
 					}
+					//天皇誕生日
+					if (wkY >= 2019) {
+						addArrH(wkY, wkM, 23, 1);
+					}
 					break;
 				case 3:		//３月
 					//春分の日
@@ -369,10 +373,10 @@ public class CalendarAssist extends HttpServlet {
 					}
 					break;
 				case 12:	//12月
-					//天皇誕生日
-					if (wkY >= 1989) {
+					//天皇誕生日（平成）
+					if (wkY >= 1989 && wkY <= 2018 ) {
 						addArrH(wkY, wkM, 23, 1);
-				}
+					}
 				}
 				wkDate.add(Calendar.MONTH, 1);
 				wkY = wkDate.get(Calendar.YEAR);
