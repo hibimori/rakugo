@@ -167,7 +167,6 @@ rtn = window.open(wkURL, '_blank', parSize400);
 	var	y = now.getFullYear();
 	var	m = now.getMonth() + 1;
 	var	d = now.getDate();
-alert(ref);
 	switch (arrArg.length) {
 	case 0:
 		break;
