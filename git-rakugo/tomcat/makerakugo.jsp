@@ -195,15 +195,15 @@ StringBuffer sch_strSortT;						/* ワークTableのふりがなエリア */
 StringBuffer sch_strSortP;						/* ワークTableのふりがなエリア */
 String parKeyword = cmR.convertNullToString(request.getParameter("inpKeyword"));				/* 文字列検索Word */
 parKeyword = parKeyword.trim();
-//String parKeyword2 = cmR.convertNullToString(request.getParameter("inpKeyword2"));				/* 文字列検索Word */
-//parKeyword2 = parKeyword2.trim();
+String parKeyword2 = cmR.convertNullToString(request.getParameter("inpKeyword2"));				/* 文字列検索Word */
+parKeyword2 = parKeyword2.trim();
 String parKeywordM = cmR.convertNullToString(request.getParameter("selKeyword"));				/* 文字列検索モード */
 String parKeywordT = cmR.convertNullToString(request.getParameter("rdoKeyword"));
 if (parKeywordT.length() == 0) {
-	parKeywordT = "T";
+	parKeywordT = "A";
 }
-String parKeywordW = "";												/* where句ワークエリア */
-//String parKeywordW2 = "";												/* where句ワークエリア2 */
+String parKeywordW = "";				/* where句ワークエリア 演題 */
+String parKeywordW2 = "";				/* where句ワークエリア 演者 */
 String strTitleBar = "落語管理DB: ";	/* タイトルバー */
 StringBuffer sBfTitleBar = new StringBuffer("");	/* タイトルバー ワークエリア */
 String strCo[] = new String[1];		/* Combo要素選択用ワーク */
@@ -220,7 +220,8 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		+ "sortT,sortP,"
 		+ "rec_length,rec_length_flg,rec_date,rec_date_flg,rec_time,rec_time_flg,"
 		+ "category_sin,media_sin,sur_sin,nr_sin,copy_sin,memo,modify_date";
-	String parSelectW = "ORDER BY sortT,sortP,vol_id,seq";
+//	String parSelectW = "ORDER BY sortT,sortP,vol_id,seq";
+	String parSelectW = "ORDER BY title_id,player1_id,vol_id,seq";
 //JDBC接続
 	cmR.connectJdbc6();
 //	Connection db = cmR.getJdbc();
@@ -229,9 +230,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 /* Query組み立て */
 	/* 初期画面または押下ボタン不明なら Dummy空読み */
 	StringBuffer query = new StringBuffer();
-	StringBuffer query2;			//名称取得用Query退避エリア
-	StringBuffer query3;
-	StringBuffer query4;
+	StringBuffer query2 = new StringBuffer();	//名称取得用Query退避エリア
+	StringBuffer query3 = new StringBuffer();
+	StringBuffer query4 = new StringBuffer();
 	StringBuffer dbMsg = new StringBuffer();
 	boolean useMainDB = true;	//rakugo_t(true) or rakugo_w(false)対象Flg
 	int idx;
@@ -322,32 +323,37 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 	/* 文字列[検索]で検索 */
 	if (sch_btn.equals("btnKeyword")) {
 		//検索文字列が両方""なら空振りするよう条件をEQに強制リセット
-		if (parKeyword.length() == 0) {
+		if ((parKeyword.length()  == 0) &&
+		    (parKeyword2.length() == 0)   ) {
 			parKeywordM = "EQ";
 			parKeyword = "no keyword";
 		}
 		if (parKeywordM.equals("EQ")) {
 			parKeywordW = escapeString(parKeyword);
-//	parKeywordW2 = escapeString(parKeyword2);
+			parKeywordW2 = escapeString(parKeyword2);
 		} else if (parKeywordM.equals("GE")) {
 			parKeywordW = escapeString(parKeyword) + "%";
-//	parKeywordW2 = escapeString(parKeyword2) + "%";
+			parKeywordW2 = escapeString(parKeyword2) + "%";
 		} else {
 			parKeywordW = "%" + escapeString(parKeyword) + "%";
-//	parKeywordW2 = "%" + escapeString(parKeyword2) + "%";
+			parKeywordW2 = "%" + escapeString(parKeyword2) + "%";
 		}
 		//次画面のタイトルバー設定
 		sBfTitleBar.append(strTitleBar);
-/*if (parKeyword.equals("")) {
+		if (parKeyword.length() == 0) {
 			sBfTitleBar.append(parKeywordW2);
 		} else {
-			if (parKeyword2.equals("")) {
-*/		sBfTitleBar.append(parKeywordW);
-/*	} else {
-				sBfTitleBar.append(parKeywordW).append("+").append(parKeywordW2);
+			sBfTitleBar.append(parKeywordW);
+			if (parKeyword2.length() == 0) {
+			} else {
+				if (parKeywordT.equals("A")) {
+					sBfTitleBar.append(" and ");
+				} else {
+					sBfTitleBar.append(" or ");
+				}
+				sBfTitleBar.append(parKeywordW2);
 			}
 		}
-*/
 		String tarItem = "";
 		String tarMode = " LIKE '";
 		/*
@@ -358,95 +364,93 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		if (parKeywordM.equals("EQ")) {
 			tarMode = " = '";
 		}
-		//タイトルとサブタイトルを検索
-		if (parKeywordT.equals("T")) {
-/*			if (parKeyword.equals("")) {
-				query.append("WHERE subtitle").append(tarItem);
-				query.append(tarMode);
-				query.append(parKeywordW2).append("'");
-			} else {
-*/
-			query.append("WHERE title").append(tarMode).append(parKeywordW).append("'");
+		//タイトルとサブタイトルを検索し，当該id群を得る。
+		if (parKeyword.length() > 0) {
+			query = new StringBuffer();
+			query.append("WHERE (title").append(tarMode).append(parKeywordW).append("'");
 			query.append(" OR subtitle").append(tarMode).append(parKeywordW).append("'");
 			query.append(" OR title_sort").append(tarMode).append(parKeywordW).append("'");
-			query.append(" OR subtitle_sort").append(tarMode).append(parKeywordW).append("'");
-/*				if (parKeyword2.equals("")) {
-					query.append(" OR subtitle").append(tarItem);
-					query.append(tarMode);
-					query.append(parKeywordW).append("'");
-				} else {
-					query.append(" AND subtitle").append(tarItem);
-					query.append(tarMode);
-					query.append(parKeywordW2).append("'");
+			query.append(" OR subtitle_sort").append(tarMode).append(parKeywordW).append("')");
+
+			tmS.selectDB(query.toString(), "");
+			idx = tmS.getResultCount();
+			query3 = new StringBuffer();
+			//idを連結。
+			if (idx > 0) {
+				query3.append("('");
+				for (int j = 0; j < idx; j++) {
+					query3.append(tmS.getId(j)).append("'");
+					if (j < idx - 1) {
+						query3.append(",'");
+					}
 				}
+				query3.append(")");
+				query2.append("(title_id IN ").append(query3);
+				query2.append(" OR subtitle_id IN ").append(query3);
+				query2.append(" OR program_id IN ").append(query3);
+				query2.append(")");
 			}
-*/
-			query.append(" ORDER BY title_sort, subtitle_sort, id");
 		}
-		//プレイヤを検索
-		/*
-		if (parKeywordT.indexOf("S") >= 0) {
-			tarItem = "_sort";
+//  out.println(query.toString() + "<br />");
+		//プレイヤを検索し，当該id群を得る。
+		if (parKeyword2.length() > 0) {
+			query = new StringBuffer();
+			query.append("WHERE (first_name").append(tarMode).append(parKeywordW2).append("'");
+			query.append(" OR last_name").append(tarMode).append(parKeywordW2).append("'");
+			query.append(" OR family_name").append(tarMode).append(parKeywordW2).append("'");
+			query.append(" OR full_name").append(tarMode).append(parKeywordW2).append("'");
+			query.append(" OR first_sort").append(tarMode).append(parKeywordW2).append("'");
+			query.append(" OR last_sort").append(tarMode).append(parKeywordW2).append("'");
+			query.append(" OR family_sort").append(tarMode).append(parKeywordW2).append("')");
+
+			pmS.selectDB(query.toString(), "");
+			idx = pmS.getResultCount();
+			query3 = new StringBuffer();
+			//idを連結。
+			if (idx > 0) {
+				query3.append("('");
+				for (int j = 0; j < idx; j++) {
+					query3.append(pmS.getId(j)).append("'");
+					if (j < idx - 1) {
+						query3.append(",'");
+					}
+				}
+				query3.append(")");
+				query4.append("(player1_id IN ").append(query3);
+				query4.append(" OR player2_id IN ").append(query3);
+				query4.append(" OR player3_id IN ").append(query3);
+				query4.append(")");
+			}
+		}
+		//WHERE句組み立て
+		query = new StringBuffer();
+		if ((query2.length() == 0) &&
+		    (query4.length() == 0)   ) {
+			query.append("WHERE title_id = '012345'");
 		} else {
-			tarItem = "_name";
-		}
-		*/
-		if (parKeywordT.equals("P")) {
-//	if (parKeyword.equals("")) {
-			query.append("WHERE first_name").append(tarMode).append(parKeywordW).append("'");
-			query.append(" OR last_name").append(tarMode).append(parKeywordW).append("'");
-			query.append(" OR family_name").append(tarMode).append(parKeywordW).append("'");
-			query.append(" OR full_name").append(tarMode).append(parKeywordW).append("'");
-			query.append(" OR first_sort").append(tarMode).append(parKeywordW).append("'");
-			query.append(" OR last_sort").append(tarMode).append(parKeywordW).append("'");
-			query.append(" OR family_sort").append(tarMode).append(parKeywordW).append("'");
-/*			} else {
-				query.append("WHERE last").append(tarItem);
-				query.append(tarMode);
-				query.append(parKeywordW).append("'");
-				if (parKeyword2.equals("")) {
-					query.append(" OR family").append(tarItem);
-					query.append(tarMode);
-					query.append(parKeywordW).append("'");
+			if (query2.length() > 0) {
+				query.append("WHERE ").append(query2);
+			}
+			if (query4.length() > 0) {
+				if (query.length() == 0) {
+					query.append("WHERE ").append(query4);
 				} else {
-					query.append(" AND first").append(tarItem);
-					query.append(tarMode);
-					query.append(parKeywordW2).append("'");
+					if (parKeywordT.equals("A")) {
+						query.append(" and ");
+					} else {
+						query.append(" or ");
+					}
+					query.append(query4);
 				}
 			}
-			*/
-			query.append(" ORDER BY last_sort, first_sort, family_sort, id");
 		}
-%>
-<%
+//  out.println("query: " + query.toString());
+
 		//まづワークTABLEをクリア
 		rwU.initRec();
 		rwU.deleteRec("", -1);
-		//取り敢えずタイトル/プレイヤマスタを検索する。
-		if (parKeywordT.equals("T")) {
-			tmS.selectDB(query.toString(), "");
-			idx = tmS.getResultCount();
-		} else {
-			pmS.selectDB(query.toString(), "");
-			idx = pmS.getResultCount();
-		}
-		for (int j = 0; j < idx; j++) {
-			//タイトル・プレイヤ マスタのIDで落語DBを検索
-			query3 = new StringBuffer();
-			if (parKeywordT.equals("T")) {
-				tarItem = tmS.getId(j);
-				query3.append("WHERE title_id = '").append(tarItem);
-				query3.append("' OR subtitle_id = '").append(tarItem);
-				query3.append("' OR program_id = '").append(tarItem);
-				query3.append("'");
-			} else {
-				tarItem = pmS.getId(j);
-				query3.append("WHERE player1_id = '").append(tarItem);
-				query3.append("' OR player2_id = '").append(tarItem);
-				query3.append("' OR player3_id = '").append(tarItem);
-				query3.append("'");
-			}
-			rkS.selectDB(query3.toString(), "");
+//		for (int j = 0; j < idx; j++) {
+			rkS.selectDB(query.toString(), "");
 			for (i = 0; i < rkS.getResultCount(); i++) {
 				rwU.initRec();
 				rwU.setVolId(rkS.getVolId(i));
@@ -478,6 +482,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				rwU.setCopySin(rkS.getCopySin(i));
 				rwU.setMemo(escapeString(rkS.getMemo(i)));
 				rwU.setModifyDate(rkS.getModifyDate(i));
+				/*
 				if (parKeywordT.equals("T")) {
 					tarItem = escapeString(tmS.getTitleSort(j));
 					tarItem += escapeString(tmS.getSubtitleSort(j));
@@ -490,12 +495,17 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 					rwU.setSortT("");
 					rwU.setSortP(tarItem);
 				}
+				*/
+					rwU.setSortT("");
+					rwU.setSortP("");
 				//ワークTABLEに格納
 				rwU.insertRec();
 			}
-		}
-		query = new StringBuffer();
-		query.append("ORDER BY sortT, sortP, vol_id, seq");
+//		}
+//		query = new StringBuffer();
+//		query.append("ORDER BY sortT, sortP, vol_id, seq");
+//		query.append("ORDER BY title_id, player1_id, id, seq");
+//		query.append("ORDER BY player1_id, id, seq");
 		useMainDB = false;
 	}
 %>
@@ -688,7 +698,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		}
 	 }
 	} catch (Exception e) {
-		out.println("Catch Exception");
+//		out.println("Catch Exception");
 	}
 	if (sBfTitleBar.toString().equals("")) {
 		sBfTitleBar.append(strTitleBar).append(sch_id);
@@ -733,7 +743,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
       <td><input type="button" name="btnIDNext" onclick="javascript:sendQuery('btnIDNext')" value="次"></td>
       <!-- td><input type="button" name="btnIDFirst" onclick="javascript:sendQuery('btnIDFirst')" value="先頭"></td -->
       <th bgcolor="#cccccc" rowspan="2">検<br>索</th>
-      <!--td bgcolor="#cccccc">Title/姓</td-->
+      <td bgcolor="#cccccc">演題</th>
       <td>
   			<input size="12" type="text" maxlength="255" name="inpKeyword" value="<%= parKeyword %>">
   		</td>
@@ -755,21 +765,25 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
       <td><input type="button" name="btnIDSeq" onclick="javascript:sendQuery('btnIDSeq')" value="検索"></td>
       <td><input type="button" name="btnIDSeqPrev" onclick="javascript:sendQuery('btnIDSeqPrev')" value="前"></td>
       <td><input type="button" name="btnIDSeqNext" onclick="javascript:sendQuery('btnIDSeqNext')" value="次"></td>
-      <!-- td><input type="button" name="btnIDSeqFirst" onclick="javascript:sendQuery('btnIDSeqFirst')" value="先頭"></td -->
-      <!--td align="left" bgcolor="#cccccc">Sub/名</td-->
-      <!--td><input size="12" type="text" maxlength="255" name="inpKeyword2"
-       value="<!--%= parKeyword2 %>">
-      </td-->
-			<td align="left" colspan="2">
+      <td bgcolor="#cccccc">演者</th>
+      <td>
+		<input size="12" type="text" maxlength="255" name="inpKeyword2" value="<%= parKeyword2 %>">
+      </td>
+			<td align="left">
 			<%
 				//題副・かなセレクタ
 //				out.println(cmF.makeSelectItemR("selKeywordT", "", parKeywordT));
 				strCo = new String[2];
-				if (parKeywordT.equals("T")) { strCo[0] = "checked"; }
-				if (parKeywordT.equals("P")) { strCo[1] = "checked"; }
+//				if (parKeywordT.equals("T")) { strCo[0] = "checked"; }
+//				if (parKeywordT.equals("P")) { strCo[1] = "checked"; }
+				if (parKeywordT.equals("A")) { strCo[0] = "checked"; }
+				if (parKeywordT.equals("O")) { strCo[1] = "checked"; }
 			%>
-				<input type="radio" name="rdoKeyword" value="T" <%= strCo[0] %>>演題
+<!--				<input type="radio" name="rdoKeyword" value="T" <%= strCo[0] %>>演題
 				<input type="radio" name="rdoKeyword" value="P" <%= strCo[1] %>>演者
+				-->
+				<input type="radio" name="rdoKeyword" value="A" <%= strCo[0] %>>and
+				<input type="radio" name="rdoKeyword" value="O" <%= strCo[1] %>>or
 			</td>
 			<td>
 				<input type="button" name="btnKeywordClear" onclick="javascript: clearKeyword()" value="クリア">
@@ -1404,7 +1418,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 <%
 	}
 	} catch (Exception e) {
-		out.println("Catch Exception");
+//		out.println("Catch Exception");
 	}
 //rs.close();
 //rs2.close();
