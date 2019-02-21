@@ -296,8 +296,18 @@ public class CalendarAssist extends HttpServlet {
 					if (wkY >= 1948) {
 						addArrH(wkY, wkM, 29, 1);
 					}
+					if (wkY == 2019) {
+						//国民の休日
+						addArrH(wkY, wkM, 30, 0);
+					}
 					break;
 				case 5:		//５月
+					if (wkY == 2019) {
+						//天皇即位の日（徳仁）
+						addArrH(wkY, wkM, 1, 0);
+						//国民の休日
+						addArrH(wkY, wkM, 2, 0);
+					}
 					//憲法記念日
 					if (wkY >= 1986) {
 						addArrH(wkY, wkM, 3, 0);
@@ -370,6 +380,10 @@ public class CalendarAssist extends HttpServlet {
 						addArrH(wkY, wkM, getHappyMonday(wkY, wkM, 2), 0);
 					} else if (wkY >= 1966) {
 						addArrH(wkY, wkM, 10, 1);
+					}
+					if (wkY == 2019) {
+						//即位礼正殿の儀
+						addArrH(wkY, wkM, 22, 0);
 					}
 					break;
 				case 11:	//11月
