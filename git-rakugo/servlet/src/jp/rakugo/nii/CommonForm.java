@@ -78,7 +78,7 @@ public class CommonForm implements Serializable {
 		{"","H","S",
 		"F","G","Q",
 		"I","J",
-		"C","T",
+		"C","T","U",
 		"K","L","M","O",
 		"P","N","R",
 		"B","E","A","D"};
@@ -86,30 +86,34 @@ public class CommonForm implements Serializable {
 		{"","Book","eBook",
 		"DVD","DVD-RW","Blu-ray",
 		"Software","Hardware",
-		"CD","eMusic",
+		"CD","eMusic","HDD/SSD",
 		"Figure","Model","Goods","Supply",
 		"Medicine","Food","Wear",
 		"MD","Beta","CC","LD"};
 
 	private HashMap hmBbs;
 	private String[] BBS_CODE =
-		{"","790101","790103","790104",
-		"790106","790108","790110","790112",
-		"790113","790114"};
+		{"","790101","790103","790117","790118",
+		"790119","790120",
+		"790104","790106","790108","790110",
+		"790112","790113","790114"};
 	private String[] BBS_DATA =
-		{"","NHK総合","NHK教育","日本テレビ",
-		"TBS","フジテレビ","テレビ朝日","テレビ東京",
-		"テレビ神奈川","東京MX"};
+		{"","NHK総合","NHK教育","RCC中国放送","広島テレビ",
+		"広島ホームテレビ","テレビ新広島",
+		"日本テレビ","TBS","フジテレビ","テレビ朝日",
+		"テレビ東京","テレビ神奈川","東京MX"};
 
 	private HashMap hmBbsBs;
 	private String[] BBS_BS_CODE =
 		{"","790205","790207","790211","790209","790210","790213","790216",
 		"790217","790218","790221","790222",
-		"790305","790301","790302","790312"};
+		"790305","790301","790302","790315","790312",
+		"790313","790314"};
 	private String[] BBS_BS_DATA =
 		{"","WoWoW","BS1","BS2","BShi","BS Premium","BS Japan","BS-TBS",
 		"BSフジ","BS朝日","BS11","Twellv",
-		"St.GIGA","NHKラジオ第一","NHKラジオ第二","ニッポン放送"};
+		"St.GIGA","NHKラジオ第一","NHKラジオ第二","RCCラジオ","ニッポン放送",
+		"TBSラジオ","文化放送"};
 
 	private HashMap hmField;
 	private String[] FIELD_CODE = {"R","M","D","E","S"};
