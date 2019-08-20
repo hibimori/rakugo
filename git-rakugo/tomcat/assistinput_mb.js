@@ -453,7 +453,8 @@ function getItemId(s, m) {
                 return aryUri[i];
             }
         }
-        bibidReg = /LT0000[0-9]+/;
+//        bibidReg = /LT0000[0-9]+/;
+        bibidReg = /LT000[0-9]+/;
         for (i = 0; i < aryUri.length; i++) {
             if (bibidReg.test(aryUri[i]) === true) {
                 return aryUri[i];

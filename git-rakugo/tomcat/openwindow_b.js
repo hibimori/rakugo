@@ -229,9 +229,11 @@ function searchAB() {
 //		setIfr("aff", openIfrF + encodeURIComponent(title, true), true);
 		//iFrameはたいがいのブラウザが無効にするので別窓で開く
 		openStore("bk1", kwd);
-		openStore("ama", kwd);
-		openStore("ebk", kwd);
-		openStore("oth", kwd);
+		setTimeout(openStore("ama", kwd), 1000);
+		setTimeout(openStore("ebk", kwd), 1000);
+		setTimeout(openStore("oth", kwd), 1000);
+//		openStore("ebk", kwd);
+//		openStore("oth", kwd);
 	}
 }
 function openIfr(tar) {
@@ -341,8 +343,8 @@ function openStore(tar, kwd) {
 //	if (document.getElementById("url" + mode).value == "") {
 //		return true;
 //	} else {
-		if (window.confirm("Window.open " + tar + "?") == true) {
+//		if (window.confirm("Window.open " + tar + "?") == true) {
 			rtn = window.open(uri, '_' + tar, parYesToolbar);
-		}
+//		}
 //	}
 }

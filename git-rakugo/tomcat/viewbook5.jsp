@@ -1138,10 +1138,12 @@ public String htmDateTable(Calendar tarDate, int tarW, String tarWw, String tarW
 	hdtTable.append(hdtJ).append("</a>&nbsp;");
 	//日曜日特例
 	if (tarDate.get(Calendar.DAY_OF_WEEK) == 1) {
-		hdtTable.append("｜&nbsp;<a href='");
-		hdtTable.append("http://graph.hatena.ne.jp/nii/since%201998/");
-		hdtTable.append("' target='niin'>");
-		hdtTable.append(tarWw).append("kg</a>");
+		hdtTable.append("｜&nbsp;");
+		//hdtTable.append("｜&nbsp;<a href='");
+		//hdtTable.append("http://graph.hatena.ne.jp/nii/since%201998/");
+		//hdtTable.append("' target='niin'>");
+		//hdtTable.append(tarWw).append("kg</a>");
+		hdtTable.append(tarWw).append("kg");
 	}
 	//１日特例
 	if (tarDate.get(Calendar.DATE) == 1) {

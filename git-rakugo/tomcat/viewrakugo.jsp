@@ -213,8 +213,8 @@ public String escapeString(String strEsc) {
 %>
 <%
 	//いろいろフォーマット宣言
-	SimpleDateFormat timeFmt5 = new SimpleDateFormat("H:mm:ss");
-	SimpleDateFormat timeFmt4 = new SimpleDateFormat("m:ss");
+	SimpleDateFormat timeFmt5 = new SimpleDateFormat("H'°'mm'′'ss'″'");
+	SimpleDateFormat timeFmt4 = new SimpleDateFormat("m'′'ss'″'");
 	SimpleDateFormat timeFmtS = new SimpleDateFormat("H:mm");
 	SimpleDateFormat dateFmtS = new SimpleDateFormat("yy.M/d(E)");
 	DecimalFormat decFmt3 = new DecimalFormat("000");
@@ -593,7 +593,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 		try {
 			if (sch_recLenC.equals("1")) {
 				sch_recLen = timeFmt5.format(rkS.getRecLength(i));
-				if (sch_recLen.substring(0,2).equals("0:")) {
+				if (sch_recLen.substring(0,2).equals("0°")) {
 					sch_recLen = timeFmt4.format(rkS.getRecLength(i));
 				}
 			} else {
@@ -807,11 +807,13 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 		}
 		if (parLenC.equals("1")) {
 			out.println("<td style='white-space: nowrap;' align='right' class='cellLen' nowrap>");
-			if (sch_recLen.length() == 0) {
+			out.println("&nbsp;" + sch_recLen + "</td>");
+/*			if (sch_recLen.length() == 0) {
 				out.println("&nbsp;</td>");
 			} else {
 				out.println(sch_recLen + "</td>");
 			}
+			*/
 		}
 		if ((parDateC.equals("1")) ||
 				(parTimeC.equals("1"))   ) {
@@ -888,7 +890,7 @@ xx------------------17×79------------------------------------------------------
 <br />
 xx---------------------------------------------------------------------------------
 <br />
-75-----------------------------------------------------------------------------------
+75-------------------7×59----------------------------------------------------------------
 <br />
 xx------------------10×72----------------------------------------------------------------
 <br />
@@ -900,7 +902,7 @@ xx------------------ 7×72------------------------------------------------------
 <br />
 84----------------------------------------------------------------------------------
 <br />
-84----------------------------------------------------------------------------------
+84-------------------3×69---------------------------------------------------------------
 <br />
 84----------------------------------------------------------------------------------
 <br />
