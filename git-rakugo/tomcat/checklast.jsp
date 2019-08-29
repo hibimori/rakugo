@@ -1,6 +1,8 @@
 <%@ page buffer="128kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,javax.sql.*,javax.naming.*,java.text.*" %>
+<jsp:useBean id="cmS" class="jp.rakugo.nii.CodeMasterSelect" scope="page" />
 <jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
+<jsp:useBean id="kmS" class="jp.rakugo.nii.KanaMasterSelect" scope="page" />
 <jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
 <html>
 <head>
@@ -73,6 +75,7 @@ String parSelTitle = "select * from title_m";
 String parWhere = " where modify_date >='";
 String parOrderVol = " order by modify_date desc, vol_id, seq";
 String parOrderID = " order by modify_date desc, id";
+String parOrderInc = " order by modify_date desc, inc_id";
 String parOrderMod = " order by modify_date desc limit 0,1";
 
 /* Formの検索条件を退避 */
@@ -82,6 +85,7 @@ String parOrderMod = " order by modify_date desc limit 0,1";
 	String strDateR;		//落語DBの最終更新日
 	String strDateT;		//タイトルマスタDBの最終更新日
 	String strDateP;		//演者マスタDBの最終更新日
+	String strDateC;		//コードマスタDBの最終更新日
 
 	String dbModDate = "";
 	String dbVolID = "";
@@ -208,6 +212,11 @@ String parOrderMod = " order by modify_date desc limit 0,1";
 <%
 	}
 %>
+</table>
+	
+<hr align="right" width="16%">
+【演者マスタ】player_m
+<table border="1">
 <%
 //演者マスタDB
 	//更新日指定有無で分岐
@@ -227,10 +236,6 @@ String parOrderMod = " order by modify_date desc limit 0,1";
 		strDateP = dateFmt.format(tmpDate);
 	}
 %>
-</table>
-<hr align="right" width="16%">
-【演者マスタ】player_m
-<table border="1">
 <%
 	//演者マスタDBの対象更新日rec取得
 	query = new StringBuffer(parWhere);
@@ -253,6 +258,110 @@ String parOrderMod = " order by modify_date desc limit 0,1";
 		<td><%= dbVolID %></td>
 		<td><%= dbSeq %></td>
 		<td><%= dbTitle %></td>
+	</tr>
+<%
+	}
+	} catch (Exception e) {
+		out.println(query.toString());
+	}
+%>
+</table>
+<hr align="right" width="16%">
+【コードマスタ】code_m
+<%
+//コードマスタDB
+	//更新日指定有無で分岐
+	if (sch_modDate.equals("")) {
+		//DBの最新日取得
+		cmS.selectDB(parOrderMod, "");
+		try {
+			if (cmS.getResultCount() > 0) {
+				strDateC = dateFmt.format(cmS.getModifyDate(0));
+			} else {
+				strDateC = dateFmt.format(dateDate);
+			}
+		} catch (Exception e) {
+			strDateC = dateFmt.format(tmpDate);
+		}
+	} else {
+		strDateC = dateFmt.format(tmpDate);
+	}
+%>
+<table border="1">
+<%
+	//コードマスタDBの対象更新日rec取得
+	query = new StringBuffer(parWhere);
+	query.append(strDateC).append("'").append(parOrderVol);
+	cmS.selectDB(query.toString(), "");
+	try {
+	 	for (i = 0; i < cmS.getResultCount(); i++){
+			try {
+				dbModDate = dateFmtH.format(cmS.getModifyDate(i));
+			} catch (Exception e) {
+				dbModDate = "failre";
+			}
+			dbVolID = strNullCheck(cmS.getVolId(i));
+			dbSeq = decFmt3.format(cmS.getSeq(i));
+			dbTitle = strNullCheck(cmS.getMemo(i));
+%>
+	<tr>
+		<td align="right"><%= decFmt.format(i + 1) %></td>
+		<td><%= dbModDate %></td>
+		<td><%= dbVolID %></td>
+		<td align="right"><%= dbSeq %></td>
+		<td><%= dbTitle %></td>
+	</tr>
+<%
+		}
+	} catch (Exception e) {
+		out.println(query.toString());
+	}
+%>
+</table>
+<hr align="right" width="16%">
+【かなマスタ】kana_m
+<%
+//かなマスタDB
+	//更新日指定有無で分岐
+	if (sch_modDate.equals("")) {
+		//DBの最新日取得
+		kmS.selectDB(parOrderMod, "");
+		try {
+			if (kmS.getResultCount() > 0) {
+				strDateC = dateFmt.format(kmS.getModifyDate(0));
+			} else {
+				strDateC = dateFmt.format(dateDate);
+			}
+		} catch (Exception e) {
+			strDateC = dateFmt.format(tmpDate);
+		}
+	} else {
+		strDateC = dateFmt.format(tmpDate);
+	}
+%>
+<table border="1">
+<%
+	//かなマスタDBの対象更新日rec取得
+	query = new StringBuffer(parWhere);
+	query.append(strDateC).append("'").append(parOrderInc);
+	kmS.selectDB(query.toString(), "");
+	try {
+	for (i = 0; i < kmS.getResultCount(); i++){
+		try {
+			dbModDate = dateFmtH.format(kmS.getModifyDate(i));
+		} catch (Exception e) {
+			dbModDate = "failre";
+		}
+		dbVolID = decFmt.format(kmS.getIncId(i));
+		dbSeq = strNullCheck(kmS.getLetters(i)) + ", " + strNullCheck(kmS.getKana	(i));
+		dbTitle = decFmt.format(kmS.getCnt(i));
+%>
+	<tr>
+		<td align="right"><%= decFmt.format(i + 1) %></td>
+		<td><%= dbModDate %></td>
+		<td align="right"><%= dbVolID %></td>
+		<td><%= dbSeq %></td>
+		<td align="right"><%= dbTitle %></td>
 	</tr>
 <%
 	}

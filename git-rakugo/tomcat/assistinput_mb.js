@@ -1,5 +1,6 @@
 //*****************************************************************
 //  入力項目の補正とクリア for BookDB Tool
+//    1.90 2019.8/26	通貨コード３桁化・ドロップダウンリスト化
 //    1.80 2017.8/4	ReaderStoreの書影URI変更に対応
 //    1.71 2016.10/27 HontoのDVD商品のURL変更に対応
 //    1.70 2014.5/4 税込み購入額から税抜き価格を算出する関数を追加
@@ -199,7 +200,7 @@ function assistInpData() {
     wkText = wkText.replace(/\"/g, "&quot;");
     document.formBook.inpMemo.value = wkText;
     //購入額補正
-    wkText = document.formBook.inpCur.value.toUpperCase();
+    wkText = document.formBook.selCurrency.value.toUpperCase();
     wkText2 = document.formBook.inpPrice.value;
     wkText2 = convWideNumToNum(wkText2);
     if (wkText2.length == 0) {
@@ -209,7 +210,7 @@ function assistInpData() {
             wkText = "JP";
         }
     }
-    document.formBook.inpCur.value = wkText;
+    document.formBook.selCurrency.value = wkText;
     document.formBook.inpPrice.value = wkText2;
 }
 
@@ -313,30 +314,45 @@ function clearInpData(strCtrl, opt) {
         }
     }
     if (strCtrl == "price") { //購入額クリア
-        document.formBook.inpCur.value = "";
+        //document.formBook.inpCur.value = "";
+        elm = document.formBook.selCurrency;
+        elm.options[0].selected = true;
         document.formBook.inpPrice.value = "";
+        document.formBook.inpPriceZ.value = "";
     }
 }
 
-function calInpData(strCtrl) {
+function calInpData(strCtrl, strRate) {
     /* 値段入力値を消費税率で割る */
+    var elm;
+    var flt;
     var wkText;
     var wkText2;
     var wkText3;
+    var wkRate = parseFloat(strRate);
     if (strCtrl == "price") {
-        wkText = document.formBook.inpCur.value.toUpperCase();
-        wkText2 = document.formBook.inpPrice.value;
-        wkText2 = convWideNumToNum(wkText2);
+        elm = document.formBook.selCurrency;
+        wkText = elm.options[elm.selectedIndex].value;
+        wkText2 = convWideNumToNum(document.formBook.inpPrice.value);
         if (wkText2.length == 0) {
             wkText = "";
             wkText3 = "";
+	        document.formBook.selCurrency.options[0].selected = true;
         } else {
-            if (wkText.length == 0) {
-                wkText = "JP";
-            }
-            wkText3 = Math.round(wkText2 / 1.08);
+        	try {
+		        flt = parseFloat(wkText2);
+		    } catch {
+		    	flt = 0;
+		    	wkText2 = "";
+		    }
+            if (wkText == "JPY") {
+		        wkText3 = Math.round(flt / wkRate);
+	    	} else {
+	        	wkText3 = flt / wkRate;
+	        	wkText3 = wkText3.toFixed(2);
+	        }
         }
-        document.formBook.inpCur.value = wkText;
+//        document.formBook.inpCur.value = wkText;
         document.formBook.inpPrice.value = wkText3;
         document.formBook.barePrice.value = wkText2;
     }
@@ -646,9 +662,9 @@ function convWideNumToNum(str) {
     var p;
     var s = str;
     var c;
-    var tblNumW = "０１２３４５６７８９";
-    var tblNum = "0123456789";
-    s = s.replace(/[,.，.、。・_！!？?　\'\"]/g, "");
+    var tblNumW = "０１２３４５６７８９．";
+    var tblNum = "0123456789.";
+    s = s.replace(/[,，、。・_！!？?　\'\"]/g, "");
     for (var i = 0; i < s.length; i++) {
         p = tblNumW.indexOf(s.substring(i, i + 1));
         if (p >= 0) {

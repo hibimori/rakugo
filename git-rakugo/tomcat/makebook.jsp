@@ -1,6 +1,9 @@
 <%@ page buffer="128kb" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
+<!--
+	2019-08-25 消費税10％対応
+	-->
 <jsp:useBean id="bkS" class="jp.rakugo.nii.BookTableSelect" scope="page" />
 <jsp:useBean id="bkU" class="jp.rakugo.nii.BookTableUpdate" scope="page" />
 <jsp:useBean id="bwU" class="jp.rakugo.nii.BookWorkTableUpdate" scope="page" />
@@ -114,6 +117,7 @@ function sendQuery(tarType) {
 	SimpleDateFormat dateFmtE = new SimpleDateFormat("yyyy.M/d(E) H:mm:ss");
 	SimpleDateFormat dateFmtS = new SimpleDateFormat("yy.M/d(E)");
 	SimpleDateFormat dateFmtID = new SimpleDateFormat("yyMMdd");
+	DecimalFormat decFmt1p2 = new DecimalFormat("0.00");
 	DecimalFormat decFmt2 = new DecimalFormat("00");
 	DecimalFormat decFmt3 = new DecimalFormat("000");
 	DecimalFormat decFmt6 = new DecimalFormat("000000");
@@ -155,7 +159,7 @@ function sendQuery(tarType) {
 	String sch_media;
 	String sch_cur;
 	String sch_price;
-	String sch_priceZ;
+	String sch_priceZ = "";
 	String sch_memo;
 	String sch_modDate = "";
 %>
@@ -199,8 +203,18 @@ function sendQuery(tarType) {
 	if (sch_getYet.equals("")) {
 		sch_getYet = "0";
 	}
-	sch_cur = cmR.convertNullToString(request.getParameter("inpCur"));			/* 通貨 */
+	sch_cur = cmR.convertNullToString(request.getParameter("selCurrency"));			/* 通貨 */
 	sch_price = cmR.convertNullToString(request.getParameter("inpPrice"));			/* 購入額 */
+	if ((sch_cur.equals("EUR")) ||
+	    (sch_cur.equals("USD"))    ) {
+	    try {
+	    	sch_price = decFmt1p2.format(Float.parseFloat(
+					cmR.convertNullToString(request.getParameter("inpPrice"))));
+        } catch(Exception e) {
+	    	sch_price = "";
+	    }
+	}
+
 	sch_urlA = cmR.convertNullToString(request.getParameter("inpURLA"));			/* amazon URL */
 	sch_imgA = cmR.convertNullToString(request.getParameter("inpImgA"));			/* amazon Img */
 	sch_urlB = cmR.convertNullToString(request.getParameter("inpURLB"));			/* bk1    URL */
@@ -613,7 +627,8 @@ int i;
 			} catch (Exception e) {
 				bkU.setPrice(0);
 			}
-			bkU.setCurSin(cmR.convertCurLetter(sch_cur, "$U"));
+//			bkU.setCurSin(cmR.convertCurLetter(sch_cur, "$U"));
+			bkU.setCurSin(sch_cur);
 			bkU.setUrlA(escapeString(sch_urlA));
 			bkU.setUrlB(escapeString(sch_urlB));
 			bkU.setUrlC(escapeString(sch_urlC));
@@ -712,7 +727,8 @@ int i;
 		sch_player3Sin = bkS.getAuthor3Sin(0);
 		sch_player4 = bkS.getAuthor4Sin(0);
 		sch_isbn = bkS.getIsbn(0);
-		sch_cur = cmR.convertCurLetter(bkS.getCurSin(0), "U$");
+//		sch_cur = cmR.convertCurLetter(bkS.getCurSin(0), "U$");
+		sch_cur = bkS.getCurSin(0);
 		if (sch_cur.length() == 0) {
 			sch_price = "";
 			sch_priceZ = "";
@@ -1005,9 +1021,9 @@ int i;
 				onclick="javascript: openPlayerWindow('inpP3ID')" value="著者3">
 		</th>
 		<td colspan="3">
-			<input size="7" type="text" maxlength="6" name="inpP3ID"
+			<input size="5" type="text" maxlength="6" name="inpP3ID"
 				value="<%= sch_player3ID %>">
-			<input size="19" type="text" name="inpP3"
+			<input size="15" type="text" name="inpP3"
 				value="<%= sch_player3 %>">
 		<%
 			out.println(cmF.makePlayerPart("selP3", "", sch_player3Sin));
@@ -1049,7 +1065,7 @@ int i;
 				id="chkGetDate"
 				name="chkGetDate"
 				onclick="javascript: clearInpData('getDate')" value="1" <%= strCo[8] %>>
-			<input size="11" type="text" maxlength="10"
+			<input size="8" type="text" maxlength="10"
 				id="inpGetDate"
 				name="inpGetDate" value="<%= sch_getDate %>">
 		</td>
@@ -1059,8 +1075,8 @@ int i;
 			out.println(cmF.makeMedia("selAttMed", "", sch_media));
 		%>
 		</td>
-		<td <%= strCo[6] %> class="divRight">
-			未所有<input type="checkbox" name="chkGetYet" value="1" <%= strCo[7] %>>
+		<td <%= strCo[6] %> class="divRight">未所有
+			<input type="checkbox" name="chkGetYet" value="1" <%= strCo[7] %>>
 		</td>
 	</tr>
 <!-- 出版社とISBN制御列 -->
@@ -1095,13 +1111,21 @@ int i;
 		</td>
 		<th bgcolor="#cccccc">購入額</th>
 		<td colspan="3">
-			<input size="3" type="text" maxlength="2" id="inpCur" class="divCenter"
+			<!--
+			<input size="2" type="text" maxlength="3" id="inpCur" class="divCenter"
 				name="inpCur" value="<%= sch_cur %>">
-			<input size="11" type="text" maxlength="16" class="divRight" id="inpPrice"
+			-->
+		<%
+			//通貨セレクタの設定
+			out.println(cmF.makeCurrency("selCurrency", "", sch_cur));
+		%>
+			<input size="7" type="text" maxlength="16" class="divRight" id="inpPrice"
 				name="inpPrice" value="<%= sch_price %>">
-			<input type="button" name="btnPriceClear"
-				onclick="javascript: calInpData('price')" value="/1.08">
-			<input size="11" type="text" class="divRight" id="barePrice"
+			<input type="button" name="btnPrice10"
+				onclick="javascript: calInpData('price',1.1)" value="10%">
+			<input type="button" name="btnPrice8"
+				onclick="javascript: calInpData('price',1.08)" value="8%">
+			<input size="7" type="text" class="divRight" id="barePrice"
 				name="barePrice" value="<%= sch_priceZ %>" readonly>
 		</td>
 	</tr>
@@ -1423,7 +1447,8 @@ int i;
 		sch_player3Sin = bkS.getAuthor3Sin(i);
 		sch_player4 = bkS.getAuthor4Sin(i);
 		sch_isbn = bkS.getIsbn(i);
-		sch_cur = cmR.convertCurLetter(bkS.getCurSin(i), "U$");
+		sch_cur = bkS.getCurSin(i);
+//		sch_cur = cmR.convertCurLetter(bkS.getCurSin(i), "U$");
 		if (sch_cur.length() == 0) {
 			sch_price = "-";
 			strCo[9] = "divCenter";
