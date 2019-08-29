@@ -136,6 +136,10 @@ public class CommonForm implements Serializable {
 	private String[] BOOK_VIEW_CODE = {"0", "1", "2"};
 	private String[] BOOK_VIEW_DATA = {"", "書影不要", "書影のみ"};
 
+	public HashMap hmCurrency;
+	private String[] CURRENCY_CODE = {"", "JPY", "USD", "EUR"};
+	private String[] CURRENCY_DATA = {"", "￥", "＄", "€"};
+
 	public CommonForm() {}	//コンストラクタ
 
 	//TableSelect条件Selectの作成と取得
@@ -385,6 +389,20 @@ public class CommonForm implements Serializable {
 	public String getBookView(String key) {
 		if (hmBookView.containsKey(key)) {
 			return hmBookView.get(key).toString();
+		} else {
+			return "";
+		}
+	}
+
+	//通貨テイブル要否の作成と取得
+	public String makeCurrency(String name, String id, String def) {
+		hmCurrency = new HashMap();
+		return buildOptions(name, id, def,
+			CURRENCY_CODE, CURRENCY_DATA, hmCurrency);
+	}
+	public String getCurrency(String key) {
+		if (hmCurrency.containsKey(key)) {
+			return hmCurrency.get(key).toString();
 		} else {
 			return "";
 		}

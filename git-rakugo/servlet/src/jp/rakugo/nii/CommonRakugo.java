@@ -100,6 +100,7 @@ public class CommonRakugo implements Serializable {
 			} else {
 				String s = str.trim();
 				int i = Integer.parseInt(s);	//数値変換できなければ例外
+				s = Integer.toString(i);
 				return s;
 			}
 		} catch (Exception e) {
@@ -309,7 +310,7 @@ public class CommonRakugo implements Serializable {
 	//fを"#,##0""#,##0.00"形式に整える。
 		DecimalFormat curFmt = new DecimalFormat("#,##0");
 		DecimalFormat curFmt2 = new DecimalFormat("#,##0.00");
-		String arrCur[] = {"$", "US"};
+		String arrCur[] = {"EUR", "USD"};
 		try {
 			for (int i = 0; i < arrCur.length; i++) {
 				if (arrCur[i].equals(s.toUpperCase())) {
