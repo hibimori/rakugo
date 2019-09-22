@@ -1,5 +1,6 @@
 //*****************************************************************
 //	各種Windowの表示 for BookDB Tool
+//		1.30	2019.9/15	[AB検索]条件の微調整（ebook）。
 //		1.21	2016.12/22	[AB検索]はURI欄が空白でも行なう。
 //		1.20	2016.12/17	[AB検索]の結果表示をiFrameから別窓に変更。
 //		1.10	12.5/26		bk1→honto移行対応
@@ -205,6 +206,7 @@ function searchAB() {
 	var author = document.getElementById("author1").value;
     var titleSeq = document.getElementById("titleSeq").value;
 	var kwd = title;
+	var kwd2;
     var seq;
     var rtn;
     try {
@@ -213,6 +215,7 @@ function searchAB() {
         }
     } catch(e) {
     }
+    kwd2 = kwd;		//ReaderStoreは著者をつけないほうがイイ
 	if ((author != "") || (author != null)) {
 		if ((author.substring(0, 1) < "A") ||
 		    (author.substring(0, 1) > "z")) {
@@ -230,7 +233,7 @@ function searchAB() {
 		//iFrameはたいがいのブラウザが無効にするので別窓で開く
 		openStore("bk1", kwd);
 		setTimeout(openStore("ama", kwd), 1000);
-		setTimeout(openStore("ebk", kwd), 1000);
+		setTimeout(openStore("ebk", kwd2), 1000);
 		setTimeout(openStore("oth", kwd), 1000);
 //		openStore("ebk", kwd);
 //		openStore("oth", kwd);

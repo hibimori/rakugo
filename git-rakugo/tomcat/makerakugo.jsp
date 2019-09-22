@@ -797,32 +797,16 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			//タイトル_マスタDBからタイトル取得
 			if (sch_titleID.equals("")) {
 				sch_title = "";
-				sch_sub = "";
 			} else {
 				query2 = new StringBuffer();
 				query2.append("WHERE id = '").append(sch_titleID).append("'");
 				tmS.selectDB(query2.toString(), "");
 				if (tmS.getResultCount() > 0) {
 					sch_title = tmS.getTitle(0);
-					sch_sub = tmS.getSubtitle(0);
 				} else {
 					sch_title = "";
-					sch_sub = "";
 				}
 			}
-		%>
-      <th bgcolor="#cccccc" width="96">
-        <input type="button" name="btnTitleID" onclick="javascript: openTitleWindow('inpTitleID')" value="Title">
-      </th>
-		<td><input size="7" type="text" maxlength="6" name="inpTitleID" value="<%= sch_titleID %>"></td>
-		<td><input size="60" type="text" maxlength="255" name="inpTitle" value="<%= sch_title %> <%= sch_sub %>" readonly></td>
-		<td align="center" colspan="2">
-			<a href="javascript: addSeq(-1,'title')">▽</a><input size="4" type="text" maxlength="3" name="inpTitleSeq" value="<%= sch_titleSeq %>"><a href="javascript: addSeq(1,'title')">△</a>
-		</td>
-    </tr>
-<!-- サブタイトル制御列 -->
-    <tr>
-		<%
 			//タイトル_マスタDBからサブタイトル取得
 			if (sch_subID.equals("")) {
 				sch_sub = "";
@@ -837,6 +821,17 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				}
 			}
 		%>
+      <th bgcolor="#cccccc" width="96">
+        <input type="button" name="btnTitleID" onclick="javascript: openTitleWindow('inpTitleID')" value="Title">
+      </th>
+		<td><input size="7" type="text" maxlength="6" name="inpTitleID" value="<%= sch_titleID %>"></td>
+		<td><input size="60" type="text" maxlength="255" name="inpTitle" value="<%= sch_title %>" readonly></td>
+		<td align="center" colspan="2">
+			<a href="javascript: addSeq(-1,'title')">▽</a><input size="4" type="text" maxlength="3" name="inpTitleSeq" value="<%= sch_titleSeq %>"><a href="javascript: addSeq(1,'title')">△</a>
+		</td>
+    </tr>
+<!-- サブタイトル制御列 -->
+    <tr>
       <th bgcolor="#cccccc"><input type="button" name="btnSubTitleID" onclick="javascript: openTitleWindow('inpSubID')" value="SubTitle"></th>
       <td><input size="7" type="text" maxlength="6" name="inpSubID" value="<%= sch_subID %>"></td>
       <td>
@@ -1175,9 +1170,6 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			tmS.selectDB(query2.toString(), "");
 			if (tmS.getResultCount() > 0) {
 				sch_title = tmS.getTitle(0);
-				if (! tmS.getSubtitle(0).equals("")) {
-					sch_title += "（" + tmS.getSubtitle(0) + "）";
-				}
 			} else {
 				sch_title = "";
 			}
@@ -1322,7 +1314,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		if (sch_recLenC.equals("1")) {
 			try {		//録画長
 				sch_recLen = timeFmt5.format(rkS.getRecLength(i));
-				sch_recLen = cmR.fixTimeFormat(sch_recLen, "HMS");
+				sch_recLen = cmR.fixTimeFormat(sch_recLen, "rHMS");
 			} catch (Exception e) {
 				sch_recLen = "";
 				sch_recLenC = "0";

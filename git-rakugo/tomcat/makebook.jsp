@@ -595,7 +595,7 @@ int i;
             query =  new StringBuffer();
         }
     }
-    //out.print(query.toString());
+    out.print(query.toString());
 %>
 <%
 	/* [更新][追加]なら更新して再検索 */
