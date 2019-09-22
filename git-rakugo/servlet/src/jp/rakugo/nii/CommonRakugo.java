@@ -236,25 +236,30 @@ public class CommonRakugo implements Serializable {
 
 	public String fixTimeFormat(String str, String mode) {
 	//strを"H:mm:ss"形式に整える。
-		SimpleDateFormat timeFmtHMS =
-				new SimpleDateFormat("H:mm:ss");
-		SimpleDateFormat timeFmtHM =
-				new SimpleDateFormat("H:mm");
-		SimpleDateFormat timeFmtMS =
-				new SimpleDateFormat("m:ss");
-		try {
+		SimpleDateFormat timeFmtHMS = new SimpleDateFormat("H:mm:ss");
+		SimpleDateFormat timeFmtHM = new SimpleDateFormat("H:mm");
+		SimpleDateFormat timeFmtMS = new SimpleDateFormat("m:ss");
+		SimpleDateFormat timeFmtRHMS = new SimpleDateFormat("H'°'mm'′'ss'″'");
+		SimpleDateFormat timeFmtRMS = new SimpleDateFormat("m'′'ss'″'");
+//		try {
 			java.util.Date dt = convertStringToTime(str, mode);
-
+			
 			if (mode.toUpperCase().equals("HM")) {
 				return timeFmtHM.format(dt);
 			} else 	if (mode.toUpperCase().equals("MS")) {
 				return timeFmtMS.format(dt);
-			} else {
+			} else 	if (mode.toUpperCase().equals("HMS")) {
 				return timeFmtHMS.format(dt);
+			} else {
+				if (timeFmtRHMS.format(dt).substring(0,2).equals("0°")) {
+					return timeFmtRMS.format(dt);
+				} else {
+					return timeFmtRHMS.format(dt);
+				}
 			}
-		} catch (Exception e) {
-			return "";
-		}
+	//	} catch (Exception e) {
+		//	return "";
+//		}
 	}
 	public java.util.Date convertStringToTime(String str, String mode) {
 	//strをDateに変換（H:mm:ss）。
