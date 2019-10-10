@@ -1,5 +1,8 @@
 <%@ page buffer="128kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
+/*
+	2019-10-10	演者名の後ろに［代目］を表示。
+*/
 <jsp:useBean id="rkS" class="jp.rakugo.nii.RakugoTableSelect" scope="page" />
 <jsp:useBean id="rkU" class="jp.rakugo.nii.RakugoTableUpdate" scope="page" />
 <jsp:useBean id="rwU" class="jp.rakugo.nii.RakugoWorkTableUpdate" scope="page" />
@@ -140,6 +143,9 @@ String sch_player3 = cmR.convertNullToString(request.getParameter("inpP3"));
 String sch_player1Sin = cmR.convertNullToString(request.getParameter("selP1"));	/* 著者１役割 */
 String sch_player2Sin = cmR.convertNullToString(request.getParameter("selP2"));	/* 著者２役割 */
 String sch_player3Sin = cmR.convertNullToString(request.getParameter("selP3"));	/* 著者３役割 */
+String sch_player1Gen = "";														/* 著者１代目 */
+String sch_player2Gen = "";														/* 著者２代目 */
+String sch_player3Gen = "";														/* 著者３代目 */
 String sch_player4 = cmR.convertNullToString(request.getParameter("chkP4"));			/* プレイヤ４サイン */
 if (!(sch_player4.equals("1"))) {
 	sch_player4 = "0";
@@ -858,6 +864,10 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				pmS.selectDB(query2.toString(), "");
 				if (pmS.getResultCount() > 0) {
 					sch_player1 = pmS.getFullName(0);
+					if (pmS.getNameSeq(0) > 0) {
+						sch_player1Gen = String.valueOf(pmS.getNameSeq(0));
+						sch_player1 += "［" + sch_player1Gen + "］";
+					}
 				} else {
 					sch_player1 = "";
 				}
@@ -897,6 +907,10 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				pmS.selectDB(query2.toString(), "");
 				if (pmS.getResultCount() > 0) {
 					sch_player2 = pmS.getFullName(0);
+					if (pmS.getNameSeq(0) > 0) {
+						sch_player2Gen = String.valueOf(pmS.getNameSeq(0));
+						sch_player2 += " [" + sch_player2Gen + "］";
+					}
 				} else {
 					sch_player2 = "";
 				}
@@ -926,6 +940,10 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				pmS.selectDB(query2.toString(), "");
 				if (pmS.getResultCount() > 0) {
 					sch_player3 = pmS.getFullName(0);
+					if (pmS.getNameSeq(0) > 0) {
+						sch_player3Gen = String.valueOf(pmS.getNameSeq(0));
+						sch_player3 += "［" + sch_player3Gen + "］";
+					}
 				} else {
 					sch_player3 = "";
 				}
@@ -1225,6 +1243,10 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				pmS.selectDB(query2.toString(), "");
 				if (pmS.getResultCount() > 0) {
 					sch_player1 = pmS.getFullName(0);
+					if (pmS.getNameSeq(0) > 0) {
+						sch_player1Gen = String.valueOf(pmS.getNameSeq(0));
+						sch_player1 += "［" + sch_player1Gen + "］";
+					}
 					sch_player1Sin = cmF.getPlayerPart(sch_player1Sin);
 				} else {
 					sch_player1 = "";
@@ -1245,6 +1267,10 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				pmS.selectDB(query2.toString(), "");
 				if (pmS.getResultCount() > 0) {
 					sch_player2 = pmS.getFullName(0);
+					if (pmS.getNameSeq(0) > 0) {
+						sch_player2Gen = String.valueOf(pmS.getNameSeq(0));
+						sch_player2 += "［" + sch_player2Gen + "］";
+					}
 					sch_player2Sin = cmF.getPlayerPart(sch_player2Sin);
 				} else {
 					sch_player2 = "";
@@ -1265,6 +1291,10 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				pmS.selectDB(query2.toString(), "");
 				if (pmS.getResultCount() > 0) {
 					sch_player3 = pmS.getFullName(0);
+					if (pmS.getNameSeq(0) > 0) {
+						sch_player3Gen = String.valueOf(pmS.getNameSeq(0));
+						sch_player3 += "［" + sch_player3Gen + "］";
+					}
 					sch_player3Sin = cmF.getPlayerPart(sch_player3Sin);
 				} else {
 					sch_player3 = "";
