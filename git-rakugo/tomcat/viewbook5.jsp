@@ -1,5 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
+<!--
+	1.10	2019-11-16	ジュリアン日付のリンクに［入院日記］オプションを追加。
+-->
 <jsp:useBean id="bkS" class="jp.rakugo.nii.BookTableSelect" scope="page" />
 <jsp:useBean id="bvS" class="jp.rakugo.nii.BookViewTableSelect" scope="page" />
 <jsp:useBean id="bvU" class="jp.rakugo.nii.BookViewTableUpdate" scope="page" />
@@ -84,6 +87,11 @@ function sendQuery(tarType) {
 		}
 		document.formBook.formBtnType.value = tarType;
 		document.formBook.inpIncIDTbl.value = wkDelInc;
+		if (document.formBook.chkViewE.checked == true) {
+			document.formBook.chkViewE.value= "1";
+		} else {
+			document.formBook.chkViewE.value= "0";
+		}
 		document.formBook.method = "post";
 		if (document.location.toString().indexOf("viewbook5b.jsp") >= 0) {
 			document.formBook.action = "viewbook5.jsp";
@@ -230,7 +238,7 @@ String sch_modDate;
 String sch_btn = request.getParameter("formBtnType");			/* 押下ボタン種 */
 
 //日記雛型コントロール
-String strCo[] = new String[11];		/* Combo要素選択用ワーク */
+String strCo[] = new String[12];		/* Combo要素選択用ワーク */
 //ブランク期間雛型
 String sch_chkViewF = cmR.convertNullToString(request.getParameter("chkViewF"));	//ブランク日付Check
 if (!(sch_chkViewF.equals("1"))) { sch_chkViewF = "0"; }
@@ -262,6 +270,14 @@ case '7':
 default:
 	strCo[6] = "checked";	//平日
 }
+String sch_chkViewE = cmR.convertNullToString(request.getParameter("chkViewE"));	//入院中日記
+//	out.println(sch_chkViewE);
+if (sch_chkViewE.equals("1")) {
+	strCo[11] = "checked";
+} else {
+	strCo[11] = "";
+}
+//out.println("strCo11=" + strCo[11]); 
 //激痩せ年間雛型
 String sch_viewS = cmR.convertNullToString(request.getParameter("inpViewS"));
 String sch_viewW = cmR.convertNullToString(request.getParameter("inpViewW"));
@@ -951,10 +967,14 @@ String ctrl_volID;						//管理Rec退避用
 				name="inpViewD" size="12" type="text"
 				value="<%= sch_viewD %>">
 		</td>
+	<%
+//	out.println("tdのstrCo[11]=" + strCo[11]);
+%>
 		<td align="left" colspan="4">
 			<input name="rdoViewD" type="radio" value="2" <%= strCo[6] %>>平日
 			<input name="rdoViewD" type="radio" value="7" <%= strCo[5] %>>土曜
 			<input name="rdoViewD" type="radio" value="1" <%= strCo[4] %>>日祝
+			<input name="chkViewE" type="checkbox" value="1" <%= strCo[11] %>>入院中
 		</td>
 	</tr>
 	<tr>
@@ -1069,7 +1089,7 @@ String ctrl_volID;						//管理Rec退避用
 </div>
 <hr>
 <%!
-public String htmDateTable(Calendar tarDate, int tarW, String tarWw, String tarWm) {
+public String htmDateTable(Calendar tarDate, int tarW, String tarWw, String tarWm, String tarNyu) {
 	//日付Table記述
 	SimpleDateFormat dateFmtS = new SimpleDateFormat("yyyy.M/d(E)");
 	SimpleDateFormat dateFmtYM = new SimpleDateFormat("yyyyMM");
@@ -1133,7 +1153,12 @@ public String htmDateTable(Calendar tarDate, int tarW, String tarWw, String tarW
 	hdtTable.append("'></a>");
 
 	hdtTable.append("<span class='fontSmall'>&nbsp;");
-	hdtTable.append("<a href='").append(hdtPath).append(dateFmtYM.format(hdtDate)).append(".html#");
+	hdtTable.append("<a href='").append(hdtPath).append(dateFmtYM.format(hdtDate));
+	if (tarNyu.equals("1")) {
+		hdtTable.append("nyu.html#");		//入院日記内アンカ
+	} else {
+		hdtTable.append(".html#");
+	}
 	hdtTable.append(hdtID).append("'>");
 	hdtTable.append(hdtJ).append("</a>&nbsp;");
 	//日曜日特例
@@ -1234,7 +1259,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 		sbfHTML.append("class='dailyDiv").append(htmW).append("2'>");
 		calDate.set(wkDate3.getYear() + 1900, wkDate3.getMonth(), wkDate3.getDate());
 		while (!(wkDate3.after(wkDate2))) {
-			sbfHTML.append(htmDateTable(calDate, 9, sch_viewW, sch_viewM));	//日付Table作成
+			sbfHTML.append(htmDateTable(calDate, 9, sch_viewW, sch_viewM, sch_chkViewE));	//日付Table作成
 			calDate.add(Calendar.DATE, 1);				//日付１up
 			wkDate3 = calDate.getTime();
 		}
@@ -1278,7 +1303,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 	if (!(sch_selViewN.equals("2"))) {		//書影のみのとき日付なし
 		sbfHTML.append("<article id='dr").append(dateFmtID.format(wkDate3));
 		sbfHTML.append("' class='dailyDiv").append(htmW).append("2'>");
-		sbfHTML.append(htmDateTable(calDate, nowW, sch_viewW, sch_viewM));	//日付Table作成
+		sbfHTML.append(htmDateTable(calDate, nowW, sch_viewW, sch_viewM, sch_chkViewE));	//日付Table作成
 	}
 %>
 <%

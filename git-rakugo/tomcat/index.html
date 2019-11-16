@@ -32,6 +32,7 @@
         var tablePar2 = "?startVal=000&inpID=&inpSeq=&formBtnType=btnSel&selViewN=1"; //書影なし
         var tablePar3 = "&chkViewD=1&rdoViewD=1";	//祝日
         var tablePar4 = "&chkViewA=1";				//aiBo日付
+        var tablePar5 = "&chkViewE=1";				//入院日記
         // BookDBタイトル修正のURLとパラメタ
         var bookTitleURL = "rakugo/modifydb.jsp";
 
@@ -99,6 +100,10 @@
             if (document.formBook.chkStartTable5a.checked === true) {
                	wkURL = wkURL + tablePar4;
             }
+        	//入院日記指定
+            if (document.formBook.chkStartTable5n.checked === true) {
+               	wkURL = wkURL + tablePar5;
+            }
         	return wkURL;
         }
         //-->
@@ -156,7 +161,8 @@
                     <td width="8%"><input type="button" onclick="javascript:openWindow('table5')" name="btnStartTable5" value="書影Table5"></td>
                     <td rowspan="2" style="text-align:left">
                     	<input type="checkbox" name="chkStartTable5" value="1">祝日<br />
-                    	<input type="checkbox" name="chkStartTable5a" value="1">aiBo
+                    	<input type="checkbox" name="chkStartTable5a" value="1">aiBo<br />
+                    	<input type="checkbox" name="chkStartTable5n" value="1">入院日記
                     </td>
                 </tr>
                 <tr>
@@ -192,6 +198,7 @@
     <hr>
     <div class="fontSmall divShort">
         <ul>
+            <li>ver 3.90 19.11/15</li>
             <li>ver 3.80 17.10/08</li>
             <li>ver 3.70 17.09/18</li>
             <li>ver 3.60 17.04/07</li>
@@ -214,7 +221,7 @@
         </ul>
     </div>
     <hr>
-    <address>&copy; copyright 2003, 2005-2016; nii.n All rights reserved.</address>
+    <address>&copy; copyright 2003, 2005-2019; nii.n All rights reserved.</address>
 </body>
 
 </html>

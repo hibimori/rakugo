@@ -1,8 +1,8 @@
 <%@ page buffer="128kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
-/*
+<!--
 	2019-10-10	演者名の後ろに［代目］を表示。
-*/
+-->
 <jsp:useBean id="rkS" class="jp.rakugo.nii.RakugoTableSelect" scope="page" />
 <jsp:useBean id="rkU" class="jp.rakugo.nii.RakugoTableUpdate" scope="page" />
 <jsp:useBean id="rwU" class="jp.rakugo.nii.RakugoWorkTableUpdate" scope="page" />
