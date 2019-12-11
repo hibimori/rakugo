@@ -1,5 +1,6 @@
 //*****************************************************************
 //  入力項目の補正とクリア for BookDB Tool
+//    2.00 2019.11/17	税込み価格の消費税10％対応
 //    1.90 2019.8/26	通貨コード３桁化・ドロップダウンリスト化
 //    1.80 2017.8/4	ReaderStoreの書影URI変更に対応
 //    1.71 2016.10/27 HontoのDVD商品のURL変更に対応
@@ -354,7 +355,13 @@ function calInpData(strCtrl, strRate) {
         }
 //        document.formBook.inpCur.value = wkText;
         document.formBook.inpPrice.value = wkText3;
-        document.formBook.barePrice.value = wkText2;
+        if (wkRate == 1.08) {
+	        document.formBook.barePrice.value = wkText2;
+	        document.formBook.barePrice10.value = "";
+	    } else {
+	        document.formBook.barePrice.value = "";
+	        document.formBook.barePrice10.value = wkText2;
+	    }
     }
 }
 

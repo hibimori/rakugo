@@ -502,7 +502,7 @@ String ctrl_volID;						//管理Rec退避用
 		nowWeight = 0;
 		baseWeight = 0;
 		diffWeight = 0;
-		out.println("cdS.getResultCount is null 1");
+//		out.println("cdS.getResultCount is null 1");
 	}
 
 	diffWeight = nowWeight - baseWeight;
@@ -547,7 +547,7 @@ String ctrl_volID;						//管理Rec退避用
 		sch_viewA = strDate;
 		sch_viewB = strDate;
 		sch_modA = strDate;
-		out.println("cdS.getResultCount is null 2");
+//		out.println("cdS.getResultCount is null 2");
 	}
 
 	//書影Table前回情報を取得
@@ -567,7 +567,12 @@ String ctrl_volID;						//管理Rec退避用
 		}
 	}
 	} catch (Exception e) {
-		out.println("cdS.getResultCount is null 3");
+		sch_lastVal = "000";
+		sch_lastRows = "0";
+		sch_modV = "";
+		sch_listVal = "001";
+		strCo[7] = "";
+//		out.println("cdS.getResultCount is null 3");
 	}
 %>
 <form name="formBook">
@@ -627,7 +632,7 @@ String ctrl_volID;						//管理Rec退避用
 	}
 	} catch (Exception e) {
 		rows = 0;
-		out.println("bvS.getResultCount is null 4");
+//		out.println("bvS.getResultCount is null 4");
 	}
 	//書影TableDBの退避場所
 	String aryTitle[] = new String[rows];
@@ -879,7 +884,7 @@ String ctrl_volID;						//管理Rec退避用
 <%
 	}
 	} catch (Exception e) {
-		out.println("vbS.getResultCount is null 5");
+//		out.println("vbS.getResultCount is null 5");
 	}
 %>
 	</table>

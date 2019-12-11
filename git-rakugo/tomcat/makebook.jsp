@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
 <!--
+	2019-12-11 明細部［採用］にstoreSin追加
 	2019-08-25 消費税10％対応
 	-->
 <jsp:useBean id="bkS" class="jp.rakugo.nii.BookTableSelect" scope="page" />
@@ -160,6 +161,7 @@ function sendQuery(tarType) {
 	String sch_cur;
 	String sch_price;
 	String sch_priceZ = "";
+	String sch_priceZ10 = "";
 	String sch_memo;
 	String sch_modDate = "";
 %>
@@ -732,13 +734,16 @@ int i;
 		if (sch_cur.length() == 0) {
 			sch_price = "";
 			sch_priceZ = "";
+			sch_priceZ10 = "";
 		} else {
 			try {
 				sch_price = cmR.fixCurFormat(bkS.getPrice(0), sch_cur);
 				sch_priceZ = cmR.fixCurFormat((float)(bkS.getPrice(0) * 1.08), sch_cur);
+				sch_priceZ10 = cmR.fixCurFormat((float)(bkS.getPrice(0) * 1.10), sch_cur);
 			} catch (Exception e) {
 				sch_price = "exp";
                 sch_priceZ = "";
+				sch_priceZ10 = "";
 			}
 		}
 		sch_sourceID = bkS.getPublishId(0);
@@ -789,7 +794,7 @@ int i;
 	}
 	} catch (Exception e) {
 		//		alert("bkS.getResultCount() is null");
-		out.println("bkS.getResultCount() is null");
+		//out.println("bkS.getResultCount() is null");
 	}
 %>
 <form name="formBook">
@@ -1094,7 +1099,7 @@ int i;
 					sch_source = "";
 				}
 			} catch (Exception e) {
-				out.println("tms.getResultCount() is null");
+				//out.println("tms.getResultCount() is null");
 			}
 		%>
 		<th bgcolor="#cccccc">
@@ -1119,13 +1124,15 @@ int i;
 			//通貨セレクタの設定
 			out.println(cmF.makeCurrency("selCurrency", "", sch_cur));
 		%>
-			<input size="7" type="text" maxlength="16" class="divRight" id="inpPrice"
+			<input size="5" type="text" maxlength="16" class="divRight" id="inpPrice"
 				name="inpPrice" value="<%= sch_price %>">
 			<input type="button" name="btnPrice10"
 				onclick="javascript: calInpData('price',1.1)" value="10%">
+			<input size="5" type="text" class="divRight" id="barePrice10"
+				name="barePrice10" value="<%= sch_priceZ10 %>" readonly>
 			<input type="button" name="btnPrice8"
 				onclick="javascript: calInpData('price',1.08)" value="8%">
-			<input size="7" type="text" class="divRight" id="barePrice"
+			<input size="5" type="text" class="divRight" id="barePrice"
 				name="barePrice" value="<%= sch_priceZ %>" readonly>
 		</td>
 	</tr>
@@ -1487,6 +1494,7 @@ int i;
 		sch_urlE = bkS.getUrlE(i);
 		sch_imgE = bkS.getImgE(i);
 		sch_imgS = bkS.getImgSin(i);
+		sch_storeS = bkS.getStoreSin(i);
 		sch_media = bkS.getMediaSin(i);
 		sch_memo = bkS.getMemo(i);
 		try {
@@ -1630,8 +1638,13 @@ int i;
 		//媒体サイン取得
 		try {
 			sch_media = cmF.getMedia(sch_media);
+			sch_storeS = cmF.getStore(sch_storeS);
 		} catch (Exception e) {
 			sch_media = "?";
+			sch_storeS = "?";
+		}
+		if (sch_storeS.length() > 0) {
+			sch_media = sch_storeS.concat("/").concat(sch_media);
 		}
 		if (sch_imgS.length() > 0) {
 			sch_media = sch_imgS.concat("/").concat(sch_media);
@@ -1690,7 +1703,7 @@ int i;
 			}
 	}
 	} catch (Exception e) {
-		out.println("bkS.getResultCount() is null");
+		//out.println("bkS.getResultCount() is null");
 	}
 	cmR.closeJdbc();
 %>
