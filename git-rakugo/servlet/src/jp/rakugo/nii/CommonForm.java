@@ -67,11 +67,15 @@ public class CommonForm implements Serializable {
 
 	public HashMap hmStore;
 	private String[] STORE_CODE = 
-		{"","R","A","W","J","O",
-		 "G","K","Y","B","C"};
+		{"","R","A","W",
+		 "M","I",
+		 "J","O","G",
+		 "K","Y","B","C"};
 	private String[] STORE_DATA = 
-		{"","ReaderStore","KindleStore","BookWalker","Jコミ","O'Reilly",
-		 "GooglePlayBooks","楽天kobo","Yahoo","Baboo","その他"};
+		{"","ReaderStore","KindleStore","BookWalker",
+		 "mora","iTunes",
+		 "Jコミ","O'Reilly","GooglePlayBooks",
+		 "楽天kobo","Yahoo","Baboo","その他"};
 
 	private HashMap hmMedia;
 	private String[] MEDIA_CODE =
