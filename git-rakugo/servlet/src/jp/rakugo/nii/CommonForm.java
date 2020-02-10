@@ -51,14 +51,20 @@ public class CommonForm implements Serializable {
 	private HashMap hmPlayerPart;
 	private String[] PLAYER_PART_CODE =
 		{"", "A", "B", "C", "D", "L",
-		 "E","F",
+		 "E","F","O",
 		 "G","H","I",
-		 "M","J","N","K"};
+		 "J","N","K",
+		 "P","Q","R","S",
+		 "W","X","Y","Z",
+		 "T","M","U","V"};
 	private String[] PLAYER_PART_DATA =
 		{"","著","訳","編","原作","原案",
-		 "監修","画",
+		 "監修","画","声",
 		 "作詞","作曲","編曲",
-		 "製作","監督","脚本","脚色"};
+		 "監督","脚本","脚色",
+		 "音楽","音響監督","作画監督","美術監督",
+		 "撮影監督","総監督","色彩設計","編集",
+		 "キャラデ","製作","制作","著作"};
 
 	public HashMap hmAssociate;
 	private String[] ASSOCIATE_CODE = {"B", "A", "E", "C", ""};
