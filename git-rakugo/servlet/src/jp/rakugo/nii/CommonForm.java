@@ -116,12 +116,12 @@ public class CommonForm implements Serializable {
 	private HashMap hmBbsBs;
 	private String[] BBS_BS_CODE =
 		{"","790205","790207","790211","790209","790210","790213","790216",
-		"790217","790218","790221","790222",
+		"790217","790218","790221","790222","790208",
 		"790305","790301","790302","790315","790312",
 		"790313","790314"};
 	private String[] BBS_BS_DATA =
 		{"","WoWoW","BS1","BS2","BShi","BS Premium","BS Japan","BS-TBS",
-		"BSフジ","BS朝日","BS11","Twellv",
+		"BSフジ","BS朝日","BS11","Twellv","HiVision",
 		"St.GIGA","NHKラジオ第一","NHKラジオ第二","RCCラジオ","ニッポン放送",
 		"TBSラジオ","文化放送"};
 
