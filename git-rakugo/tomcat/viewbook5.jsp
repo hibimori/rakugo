@@ -298,6 +298,7 @@ String sch_lastA = "";			//aiBo前前回日(DB)
 String sch_lastB = "";			//aiBo前回日　(DB)
 String sch_modA = "";			//aiBoRec更新日　(DB)
 String sch_modV = "";			//書影Rec更新日　(DB)
+String sch_modW = "";			//体重Rec更新日　(DB)
 //書影Table雛型
 String sch_listVal = cmR.convertNullToString(request.getParameter("inpListVal"));
 if (sch_listVal.equals("")) { sch_listVal = "001"; }
@@ -480,6 +481,11 @@ String ctrl_volID;						//管理Rec退避用
 	if (cdS.getResultCount() > 0) {
 		nowWeight = Float.valueOf(cdS.getInt0(0)).floatValue() / 1000;
 		baseWeight = Float.valueOf(cdS.getInt1(0)).floatValue() / 1000;
+		try {
+			sch_modW = dateFmtE.format(cdS.getModifyDate(0));
+		} catch (Exception e) {
+			sch_modW = strDate;
+		}
 	} else {
 		try {
 			baseWeight = Float.valueOf(sch_viewS).floatValue();
@@ -496,12 +502,13 @@ String ctrl_volID;						//管理Rec退避用
 		} catch (NumberFormatException e) {
 			diffWeight = 0;
 		}
+		sch_modW = strDate;
 	}
-	
 	} catch (Exception e) {
 		nowWeight = 0;
 		baseWeight = 0;
 		diffWeight = 0;
+		sch_modW = strDate;
 //		out.println("cdS.getResultCount is null 1");
 	}
 
@@ -982,19 +989,21 @@ String ctrl_volID;						//管理Rec退避用
 			<input name="chkViewE" type="checkbox" value="1" <%= strCo[11] %>>入院中
 		</td>
 	</tr>
-	<tr>
-		<th bgcolor="silver" colspan="7">激痩せ年間</th>
+	<tr bgcolor="silver">
+		<th colspan="5">激痩せ年間</th>
+		<td align="right" colspan="2" class="fontSmall"><%= sch_modW %></td>
 	</tr>
 	<tr align="center">
 		<td>
 		</td>
 		<td colspan="5">
-			<input maxlength="5" name="inpViewW" size="6" type="text" value="<%= sch_viewW %>">
-		kg - 
+			<input maxlength="5" name="inpViewW" size="4" type="text" value="<%= sch_viewW %>"> kg（現在体重）<!--
+			 - 
 			<input maxlength="5" name="inpViewS" size="6" type="text" value="<%= sch_viewS %>">
 		kg = 
 			<input maxlength="5" name="inpViewM" size="6" type="text" value="<%= sch_viewM %>" readonly>
 		kg
+		-->
 		</td>
 		<td>
 			<input name="btnViewW" onclick="javascript: sendQuery('btnViewW')"
