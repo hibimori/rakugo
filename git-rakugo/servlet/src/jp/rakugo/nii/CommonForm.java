@@ -53,7 +53,7 @@ public class CommonForm implements Serializable {
 		{"", "A", "B", "C", "D", "L",
 		 "E","F","O",
 		 "G","H","I",
-		 "J","N","K",
+		 "J","N","K","0",
 		 "P","Q","R","S",
 		 "W","X","Y","Z",
 		 "T","M","U","V"};
@@ -61,7 +61,7 @@ public class CommonForm implements Serializable {
 		{"","著","訳","編","原作","原案",
 		 "監修","画","声",
 		 "作詞","作曲","編曲",
-		 "監督","脚本","脚色",
+		 "監督","脚本","脚色","構成",
 		 "音楽","音響監督","作画監督","美術監督",
 		 "撮影監督","総監督","色彩設計","編集",
 		 "キャラデ","製作","制作","著作"};
@@ -87,16 +87,16 @@ public class CommonForm implements Serializable {
 	private String[] MEDIA_CODE =
 		{"","H","S",
 		"F","G","Q",
-		"I","J",
 		"C","T","U",
+		"I","J",
 		"K","L","M","O",
 		"P","N","R",
 		"B","E","A","D"};
 	private String[] MEDIA_DATA =
 		{"","Book","eBook",
 		"DVD","DVD-RW","Blu-ray",
-		"Software","Hardware",
 		"CD","eMusic","HDD/SSD",
+		"Software","Hardware",
 		"Figure","Model","Goods","Supply",
 		"Medicine","Food","Wear",
 		"MD","Beta","CC","LD"};
