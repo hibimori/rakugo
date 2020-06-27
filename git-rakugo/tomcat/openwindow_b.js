@@ -1,5 +1,6 @@
 //*****************************************************************
 //	各種Windowの表示 for BookDB Tool
+//		1.40	2020.6/19	http: を https:// に変更。
 //		1.30	2019.9/15	[AB検索]条件の微調整（ebook）。
 //		1.21	2016.12/22	[AB検索]はURI欄が空白でも行なう。
 //		1.20	2016.12/17	[AB検索]の結果表示をiFrameから別窓に変更。
@@ -25,26 +26,26 @@ var openBookPar = "?inpTitle=&inpTitleSort=&inpTitleSeq=&selKeyword=GE&inpKeysor
 var openViewBook = "viewbook.jsp";
 var openViewBook5 = "viewbook5.jsp";
 // bk1/amazon検索用URL
-//var openSearchURL = "http://www.asahi-net.or.jp/~SU2N-NI/suki/books/search.htm";
+//var openSearchURL = "https://www.asahi-net.or.jp/~SU2N-NI/suki/books/search.htm";
 var openSearchURL = "searchbook.htm";
 //amazon・bk1・Googleの検索用パラメタ（iframe用）
 //affiliate2.0追加（07.6/8; iframeではなくdivに一覧を表示）
-	var openIfrA = "http://www.amazon.co.jp/exec/obidos/external-search";
+	var openIfrA = "https://www.amazon.co.jp/exec/obidos/external-search";
 		openIfrA += "?mode=blended&tag=niin-22&encoding-string-jp=日本語";
 		openIfrA += "&keyword=";
-/*	var openIfrB = "http://www.bk1.co.jp/search/search.asp";
+/*	var openIfrB = "https://www.bk1.co.jp/search/search.asp";
 		openIfrB += "?partnerid=p-niin00148&srch=1&Sort=dd&submit.x=0&submit.y=0";
 		openIfrB += "&kywd=";
-	var openIfrB = "http://www.bk1.jp/books/searchResult/?partnerid=p-niin00148&keyword=";
+	var openIfrB = "https://www.bk1.jp/books/searchResult/?partnerid=p-niin00148&keyword=";
 		*/
-	var openIfrB = "http://honto.jp/netstore/search_10";
-	var openIfrC = "http://www.google.co.jp/search";
+	var openIfrB = "https://honto.jp/netstore/search_10";
+	var openIfrC = "https://www.google.co.jp/search";
 		openIfrC += "?hl=ja&ie=UTF-8";
 		openIfrC += "&q=";
-	var openIfrE = "http://www.google.co.jp/search";
+	var openIfrE = "https://www.google.co.jp/search";
 		openIfrE += "?hl=ja&ie=UTF-8";
 		openIfrE += "&q=";
-	var openIfrER = "http://ebookstore.sony.jp/search/?q=";
+	var openIfrER = "https://ebookstore.sony.jp/search/?q=";
 	var openIfrF = "affbook.html";
 		openIfrF += "?kwd=";
 

@@ -1,5 +1,6 @@
 //*****************************************************************
 //  入力項目の補正とクリア for BookDB Tool
+//	  2.10 2020.6/19	http: を https:// に変更。
 //    2.00 2019.11/17	税込み価格の消費税10％対応
 //    1.90 2019.8/26	通貨コード３桁化・ドロップダウンリスト化
 //    1.80 2017.8/4	ReaderStoreの書影URI変更に対応
@@ -498,13 +499,13 @@ function getItemId(s, m) {
 function getItemUri(s, m) {
     var aryStore = "8ABIHRW?";
     var i = aryStore.indexOf(m);
-    var aryUri = ["http://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http://honto.jp/",
-        "http://www.amazon.co.jp/exec/obidos/ASIN/",
-        "http://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http%3A%2F%2Fwww.bk1.jp%2Fproduct%2F",
-        "http://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http%3A%2F%2Fwww.bk1.jp%2Fproduct%2F",
-        "http://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http://honto.jp/",
-        "http://ebookstore.sony.jp/item/",
-        "http://bookwalker.jp/pc/detail/",
+    var aryUri = ["https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=https://honto.jp/",
+        "https://www.amazon.co.jp/exec/obidos/ASIN/",
+        "https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http%3A%2F%2Fwww.bk1.jp%2Fproduct%2F",
+        "https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http%3A%2F%2Fwww.bk1.jp%2Fproduct%2F",
+        "https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=https://honto.jp/",
+        "https://ebookstore.sony.jp/item/",
+        "https://bookwalker.jp/pc/detail/",
         ""
     ];
     var aryUri2 = ["?partnerid=02a801",
@@ -531,15 +532,16 @@ function getItemUri(s, m) {
 
 function getItemImg(s, m) {
     var aryStore = "8ABIHRW?";
-    var aryUri = ["http://image.honto.jp/item/1/180/",
-        "http://images-jp.amazon.com/images/P/",
-        "http://img.bk1.jp/bibimg/",
-        "http://img.bk1.jp/hmvimg/",
-        "http://image.honto.jp/item/1/180/",
+    var aryUri = ["https://image.honto.jp/item/1/180/",
+        "https://m.media-amazon.com/images/P/",
+        "https://img.bk1.jp/bibimg/",
+        "https://img.bk1.jp/hmvimg/",
+        "https://image.honto.jp/item/1/180/",
         "https://ebookstore.sony.jp/photo/",
-        "http://bookwalker.jp/cc/thumbnailImage_",
+        "https://bookwalker.jp/cc/thumbnailImage_",
         ""
     ];
+//        "http://images-jp.amazon.com/images/P/",	//Amazon旧URI
     var aryUri2 = ["_1.jpg",
         ".09.MZZZZZZZ.jpg",
         ".jpg",
@@ -586,7 +588,7 @@ function getISBN13(s) {
           13: チェックディジット再計算）
         ・引数が半角数字以外のとき（13桁目を除く; "123456789012x"は可）
       参考:
-        http://www.isbn-center.jp/whatsnew/kikaku.html#cf1
+        https://www.isbn-center.jp/whatsnew/kikaku.html#cf1
     */
     var isbn = "";
     var i;

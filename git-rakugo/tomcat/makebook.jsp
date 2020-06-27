@@ -1387,9 +1387,9 @@ int i;
 	<input name="inpModID" type="hidden" value="">
 	<table border="0">
 		<tr align="center" bgcolor="silver">
-			<th></th>
-			<th></th>
-			<th></th>
+			<th rowspan="2">No.</th>
+			<th rowspan="2">ID</th>
+			<th rowspan="2">SEQ</th>
 			<th>書名</th>
 			<th>出版社</th>
 			<th colspan="4">URL/image</th>
@@ -1397,9 +1397,6 @@ int i;
 			<th>購入日</th>
 		</tr>
 		<tr align="center" bgcolor="silver">
-			<th>No.</th>
-			<th>ID</th>
-			<th>SEQ</th>
 			<th>著者名</th>
 			<th>ISBN</th>
 			<th>bk1</th>

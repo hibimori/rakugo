@@ -1145,7 +1145,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			<th>TITLE<br>PLAYER1</th>
 			<th>PROGRAM<br>PLAYER2</th>
 			<th>SOURCE<br>PLAYER3</th>
-			<th>REC DATE<br>Att1t</th>
+			<th>REC DATE<br>Att1</th>
 			<th>LENGTH<br>Att2</th>
 			<th>MEMO<br>MOD DATE</th>
 		</tr>

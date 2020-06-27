@@ -97,7 +97,8 @@ function sendQuery(tarType) {
 			document.formBook.action = "viewbook5.jsp";
 		} else {
 			var rtn = window.open(document.location.toString(), '_blank', parNoToolbar);
-			document.formBook.action = "viewbook5b.jsp";
+		//	document.formBook.action = "viewbook5b.jsp";
+			document.formBook.action = "viewbook5.jsp";
 		}
 		document.formBook.submit();
 	}
