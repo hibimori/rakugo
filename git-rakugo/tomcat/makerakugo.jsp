@@ -1,6 +1,7 @@
 <%@ page buffer="128kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
 <!--
+	2020-11-01	ID［検索］時に明細部［Seq］を逆順表示するオプションを追加。
 	2019-10-10	演者名の後ろに［代目］を表示。
 -->
 <jsp:useBean id="rkS" class="jp.rakugo.nii.RakugoTableSelect" scope="page" />
@@ -208,6 +209,8 @@ String parKeywordT = cmR.convertNullToString(request.getParameter("rdoKeyword"))
 if (parKeywordT.length() == 0) {
 	parKeywordT = "A";
 }
+String parKeywordSeq = cmR.convertNullToString(request.getParameter("chkKeyword"));				/* Seq逆順スイッチ */
+
 String parKeywordW = "";				/* where句ワークエリア 演題 */
 String parKeywordW2 = "";				/* where句ワークエリア 演者 */
 String strTitleBar = "落語管理DB: ";	/* タイトルバー */
@@ -253,6 +256,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			query.append("WHERE vol_id = '").append(sch_id).append("'");
 		}
 		query.append(" ORDER BY vol_id, seq");
+		if (parKeywordSeq.equals("1")) {
+			 query.append(" DESC");
+		}
 	}
 	//ID+Seqの［検索］（そのVolID内）
 	if (sch_btn.equals("btnIDSeq")) {
@@ -268,6 +274,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			}
 		}
 		query.append(" ORDER BY vol_id, seq");
+		if (parKeywordSeq.equals("1")) {
+			 query.append(" DESC");
+		}
   }
 	/* [先頭検索] 
 	//ID単位の検索（先頭VolIDのSeq全件。後のrs.next()ループでVolIDブレイクしたら終わり）
@@ -291,6 +300,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 	if (sch_btn.equals("btnIDNext")) {
       query.append("WHERE vol_id > '").append(sch_id);
       query.append("' ORDER BY vol_id, seq");
+	  if (parKeywordSeq.equals("1")) {
+		 query.append(" DESC");
+	  }
 	}
 	//ID+Seqの検索
 	if (sch_btn.equals("btnIDSeqNext")) {
@@ -300,8 +312,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 	    query.append("WHERE vol_id = '").append(sch_id);
 	    query.append("' AND seq > '").append(sch_seq).append("'");
 		}
-    query.append(" ORDER BY vol_id, seq LIMIT 0,1");	// Seqは１件目
-  }
+      query.append(" ORDER BY vol_id, seq");	// Seqは１件目
+	  query.append(" LIMIT 0,1");
+    }
 	/* [前検索]なら小なり検索して逆順ソートの１件目を採る */
 	//ID単位の検索（小さいVolIDのSeq全件検索。後のrs.next()ループでVolIDブレイクしたら終わり）
 	if (sch_btn.equals("btnIDPrev")) {
@@ -311,6 +324,9 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			query.append("WHERE vol_id < '").append(sch_id);
 		}
       query.append("' ORDER BY vol_id DESC, seq");
+	  if (parKeywordSeq.equals("1")) {
+		 query.append(" DESC");
+	  }
 	}
 	//ID+Seqの検索
 	if (sch_btn.equals("btnIDSeqPrev")) {
@@ -766,7 +782,11 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
     </tr>
 <!-- VolSeq制御列 -->
     <tr align="center" valign="middle">
-      <th bgcolor="#cccccc">SEQ</th>
+		<%
+			strCo = new String[1];
+			if (parKeywordSeq.equals("1")) { strCo[0] = "checked"; }
+		%>
+      <th bgcolor="#cccccc">SEQ<input type="checkbox" name="chkKeyword" value="1" <%= strCo[0] %>>逆順</th>
       <td><a href="javascript: addSeq(-1,'id')">▽</a><input size="4" type="text" maxlength="3" name="inpSeq" value="<%= sch_seq %>"><a href="javascript: addSeq(1,'id')">△</a></td>
       <td><input type="button" name="btnIDSeq" onclick="javascript:sendQuery('btnIDSeq')" value="検索"></td>
       <td><input type="button" name="btnIDSeqPrev" onclick="javascript:sendQuery('btnIDSeqPrev')" value="前"></td>
@@ -1153,10 +1173,17 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 	/* 明細用にまた読む。 */
 	if (useMainDB == true) {
 		//rakugo_t 条件よみ
+		if (parKeywordSeq.equals("1")) {
+			query.append(" DESC");
+		}
 		rkS.selectDB(query.toString(), "");
 	} else {
 		//rakugo_w 全件よみ
-		rkS.selectWK(parSelectW, parDistinct);
+		if (parKeywordSeq.equals("1")) {
+			rkS.selectWK(parSelectW + " DESC", parDistinct);
+		} else {
+			rkS.selectWK(parSelectW, parDistinct);
+		}
 	}
 	int row = 0;
 	String strLine1 = "bgcolor=white";

@@ -1555,17 +1555,19 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 <!--
 	var strT = "<%= sbfHTML.toString() %>";
 	document.formBook.txtHTML.value = strT;
-	document.formBook.txtHTML.focus();
-	document.formBook.txtHTML.select();
 	document.write(strT);
 	var strButton = "<%= sch_btn %>";
-	if ((strButton == "btnHTML") || (strButton.indexOf("View") >= 0)) {
+/*	if ((strButton == "btnHTML") || (strButton.indexOf("View") >= 0)) {
 		document.formBook.btnHTML.focus();
 	}
+*/
 	if ("<%= dbMsg.toString() %>" != "") {
 		document.getElementById("AjaxState").innerHTML =
 			"<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
 	}
+	document.formBook.txtHTML.select();
+	document.execCommand("copy");
+	document.formBook.txtHTML.focus();
 // -->
 </script>
 </form>
