@@ -336,7 +336,11 @@ public class CalendarAssist extends HttpServlet {
 					break;
 				case 7:		//７月
 					//海の日
-					if (wkY == 2020) {
+					if (wkY == 2021) {
+						addArrH(wkY, wkM, 22, 0);
+						//スポーツの日特例
+						addArrH(wkY, wkM, 23, 0);
+					} else if (wkY == 2020) {
 						addArrH(wkY, wkM, 23, 0);
 						//スポーツの日特例
 						addArrH(wkY, wkM, 24, 0);
@@ -348,7 +352,9 @@ public class CalendarAssist extends HttpServlet {
 					break;
 				case 8:		//８月
 					//山の日
-					if (wkY == 2020) {
+					if (wkY == 2021) {
+						addArrH(wkY, wkM, 8, 1);
+					} else if (wkY == 2020) {
 						addArrH(wkY, wkM, 10, 0);
 					} else if (wkY >= 2016) {
 						addArrH(wkY, wkM, 11, 1);
@@ -374,15 +380,17 @@ public class CalendarAssist extends HttpServlet {
 					break;
 				case 10:	//10月
 					//体育の日
-					if (wkY == 2020) {
+					if (wkY == 2021) {
+						//2021.7/23(金)へ移動
+					} else if (wkY == 2020) {
 						//2020.7/24(金)へ移動
 					} else if (wkY >= 2000) {
 						addArrH(wkY, wkM, getHappyMonday(wkY, wkM, 2), 0);
 					} else if (wkY >= 1966) {
 						addArrH(wkY, wkM, 10, 1);
 					}
+					//即位礼正殿の儀
 					if (wkY == 2019) {
-						//即位礼正殿の儀
 						addArrH(wkY, wkM, 22, 0);
 					}
 					break;
