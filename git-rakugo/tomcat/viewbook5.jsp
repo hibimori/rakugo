@@ -1115,9 +1115,11 @@ public String htmDateTable(Calendar tarDate, int tarW, String tarWw, String tarW
 	String hdtPath = "file:///d:/webber/nikkk/";
 	//日記htm置き場（2011.1 - 2015.12）
 	String hdtPath = "file:///d:/webber/nikkl/";
-*/
 	//日記htm置き場（2016.1 - 2020.12）
 	String hdtPath = "file:///d:/webber/nikkm/";
+*/
+	//日記htm置き場（2021.1 - 2025.12）
+	String hdtPath = "file:///d:/webber/nikkn/";
 	StringBuffer hdtTable = new StringBuffer();
 	String hdtW = new String();
 	String hdtID = new String();
@@ -1198,8 +1200,8 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 	SimpleDateFormat dateFmtYM = new SimpleDateFormat("yyyyMM");
 	SimpleDateFormat dateFmtYMD = new SimpleDateFormat("yyMMdd");
 	SimpleDateFormat dateFmtD = new SimpleDateFormat("d");
-	//日記htm置き場（2016.1 - 2020.12）
-	String adtPath = "file:///d:/webber/nikkm/";
+	//日記htm置き場（2021.1 - 2025.12）
+	String adtPath = "file:///d:/webber/nikkn/";
 
 	StringBuffer adtTable = new StringBuffer();
 	java.util.Date adtDate = tarDate.getTime();
