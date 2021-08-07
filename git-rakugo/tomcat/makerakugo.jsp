@@ -786,7 +786,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			strCo = new String[1];
 			if (parKeywordSeq.equals("1")) { strCo[0] = "checked"; }
 		%>
-      <th bgcolor="#cccccc">SEQ<input type="checkbox" name="chkKeyword" value="1" <%= strCo[0] %>>逆順</th>
+      <th bgcolor="#cccccc">SEQ<span style="font-size:66%">(<input type="checkbox" name="chkKeyword" value="1" <%= strCo[0] %>>逆順)</span></th>
       <td><a href="javascript: addSeq(-1,'id')">▽</a><input size="4" type="text" maxlength="3" name="inpSeq" value="<%= sch_seq %>"><a href="javascript: addSeq(1,'id')">△</a></td>
       <td><input type="button" name="btnIDSeq" onclick="javascript:sendQuery('btnIDSeq')" value="検索"></td>
       <td><input type="button" name="btnIDSeqPrev" onclick="javascript:sendQuery('btnIDSeqPrev')" value="前"></td>

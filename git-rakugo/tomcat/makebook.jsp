@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
 <!--
+	2021-07-24 ヘッダ部［貨幣］［価格］デフォルト値微調整
 	2019-12-11 明細部［採用］にstoreSin追加
 	2019-08-25 消費税10％対応
 	-->
@@ -207,6 +208,13 @@ function sendQuery(tarType) {
 	}
 	sch_cur = cmR.convertNullToString(request.getParameter("selCurrency"));			/* 通貨 */
 	sch_price = cmR.convertNullToString(request.getParameter("inpPrice"));			/* 購入額 */
+	if ((sch_cur.length() == 0) &&
+		(sch_price.length() > 0)) {
+		sch_cur = "JPY";
+	} else if ((sch_cur.length() > 0) &&
+		(sch_price.length() == 0)) {
+		sch_cur = "";
+	}
 	if ((sch_cur.equals("EUR")) ||
 	    (sch_cur.equals("USD"))    ) {
 	    try {

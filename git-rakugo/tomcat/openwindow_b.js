@@ -1,5 +1,6 @@
 //*****************************************************************
 //	各種Windowの表示 for BookDB Tool
+//		1.42	2021.8/7	[AB検索]のダミー画面表示を追加。
 //		1.41	2020.7/18	[AB検索]条件の微調整（ebook）。
 //		1.40	2020.6/19	http: を https:// に変更。
 //		1.30	2019.9/15	[AB検索]条件の微調整（ebook）。
@@ -237,6 +238,8 @@ function searchAB() {
 		setTimeout(openStore("oth", kwd), 1000);
 //		openStore("ebk", kwd);
 //		openStore("oth", kwd);
+		//Vivaldiが最後に開けたタブの内容で既存タブ内を上書き表示してしまう。最後のタブを閉じれば解消されるので，閉じ用のダミータブを開く。
+		setTimeout(openStore("DMY", kwd), 1000);
 	}
 }
 function openIfr(tar) {
@@ -340,6 +343,9 @@ function openStore(tar, kwd) {
 	} else if (tar == "ebk") {
 		mode = "E";
 		uri = openIfrER + encodeURIComponent(kwd, true);
+	} else if (tar == "DMY") {
+		mode = "D";
+		uri = openIfrE + encodeURIComponent(kwd, true);
 	} else {
 		return false;
 	}
@@ -348,6 +354,7 @@ function openStore(tar, kwd) {
 //	} else {
 //		if (window.confirm("Window.open " + tar + "?") == true) {
 			rtn = window.open(uri, '_' + tar, parYesToolbar);
+//			rtn = window.open(uri, '_blank', parYesToolbar);
 //		}
 //	}
 }
