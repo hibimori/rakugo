@@ -1,115 +1,119 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
-<!--
+    <!--
+	1.20	2021-10-22	VSCバグ対応 strCo[n] を JSP埋め込みから out.print() するよう修正。
 	1.10	2019-11-16	ジュリアン日付のリンクに［入院日記］オプションを追加。
 -->
-<jsp:useBean id="bkS" class="jp.rakugo.nii.BookTableSelect" scope="page" />
-<jsp:useBean id="bvS" class="jp.rakugo.nii.BookViewTableSelect" scope="page" />
-<jsp:useBean id="bvU" class="jp.rakugo.nii.BookViewTableUpdate" scope="page" />
-<jsp:useBean id="tmS" class="jp.rakugo.nii.TitleMasterSelect" scope="page" />
-<jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
-<jsp:useBean id="cdS" class="jp.rakugo.nii.CodeMasterSelect" scope="page" />
-<jsp:useBean id="cdU" class="jp.rakugo.nii.CodeMasterUpdate" scope="page" />
-<jsp:useBean id="cmF" class="jp.rakugo.nii.CommonForm" scope="page" />
-<jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="ja">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<head>
-<link rel="stylesheet" type="text/css" href="hibimor2.css">
-<link rel="stylesheet" type="text/css" href="makerakugo.css">
-<link rel="stylesheet" type="text/css" href="hibi2011.css">
-<style type="text/css">
-body {
-  background-color: #fff8e7;
-  color: 000066;
-  font-family: 'ＭＳ ゴシック';
-  line-height: 133%;
-}
-a:link {
-  color: #007000;
-}
-</style>
-<title>BookDB 書影Table HTML5</title>
-<script language="JavaScript" src="assistinput.js"></script>
-<script language="JavaScript" src="openwindow_b.js"></script>
-<script language="JavaScript" src="assistinput_mb.js"></script>
-<script language="JavaScript" src="assistinput_vb.js"></script>
-<script language="JavaScript" src="inpcalendar.js"></script>
-<script language="JavaScript" type="text/javascript">
-<!--
-function sendQuery(tarType) {
-/* マスタ rewrite */
-	var strMsg = "";
-	var goFlg = true;
-	var wkDelInc = "";
-	if (tarType == "btnDel") {
-		strMsg = "Delete OK?";
-	} else if (tarType == "btnAllDel") {
-		strMsg = "Delete All OK?";
-	} else if (tarType == "btnOldDel") {
-		strMsg = "Delete Older OK?";
-	} else if (tarType == "btnViewA") {
-		strMsg = "aiBo Date fix OK?";
-	} else if (tarType == "btnViewL") {
-		strMsg = "ListVal fix OK?";
-	}
-	if (strMsg != "") {								//更新系は確認Dialogを出す。
-		if (confirm(strMsg) == true) {
-			//［削除］なら入力チェックを無視して何でも消せる。
-			if (tarType == "btnDel") {
-				//削除チェックのチェック
-				for (i = 0; i < document.formBook.inpRows.value; i++) {
-					if (document.formBook.chkDel[i].checked == true) {
-						if (wkDelInc == "") {
-							wkDelInc = document.formBook.inpIncID[i].value;
-						} else {
-							wkDelInc = wkDelInc + "," + document.formBook.inpIncID[i].value;
-						}
-					}
-				}
-			} else {
-				if (isNaN(document.formBook.inpListVal.value)) {
-					document.formBook.inpListVal.value = "000";
-				}
-			}
-		} else {
-			goFlg = false;
-		}
-	}
-	if (goFlg == true) {
-		if (tarType == "btnHTML1") {
-			document.formBook.selViewN.value = "1";
-		} else if (tarType == "btnHTML2") {
-			document.formBook.selViewN.value = "2";
-		} else {
-			document.formBook.selViewN.value = "0";
-		}
-		document.formBook.formBtnType.value = tarType;
-		document.formBook.inpIncIDTbl.value = wkDelInc;
-		if (document.formBook.chkViewE.checked == true) {
-			document.formBook.chkViewE.value= "1";
-		} else {
-			document.formBook.chkViewE.value= "0";
-		}
-		document.formBook.method = "post";
-		if (document.location.toString().indexOf("viewbook5b.jsp") >= 0) {
-			document.formBook.action = "viewbook5.jsp";
-		} else {
-			var rtn = window.open(document.location.toString(), '_blank', parNoToolbar);
-		//	document.formBook.action = "viewbook5b.jsp";
-			document.formBook.action = "viewbook5.jsp";
-		}
-		document.formBook.submit();
-	}
-}
-// -->
-</script>
-<script type="text/javascript" src="ckeditor/ckeditor.js"></script>
-</head>
-<body bgcolor="#FFFFFF" text="#000000" >
-<a name="b0"></a>
-<%!
+    <jsp:useBean id="bkS" class="jp.rakugo.nii.BookTableSelect" scope="page" />
+    <jsp:useBean id="bvS" class="jp.rakugo.nii.BookViewTableSelect" scope="page" />
+    <jsp:useBean id="bvU" class="jp.rakugo.nii.BookViewTableUpdate" scope="page" />
+    <jsp:useBean id="tmS" class="jp.rakugo.nii.TitleMasterSelect" scope="page" />
+    <jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
+    <jsp:useBean id="cdS" class="jp.rakugo.nii.CodeMasterSelect" scope="page" />
+    <jsp:useBean id="cdU" class="jp.rakugo.nii.CodeMasterUpdate" scope="page" />
+    <jsp:useBean id="cmF" class="jp.rakugo.nii.CommonForm" scope="page" />
+    <jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+    <html lang="ja">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="hibimor2.css">
+        <link rel="stylesheet" type="text/css" href="makerakugo.css">
+        <link rel="stylesheet" type="text/css" href="hibi2011.css">
+        <style type="text/css">
+            body {
+                background-color: #fff8e7;
+                color: 000066;
+                font-family: 'ＭＳ ゴシック';
+                line-height: 133%;
+            }
+            
+            a:link {
+                color: #007000;
+            }
+        </style>
+        <title>BookDB 書影Table HTML5</title>
+        <script language="JavaScript" src="assistinput.js"></script>
+        <script language="JavaScript" src="openwindow_b.js"></script>
+        <script language="JavaScript" src="assistinput_mb.js"></script>
+        <script language="JavaScript" src="assistinput_vb.js"></script>
+        <script language="JavaScript" src="inpcalendar.js"></script>
+        <script language="JavaScript" type="text/javascript">
+            <!--
+            function sendQuery(tarType) {
+                /* マスタ rewrite */
+                var strMsg = "";
+                var goFlg = true;
+                var wkDelInc = "";
+                if (tarType == "btnDel") {
+                    strMsg = "Delete OK?";
+                } else if (tarType == "btnAllDel") {
+                    strMsg = "Delete All OK?";
+                } else if (tarType == "btnOldDel") {
+                    strMsg = "Delete Older OK?";
+                } else if (tarType == "btnViewA") {
+                    strMsg = "aiBo Date fix OK?";
+                } else if (tarType == "btnViewL") {
+                    strMsg = "ListVal fix OK?";
+                }
+                if (strMsg != "") { //更新系は確認Dialogを出す。
+                    if (confirm(strMsg) == true) {
+                        //［削除］なら入力チェックを無視して何でも消せる。
+                        if (tarType == "btnDel") {
+                            //削除チェックのチェック
+                            for (i = 0; i < document.formBook.inpRows.value; i++) {
+                                if (document.formBook.chkDel[i].checked == true) {
+                                    if (wkDelInc == "") {
+                                        wkDelInc = document.formBook.inpIncID[i].value;
+                                    } else {
+                                        wkDelInc = wkDelInc + "," + document.formBook.inpIncID[i].value;
+                                    }
+                                }
+                            }
+                        } else {
+                            if (isNaN(document.formBook.inpListVal.value)) {
+                                document.formBook.inpListVal.value = "000";
+                            }
+                        }
+                    } else {
+                        goFlg = false;
+                    }
+                }
+                if (goFlg == true) {
+                    if (tarType == "btnHTML1") {
+                        document.formBook.selViewN.value = "1";
+                    } else if (tarType == "btnHTML2") {
+                        document.formBook.selViewN.value = "2";
+                    } else {
+                        document.formBook.selViewN.value = "0";
+                    }
+                    document.formBook.formBtnType.value = tarType;
+                    document.formBook.inpIncIDTbl.value = wkDelInc;
+                    if (document.formBook.chkViewE.checked == true) {
+                        document.formBook.chkViewE.value = "1";
+                    } else {
+                        document.formBook.chkViewE.value = "0";
+                    }
+                    document.formBook.method = "post";
+                    if (document.location.toString().indexOf("viewbook5b.jsp") >= 0) {
+                        document.formBook.action = "viewbook5.jsp";
+                    } else {
+                        var rtn = window.open(document.location.toString(), '_blank', parNoToolbar);
+                        //	document.formBook.action = "viewbook5b.jsp";
+                        document.formBook.action = "viewbook5.jsp";
+                    }
+                    document.formBook.submit();
+                }
+            }
+            // -->
+        </script>
+        <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+    </head>
+
+    <body bgcolor="#FFFFFF" text="#000000">
+        <a name="b0"></a>
+        <%!
 public String escapeString(String strEsc) {
 //',",\ をescapeする
 	StringBuffer sbfResult = new StringBuffer();
@@ -135,7 +139,7 @@ public String escapeString(String strEsc) {
 	return sbfResult.toString().trim();
 }
 %>
-<%
+            <%
 	//キャラクタ_セット宣言
 	request.setCharacterEncoding("Shift_JIS");
 
@@ -336,7 +340,7 @@ String ctrl_volID;						//管理Rec退避用
 	StringBuffer query2;			//名称取得用Query退避エリア
 	StringBuffer dbMsg = new StringBuffer();	//DB更新メセイジ
 %>
-<%
+                <%
 	/* [追加]なら更新して再検索 */
 	if (sch_btn.equals("btnAdd")) {
 		//既存recを削除
@@ -366,7 +370,7 @@ String ctrl_volID;						//管理Rec退避用
 		}
 	}
 %>
-<%
+                    <%
 	/* [削除]なら更新して再検索 */
 	if (sch_btn.equals("btnDel")) {
 		bvU.initRec();
@@ -396,7 +400,7 @@ String ctrl_volID;						//管理Rec退避用
 		}
 	}
 %>
-<%
+                        <%
 	/* 激痩せ年間［算出］なら更新して再検索 */
 	if (sch_btn.equals("btnViewW")) {
 		cdU.deleteRec("0000W0", 0);		//いったん削除
@@ -583,44 +587,43 @@ String ctrl_volID;						//管理Rec退避用
 //		out.println("cdS.getResultCount is null 3");
 	}
 %>
-<form name="formBook">
-<table border="0" width="100%">
-	<tr>
-	<td width="50%">
-		<h1>書影Table HTML5</h1>
-	</td>
-	<td class="fontSmall">［<a href="#b50">雛型</a>］［<a
-		href="http://www.amazon.co.jp/exec/obidos/tg/listmania/list-browse/-/1ZMFRAD8NNOZ7/"
-		target="_blank">ListMania</a>］［<a href="http://www.asahi-net.or.jp/~SU2N-NI/index.htm" target="_blank">nii.n表紙</a>］［<a href="http://graph.hatena.ne.jp/nii/edit" target="_blank">はてなグラフ</a>］
-</td>
-	<td align="center" id="AjaxState">
-	</td>
-	<td align="right">
-		<%= sch_comName %>
-	</td>
-	</tr>
-</table>
-<hr>
-<!-- 書影リスト作表開始 -->
-	<input name="inpModID" type="hidden" value="">
-	<table border="0">
-		<tr align="center" bgcolor="silver">
-			<th></th>
-			<td>
-				<input type="checkbox" name="chkDelTitle" onclick="javascript: assistInpDataV('chkDel')">削
-			</td>
-			<th>inc</th>
-			<th>vol/seq</th>
-			<th>書名</th>
-			<th>著者</th>
-			<th>出版社</th>
-			<th>ASIN</th>
-			<th>媒体</th>
-			<th>img</th>
-			<th>memo</th>
-			<th>日付</th>
-		</tr>
-<%
+                            <form name="formBook">
+                                <table border="0" width="100%">
+                                    <tr>
+                                        <td width="50%">
+                                            <h1>書影Table HTML5</h1>
+                                        </td>
+                                        <td class="fontSmall">［<a href="#b50">雛型</a>］［<a href="http://www.amazon.co.jp/exec/obidos/tg/listmania/list-browse/-/1ZMFRAD8NNOZ7/" target="_blank">ListMania</a>］［<a href="http://www.asahi-net.or.jp/~SU2N-NI/index.htm" target="_blank">nii.n表紙</a>］［
+                                            <a href="http://graph.hatena.ne.jp/nii/edit" target="_blank">はてなグラフ</a>］
+                                        </td>
+                                        <td align="center" id="AjaxState">
+                                        </td>
+                                        <td align="right">
+                                            <%= sch_comName %>
+                                        </td>
+                                    </tr>
+                                </table>
+                                <hr>
+                                <!-- 書影リスト作表開始 -->
+                                <input name="inpModID" type="hidden" value="">
+                                <table border="0">
+                                    <tr align="center" bgcolor="silver">
+                                        <th></th>
+                                        <td>
+                                            <input type="checkbox" name="chkDelTitle" onclick="javascript: assistInpDataV('chkDel')">削
+                                        </td>
+                                        <th>inc</th>
+                                        <th>vol/seq</th>
+                                        <th>書名</th>
+                                        <th>著者</th>
+                                        <th>出版社</th>
+                                        <th>ASIN</th>
+                                        <th>媒体</th>
+                                        <th>img</th>
+                                        <th>memo</th>
+                                        <th>日付</th>
+                                    </tr>
+                                    <%
 	int rows = 9;
 	int rowsImg = 0;
 	String strLine1 = "bgcolor=white";
@@ -660,7 +663,7 @@ String ctrl_volID;						//管理Rec退避用
 	int aryImgTable[] = new int[rows];	//書影有無配列
 	rows = 0;							//書影有無配列のサイズを決めたらまた初期化。
 %>
-<%
+                                        <%
 	try {
 
 	for (i = 0; i < bvS.getResultCount(); i++) {
@@ -676,7 +679,7 @@ String ctrl_volID;						//管理Rec退避用
 		strMakeBookLink = cmR.addUri(sch_id + "/" + sch_seq,
 			"makebook.jsp?inpID=" + sch_id + "&inpSeq=" + sch_seq + parLink);
 %>
-<%
+                                            <%
 		/* BookDBから情報取得 */
 		query2 = new StringBuffer();
 		query2.append("WHERE vol_id = '").append(sch_id).append("'");
@@ -739,7 +742,7 @@ String ctrl_volID;						//管理Rec退避用
 			sch_memo = "";
 		}
 %>
-<%
+                                                <%
 		//その他URLがあればタイトルにリンク設定
 		strTitleLink = cmR.addUri(sch_title, sch_urlC);
 		
@@ -869,241 +872,238 @@ String ctrl_volID;						//管理Rec退避用
 		aryMedia[rows - 1] = sch_media;
 		aryMemo[rows - 1] = sch_memo;
 %>
-		<tr <%= clsLine %>>
-			<td align="right"><%= rows %></td>
-			<td align="center"><input type="checkbox" name="chkDel"></td>
-			<td align="right">
-				<%= sch_incID %>
-				<input name="inpIncID" type="hidden" value="<%= sch_incID %>">
-			</td>
-			<td align="center"><%= strMakeBookLink %></td>
-			<td><%= strTitleLink %></td>
-			<td><%= sch_player1Sei %></td>
-			<td><%= sch_source %></td>
-			<td><%= sch_asin %></td>
-			<td align="center"><%= sch_media %></td>
-			<td align="center"><%= sch_imgS %></td>
-			<td class="fontSmall">
-				<%= sch_memo %>
-				<input name="inpMemo" type="hidden" value="<%= sch_memo %>">
-			</td>
-			<td><%= sch_modDate %></td>
-		</tr>
-<%
+                                                    <tr <% out.print(clsLine); %>>
+                                                        <td align="right">
+                                                            <%= rows %>
+                                                        </td>
+                                                        <td align="center"><input type="checkbox" name="chkDel"></td>
+                                                        <td align="right">
+                                                            <%= sch_incID %>
+                                                                <input name="inpIncID" type="hidden" value="<%= sch_incID %>">
+                                                        </td>
+                                                        <td align="center">
+                                                            <%= strMakeBookLink %>
+                                                        </td>
+                                                        <td>
+                                                            <%= strTitleLink %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_player1Sei %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_source %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_asin %>
+                                                        </td>
+                                                        <td align="center">
+                                                            <%= sch_media %>
+                                                        </td>
+                                                        <td align="center">
+                                                            <%= sch_imgS %>
+                                                        </td>
+                                                        <td class="fontSmall">
+                                                            <%= sch_memo %>
+                                                                <input name="inpMemo" type="hidden" value="<%= sch_memo %>">
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_modDate %>
+                                                        </td>
+                                                    </tr>
+                                                    <%
 	}
 	} catch (Exception e) {
 //		out.println("vbS.getResultCount is null 5");
 	}
 %>
-	</table>
-<input name="formBtnType" type="hidden" value="<%= sch_btn %>">
-<input name="inpIncIDTbl" type="hidden" value="">
-<input type="hidden" name="inpRows" value="<%= rows %>">
-<!-- 検索結果が１件でも明細項目nameを配列にして添字参照するためのダミー -->
-<input type="hidden" name="chkDel" checked=false>
-<input type="hidden" name="inpIncID" value="">
-<hr><a name="b50"></a>
-<table border="0">
-	<tr align="center">
-		<td><%= rows %>件</td>
-		<td>（<%= rowsImg %>書影）</td>
-		<td>
-			<input type="button" name="btnDel" value="削除"
-				onclick="javascript: sendQuery('btnDel');">
-		</td>
-		<td>
-			<input type="button" name="btnDel" value="最新日付を除いて削除"
-				onclick="javascript: sendQuery('btnOldDel');">
-		</td>
-		<td>
-			<input type="button" name="btnDel" value="全削除"
-				onclick="javascript: sendQuery('btnAllDel');">
-		</td>
-		<td>
-			<input type="button" name="btnClose" value="Close"
-				onclick="javascript: window.close();">
-		</td>
-	<tr>
-</table>
-<div class="divCenter"><span class="fontSmall">［<a href="#b0">TOP</a>］</span></div>
-<hr>
-<div class="divFloatR">
-	<textarea name="txtHTML" rows="32" cols="48"></textarea>
-</div>
-<div id="divCalendar" class="div1"></div>
-<table border="1" id="tblId">
-	<tr>
-		<th bgcolor="silver" colspan="7">ブランク日付</th>
-	</tr>
-	<tr align="center">
-		<td><input name="chkViewF" type="checkbox" value="1" <%= strCo[0] %>></td>
-		<td id="thViewF">
-			<input name="btnViewF"
-				onclick="javascript: openCalendarWindow('ViewF')"
-				type="button" value="開始日">
-		</td><td>
-			<input maxlength="10"
-				id="inpViewF"
-				name="inpViewF" size="12" type="text"
-				value="<%= sch_viewF %>">
-		</td>
-		<td id="thViewT">
-			<input name="btnViewT"
-				onclick="javascript: openCalendarWindow('ViewT')"
-				type="button" value="終了日">
-		</td>
-		<td colspan="2">
-			<input maxlength="10"
-				id="inpViewT"
-				name="inpViewT" size="12" type="text"
-				value="<%= sch_viewT %>">
-		</td>
-		<td>
-			<input name="btnViewFC" onclick="javascript: clearInpDataV('btnViewFC')"
-				 type="button" value="クリア">
-		</td>
-	</tr>
-	<tr>
-		<th bgcolor="silver" colspan="7">タイトル日付</th>
-	</tr>
-	<tr align="center" bgcolor="lavender">
-		<td>
-			<input name="chkViewD" type="checkbox" value="1" <%= strCo[1] %>>
-		</td>
-		<td id="thViewD">
-			<input name="btnViewD"
-				onclick="javascript: openCalendarWindow('ViewD')"
-				type="button" value="きょう">
-		</td><td>
-			<input maxlength="10"
-				id="inpViewD"
-				name="inpViewD" size="12" type="text"
-				value="<%= sch_viewD %>">
-		</td>
-	<%
-//	out.println("tdのstrCo[11]=" + strCo[11]);
-%>
-		<td align="left" colspan="4">
-			<input name="rdoViewD" type="radio" value="2" <%= strCo[6] %>>平日
-			<input name="rdoViewD" type="radio" value="7" <%= strCo[5] %>>土曜
-			<input name="rdoViewD" type="radio" value="1" <%= strCo[4] %>>日祝
-			<input name="chkViewE" type="checkbox" value="1" <%= strCo[11] %>>入院中
-		</td>
-	</tr>
-	<tr bgcolor="silver">
-		<th colspan="5">激痩せ年間</th>
-		<td align="right" colspan="2" class="fontSmall"><%= sch_modW %></td>
-	</tr>
-	<tr align="center">
-		<td>
-		</td>
-		<td colspan="5">
-			<input maxlength="5" name="inpViewW" size="4" type="text" value="<%= sch_viewW %>"> kg（現在体重）<!--
+                                </table>
+                                <input name="formBtnType" type="hidden" value="<%= sch_btn %>">
+                                <input name="inpIncIDTbl" type="hidden" value="">
+                                <input type="hidden" name="inpRows" value="<%= rows %>">
+                                <!-- 検索結果が１件でも明細項目nameを配列にして添字参照するためのダミー -->
+                                <input type="hidden" name="chkDel" checked=false>
+                                <input type="hidden" name="inpIncID" value="">
+                                <hr>
+                                <a name="b50"></a>
+                                <table border="0">
+                                    <tr align="center">
+                                        <td>
+                                            <%= rows %>件</td>
+                                        <td>（
+                                            <%= rowsImg %>書影）</td>
+                                        <td>
+                                            <input type="button" name="btnDel" value="削除" onclick="javascript: sendQuery('btnDel');">
+                                        </td>
+                                        <td>
+                                            <input type="button" name="btnDel" value="最新日付を除いて削除" onclick="javascript: sendQuery('btnOldDel');">
+                                        </td>
+                                        <td>
+                                            <input type="button" name="btnDel" value="全削除" onclick="javascript: sendQuery('btnAllDel');">
+                                        </td>
+                                        <td>
+                                            <input type="button" name="btnClose" value="Close" onclick="javascript: window.close();">
+                                        </td>
+                                        <tr>
+                                </table>
+                                <div class="divCenter"><span class="fontSmall">［<a href="#b0">TOP</a>］</span></div>
+                                <hr>
+                                <div class="divFloatR">
+                                    <textarea name="txtHTML" rows="32" cols="48"></textarea>
+                                </div>
+                                <div id="divCalendar" class="div1"></div>
+                                <table border="1" id="tblId">
+                                    <tr>
+                                        <th bgcolor="silver" colspan="7">ブランク日付</th>
+                                    </tr>
+                                    <tr align="center">
+                                        <td><input name="chkViewF" type="checkbox" value="1" <% out.println(strCo[0]); %>></td>
+                                        <td id="thViewF">
+                                            <input name="btnViewF" onclick="javascript: openCalendarWindow('ViewF')" type="button" value="開始日">
+                                        </td>
+                                        <td>
+                                            <input maxlength="10" id="inpViewF" name="inpViewF" size="12" type="text" value="<%= sch_viewF %>">
+                                        </td>
+                                        <td id="thViewT">
+                                            <input name="btnViewT" onclick="javascript: openCalendarWindow('ViewT')" type="button" value="終了日">
+                                        </td>
+                                        <td colspan="2">
+                                            <input maxlength="10" id="inpViewT" name="inpViewT" size="12" type="text" value="<%= sch_viewT %>">
+                                        </td>
+                                        <td>
+                                            <input name="btnViewFC" onclick="javascript: clearInpDataV('btnViewFC')" type="button" value="クリア">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th bgcolor="silver" colspan="7">タイトル日付</th>
+                                    </tr>
+                                    <tr align="center" bgcolor="lavender">
+                                        <td>
+                                            <input name="chkViewD" type="checkbox" value="1" <% out.println(strCo[1]); %>>
+                                        </td>
+                                        <td id="thViewD">
+                                            <input name="btnViewD" onclick="javascript: openCalendarWindow('ViewD')" type="button" value="きょう">
+                                        </td>
+                                        <td>
+                                            <input maxlength="10" id="inpViewD" name="inpViewD" size="12" type="text" value="<%= sch_viewD %>">
+                                        </td>
+                                        <td align="left" colspan="4">
+                                            <input name="rdoViewD" type="radio" value="2" <% out.println(strCo[6]); %>>平日
+                                            <input name="rdoViewD" type="radio" value="7" <% out.println(strCo[5]); %>>土曜
+                                            <input name="rdoViewD" type="radio" value="1" <% out.println(strCo[4]); %>>日祝
+                                            <input name="chkViewE" type="checkbox" value="1" <% out.println(strCo[11]); %>>入院中
+                                        </td>
+                                    </tr>
+                                    <tr bgcolor="silver">
+                                        <th colspan="5">激痩せ年間</th>
+                                        <td align="right" colspan="2" class="fontSmall">
+                                            <%= sch_modW %>
+                                        </td>
+                                    </tr>
+                                    <tr align="center">
+                                        <td>
+                                        </td>
+                                        <td colspan="5">
+                                            <input maxlength="5" name="inpViewW" size="4" type="text" value="<%= sch_viewW %>"> kg（現在体重）
+                                            <!--
 			 - 
 			<input maxlength="5" name="inpViewS" size="6" type="text" value="<%= sch_viewS %>">
 		kg = 
 			<input maxlength="5" name="inpViewM" size="6" type="text" value="<%= sch_viewM %>" readonly>
 		kg
 		-->
-		</td>
-		<td>
-			<input name="btnViewW" onclick="javascript: sendQuery('btnViewW')"
-				 type="button" value="算出">
-		</td>
-	</tr>
-	<tr bgcolor="silver">
-		<th colspan="5">aiBo日付</th>
-		<td align="right" colspan="2" class="fontSmall"><%= sch_modA %></td>
-	</tr>
-	<tr align="center" bgcolor="lavender">
-		<td><input name="chkViewA" type="checkbox" value="1" <%= strCo[3] %>></td>
-		<td id="thViewA">
-			<input name="btnViewA"
-				onclick="javascript: openCalendarWindow('ViewA')"
-				type="button" value="前前日">
-		</td>
-		<td>
-			<input maxlength="10"
- 				id="inpViewA"
-  			name="inpViewA" size="12" type="text"
-				value="<%= sch_viewA %>">
-			<!-- input id="inpViewA"
+                                        </td>
+                                        <td>
+                                            <input name="btnViewW" onclick="javascript: sendQuery('btnViewW')" type="button" value="算出">
+                                        </td>
+                                    </tr>
+                                    <tr bgcolor="silver">
+                                        <th colspan="5">aiBo日付</th>
+                                        <td align="right" colspan="2" class="fontSmall">
+                                            <%= sch_modA %>
+                                        </td>
+                                    </tr>
+                                    <tr align="center" bgcolor="lavender">
+                                        <td><input name="chkViewA" type="checkbox" value="1" <% out.println(strCo[3]); %>></td>
+                                        <td id="thViewA">
+                                            <input name="btnViewA" onclick="javascript: openCalendarWindow('ViewA')" type="button" value="前前日">
+                                        </td>
+                                        <td>
+                                            <input maxlength="10" id="inpViewA" name="inpViewA" size="12" type="text" value="<%= sch_viewA %>">
+                                            <!-- input id="inpViewA"
   			 type="date"
 				value="<%= sch_viewA %>"-->
-		</td>
-		<td id="thViewB">
-			<input name="btnViewB"
-				onclick="javascript: openCalendarWindow('ViewB')"
-				type="button" value="前回日">
-		</td>
-		<td colspan="2">
-			<input maxlength="10"
- 				id="inpViewB"
-  	 		name="inpViewB" size="12" type="text"
-				value="<%= sch_viewB %>">
-		</td>
-		<td>
-			<input name="btnViewA" onclick="javascript: sendQuery('btnViewA')"
-				 type="button" value="確定">
-		</td>
-	</tr>
-	<tr align="center" bgcolor="lavender">
-		<td></td>
-		<th bgcolor="silver">前回</td>
-		<td><%= sch_lastA %></td>
-		<td></td>
-		<td colspan="2"><%= sch_lastB %></td>
-		<td></td>
-	</tr>
-	<tr bgcolor="silver">
-		<th colspan="5">きょうの愉しみ</th>
-		<td align="right" colspan="2" class="fontSmall"><%= sch_modV %></td>
-	</tr>
-	<tr align="center">
-		<td>
-			<input name="chkViewL" type="checkbox" value="1" <%= strCo[7] %>>
-		</td>
-		<th bgcolor="silver">今回</th>
-		<td class="fontSmall">
-			<a href="javascript: addSeq(-1, 'listVal')")>▽</a>
-			<input maxlength="4" name="inpListVal" size="4" type="text"
-				value="<%= sch_listVal %>">
-			<a href="javascript: addSeq(1, 'listVal')")>△</a>
-		</td>
-		<th bgcolor="silver">前回</th>
-		<td><%= sch_lastVal %></td>
-		<td align="right"><%= sch_lastRows %>件</td>
-		<td>
-			<input name="btnViewL" onclick="javascript: sendQuery('btnViewL')"
-				type="button" value="確定">
-		</td>
-	</tr>
-	<tr align="center" valign="center" bgcolor="lavender">
-		<th colspan="2" bgcolor="silver">
-<!--		<%
+                                        </td>
+                                        <td id="thViewB">
+                                            <input name="btnViewB" onclick="javascript: openCalendarWindow('ViewB')" type="button" value="前回日">
+                                        </td>
+                                        <td colspan="2">
+                                            <input maxlength="10" id="inpViewB" name="inpViewB" size="12" type="text" value="<%= sch_viewB %>">
+                                        </td>
+                                        <td>
+                                            <input name="btnViewA" onclick="javascript: sendQuery('btnViewA')" type="button" value="確定">
+                                        </td>
+                                    </tr>
+                                    <tr align="center" bgcolor="lavender">
+                                        <td></td>
+                                        <th bgcolor="silver">前回</td>
+                                            <td>
+                                                <%= sch_lastA %>
+                                            </td>
+                                            <td></td>
+                                            <td colspan="2">
+                                                <%= sch_lastB %>
+                                            </td>
+                                            <td></td>
+                                    </tr>
+                                    <tr bgcolor="silver">
+                                        <th colspan="5">きょうの愉しみ</th>
+                                        <td align="right" colspan="2" class="fontSmall">
+                                            <%= sch_modV %>
+                                        </td>
+                                    </tr>
+                                    <tr align="center">
+                                        <td>
+                                            <input name="chkViewL" type="checkbox" value="1" <% out.println(strCo[7]); %>>
+                                        </td>
+                                        <th bgcolor="silver">今回</th>
+                                        <td class="fontSmall">
+                                            <a href="javascript: addSeq(-1, 'listVal')" )>▽</a>
+                                            <input maxlength="4" name="inpListVal" size="4" type="text" value="<%= sch_listVal %>">
+                                            <a href="javascript: addSeq(1, 'listVal')" )>△</a>
+                                        </td>
+                                        <th bgcolor="silver">前回</th>
+                                        <td>
+                                            <%= sch_lastVal %>
+                                        </td>
+                                        <td align="right">
+                                            <%= sch_lastRows %>件</td>
+                                        <td>
+                                            <input name="btnViewL" onclick="javascript: sendQuery('btnViewL')" type="button" value="確定">
+                                        </td>
+                                    </tr>
+                                    <tr align="center" valign="center" bgcolor="lavender">
+                                        <th colspan="2" bgcolor="silver">
+                                            <!--		<%
 			//書影要否セレクタの設定
 			out.println(cmF.makeBookView("selViewN", "", sch_selViewN));
 		%>
 -->
-			雛形作成
-			<input name="selViewN" type="hidden" value="0">
-		</th>
-		<td colspan="5">
-			<input name="btnHTML0" onclick="javascript: sendQuery('btnHTML0')"
-				 type="button" value="書影つき雛型">
-			<input name="btnHTML" onclick="javascript: sendQuery('btnHTML1')"
-				 type="button" value="書影なし雛型">
-			<input name="btnHTML" onclick="javascript: sendQuery('btnHTML2')"
-				 type="button" value="書影のみ">
-		</td>
-	</tr>
-</table>
-<hr>
-<div>
-<textarea class="ckeditor" id="editor" name="editor" cols="64" rows="4"></textarea>
-</div>
-<hr>
-<%!
+                                            雛形作成
+                                            <input name="selViewN" type="hidden" value="0">
+                                        </th>
+                                        <td colspan="5">
+                                            <input name="btnHTML0" onclick="javascript: sendQuery('btnHTML0')" type="button" value="書影つき雛型">
+                                            <input name="btnHTML" onclick="javascript: sendQuery('btnHTML1')" type="button" value="書影なし雛型">
+                                            <input name="btnHTML" onclick="javascript: sendQuery('btnHTML2')" type="button" value="書影のみ">
+                                        </td>
+                                    </tr>
+                                </table>
+                                <hr>
+                                <div>
+                                    <textarea class="ckeditor" id="editor" name="editor" cols="64" rows="4"></textarea>
+                                </div>
+                                <hr>
+                                <%!
 public String htmDateTable(Calendar tarDate, int tarW, String tarWw, String tarWm, String tarNyu) {
 	//日付Table記述
 	SimpleDateFormat dateFmtS = new SimpleDateFormat("yyyy.M/d(E)");
@@ -1225,7 +1225,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 	return adtTable.toString();
 }
 %>
-<%
+                                    <%
 // 日記雛型記述開始
 	StringBuffer sbfHTML = new StringBuffer(255);
 	Calendar calDate = Calendar.getInstance();
@@ -1283,7 +1283,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 		sbfHTML.append("</article>");
 	}
 %>
-<%
+                                        <%
 	//日記タイトル日付Table
 	if (sch_chkViewD.equals("1")) {
 		try {						//タイトル日付が任意のとき
@@ -1323,7 +1323,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 		sbfHTML.append(htmDateTable(calDate, nowW, sch_viewW, sch_viewM, sch_chkViewE));	//日付Table作成
 	}
 %>
-<%
+                                            <%
 	//aiBoブロック記述
 	if (sch_chkViewA.equals("1")) {
 		try {						//aiBo前前回日付のとき
@@ -1361,7 +1361,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 		sbfHTML.append("</div>");
 	}
 %>
-<%
+                                                <%
 	//日記本文部記述
 	if (sch_selViewN.equals("2")) {
 		sbfHTML.append("<div class='divTopic'>");
@@ -1499,7 +1499,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 		}
 		sbfHTML.append("</tbody></table></div>");
 %>
-<%
+                                                    <%
 	//きょうの愉しみリスト
 		sbfHTML.append("<ol>");
 		for (i = 0; i < rows; i++) {
@@ -1511,7 +1511,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 			sbfHTML.append("<span class='spanUL'>");
 			sbfHTML.append(aryTitleLink[i]);
 %>
-<%
+                                                        <%
 			//書籍以外は媒体名を付加
 			if (!(aryMedia[i].equals("H"))) {
 				sbfHTML.append("<span class='fontSmall'> [");
@@ -1524,7 +1524,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 				sbfHTML.append("]</span>");
 			}
 %>
-<%
+                                                            <%
 			sbfHTML.append("｜").append(aryAuthor[i]);
 /*
 			if (!(aryAuthorS[i].equals(""))) {
@@ -1534,7 +1534,7 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 */
 			sbfHTML.append("｜").append(aryPublish[i]).append("</span>");
 %>
-<%
+                                                                <%
 			if (aryMemo[i].equals("")) {
 				sbfHTML.append("</li>");
 			} else {
@@ -1543,35 +1543,36 @@ public String aiboDateTable(Calendar tarDate, Calendar tarDateA, Calendar tarDat
 			}
 		}
 %>
-<%
+                                                                    <%
 		sbfHTML.append("</ol></div>");
 	}
 %>
-<%
+                                                                        <%
 	if (!(sch_selViewN.equals("2"))) {		//書影のみのとき<div>閉じなし
 		sbfHTML.append("<div class='divCenter fontSmall'>");
     sbfHTML.append("［<a href='#b99'>▽</a>｜<a href='#top'>△</a>］</div></article>");
 	}
 %>
-<script language="JavaScript" type="text/javascript">
-<!--
-	var strT = "<%= sbfHTML.toString() %>";
-	document.formBook.txtHTML.value = strT;
-	document.write(strT);
-	var strButton = "<%= sch_btn %>";
-/*	if ((strButton == "btnHTML") || (strButton.indexOf("View") >= 0)) {
-		document.formBook.btnHTML.focus();
-	}
-*/
-	if ("<%= dbMsg.toString() %>" != "") {
-		document.getElementById("AjaxState").innerHTML =
-			"<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
-	}
-	document.formBook.txtHTML.select();
-	document.execCommand("copy");
-	document.formBook.txtHTML.focus();
-// -->
-</script>
-</form>
-</body>
-</html>
+                                                                            <script language="JavaScript" type="text/javascript">
+                                                                                <!--
+                                                                                var strT = "<%= sbfHTML.toString() %>";
+                                                                                document.formBook.txtHTML.value = strT;
+                                                                                document.write(strT);
+                                                                                var strButton = "<%= sch_btn %>";
+                                                                                /*	if ((strButton == "btnHTML") || (strButton.indexOf("View") >= 0)) {
+                                                                                		document.formBook.btnHTML.focus();
+                                                                                	}
+                                                                                */
+                                                                                if ("<%= dbMsg.toString() %>" != "") {
+                                                                                    document.getElementById("AjaxState").innerHTML =
+                                                                                        "<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
+                                                                                }
+                                                                                document.formBook.txtHTML.select();
+                                                                                document.execCommand("copy");
+                                                                                document.formBook.txtHTML.focus();
+                                                                                // -->
+                                                                            </script>
+                            </form>
+    </body>
+
+    </html>

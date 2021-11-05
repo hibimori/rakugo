@@ -1,80 +1,83 @@
 <%@ page buffer="128kb" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
-<!--
+    <!--
+	2021-10-22 VSCバグ対応 strCo[n]（<input>タグの入れ子）を廃止。
 	2021-07-24 ヘッダ部［貨幣］［価格］デフォルト値微調整
 	2019-12-11 明細部［採用］にstoreSin追加
 	2019-08-25 消費税10％対応
 	-->
-<jsp:useBean id="bkS" class="jp.rakugo.nii.BookTableSelect" scope="page" />
-<jsp:useBean id="bkU" class="jp.rakugo.nii.BookTableUpdate" scope="page" />
-<jsp:useBean id="bwU" class="jp.rakugo.nii.BookWorkTableUpdate" scope="page" />
-<jsp:useBean id="tmS" class="jp.rakugo.nii.TitleMasterSelect" scope="page" />
-<jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
-<jsp:useBean id="cmF" class="jp.rakugo.nii.CommonForm" scope="page" />
-<jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
-<html lang="ja">
-<head>
-<title>書籍DB管理</title>
-<link rel="stylesheet" type="text/css" href="makerakugo.css">
-<script language="JavaScript" src="assistinput.js"></script>
-<script language="JavaScript" src="assistinput_mb.js"></script>
-<script language="JavaScript" src="openwindow_b.js"></script>
-<script language="JavaScript" src="inpcalendar.js"></script>
-<script language="JavaScript" type="text/javascript">
-<!--
-function sendQuery(tarType) {
-/* マスタ rewrite */
-	var strMsg = "";
-	var goFlg = true;
-	if (tarType == "btnMod") {
-		strMsg = "Update OK?";
-	} else if (tarType == "btnAdd") {
-		strMsg = "Insert OK?";
-	} else if (tarType == "btnDel") {
-		strMsg = "Delete OK?";
-	}
-	if (strMsg != "") {								//更新系は確認Dialogを出す。
-		if (confirm(strMsg) == true) {
-			//［削除］なら入力チェックを無視して何でも消せる。
-			if (strMsg.indexOf("Delete") < 0) {
-				//IDの入力チェック
-				if ((document.formBook.inpID.value.length != 6   ) ||
-				    (isNaN(document.formBook.inpID.value) == true)) {
-					alert("ID is wrong.");
-					goFlg = false;
-				}
-				//Seqの入力チェック
-				while (document.formBook.inpSeq.value.length < 3) {
-					document.formBook.inpSeq.value = "0" + document.formBook.inpSeq.value;
-				}
-				if ((isNaN(document.formBook.inpSeq.value) == true ) ||
-		//		    (document.formBook.inpSeq.value        == "000") ||
-				    (document.formBook.inpSeq.value        >  "999")) {
-					alert("Seq is wrong.");
-					goFlg = false;
-				}
-			}
-		} else {
-			goFlg = false;
-		}
-	}
-	if (goFlg == true) {
-		document.formBook.formBtnType.value = tarType;
-		document.formBook.method = "post";
-		document.formBook.action = "makebook.jsp";
-		document.formBook.submit();
-	}
-}
-// -->
-</script>
-</head>
-<body bgcolor="#FFFFFF" text="#000000">
-<%
+    <jsp:useBean id="bkS" class="jp.rakugo.nii.BookTableSelect" scope="page" />
+    <jsp:useBean id="bkU" class="jp.rakugo.nii.BookTableUpdate" scope="page" />
+    <jsp:useBean id="bwU" class="jp.rakugo.nii.BookWorkTableUpdate" scope="page" />
+    <jsp:useBean id="tmS" class="jp.rakugo.nii.TitleMasterSelect" scope="page" />
+    <jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
+    <jsp:useBean id="cmF" class="jp.rakugo.nii.CommonForm" scope="page" />
+    <jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
+    <html lang="ja">
+
+    <head>
+        <title>書籍DB管理</title>
+        <link rel="stylesheet" type="text/css" href="makerakugo.css">
+        <script language="JavaScript" src="assistinput.js"></script>
+        <script language="JavaScript" src="assistinput_mb.js"></script>
+        <script language="JavaScript" src="openwindow_b.js"></script>
+        <script language="JavaScript" src="inpcalendar.js"></script>
+        <script language="JavaScript" type="text/javascript">
+            <!--
+            function sendQuery(tarType) {
+                /* マスタ rewrite */
+                var strMsg = "";
+                var goFlg = true;
+                if (tarType == "btnMod") {
+                    strMsg = "Update OK?";
+                } else if (tarType == "btnAdd") {
+                    strMsg = "Insert OK?";
+                } else if (tarType == "btnDel") {
+                    strMsg = "Delete OK?";
+                }
+                if (strMsg != "") { //更新系は確認Dialogを出す。
+                    if (confirm(strMsg) == true) {
+                        //［削除］なら入力チェックを無視して何でも消せる。
+                        if (strMsg.indexOf("Delete") < 0) {
+                            //IDの入力チェック
+                            if ((document.formBook.inpID.value.length != 6) ||
+                                (isNaN(document.formBook.inpID.value) == true)) {
+                                alert("ID is wrong.");
+                                goFlg = false;
+                            }
+                            //Seqの入力チェック
+                            while (document.formBook.inpSeq.value.length < 3) {
+                                document.formBook.inpSeq.value = "0" + document.formBook.inpSeq.value;
+                            }
+                            if ((isNaN(document.formBook.inpSeq.value) == true) ||
+                                //		    (document.formBook.inpSeq.value        == "000") ||
+                                (document.formBook.inpSeq.value > "999")) {
+                                alert("Seq is wrong.");
+                                goFlg = false;
+                            }
+                        }
+                    } else {
+                        goFlg = false;
+                    }
+                }
+                if (goFlg == true) {
+                    document.formBook.formBtnType.value = tarType;
+                    document.formBook.method = "post";
+                    document.formBook.action = "makebook.jsp";
+                    document.formBook.submit();
+                }
+            }
+            // -->
+        </script>
+    </head>
+
+    <body bgcolor="#FFFFFF" text="#000000">
+        <%
 	//キャラクタ_セット宣言
 	request.setCharacterEncoding("UTF-8");
 %>
-<%!
+            <%!
 	public String escapeString(String str) {
 	//',",\ をescapeする
 		try {
@@ -113,7 +116,7 @@ function sendQuery(tarType) {
 		}
 	}
 %>
-<%!
+                <%!
 	//いろいろフォーマット宣言
 	SimpleDateFormat dateFmt = new SimpleDateFormat("yyyy-MM-dd");
 	SimpleDateFormat dateFmtE = new SimpleDateFormat("yyyy.M/d(E) H:mm:ss");
@@ -166,7 +169,7 @@ function sendQuery(tarType) {
 	String sch_memo;
 	String sch_modDate = "";
 %>
-<%
+                    <%
 /* 本日日付を生成 */
 	Calendar parToday = Calendar.getInstance();
 	String nowDate = dateFmt.format(parToday.getTime());
@@ -255,7 +258,6 @@ if (parKeywordT.length() == 0) { parKeywordT = "T"; }
 String parKeywordW = "";												/* where句ワークエリア */
 StringBuffer sBfTitleBar = new StringBuffer("");    /* タイトルバー ワークエリア */
 String strTitle = "BookDB: ";
-String strCo[];		/* Combo要素選択用ワーク */
 
 //ring parSelect = "select * from book_t";
 String parDistinct = "DISTINCT vol_id,seq,title,title_seq,title_seq_sin,"
@@ -277,7 +279,7 @@ int idx = 0;
 int idx2 = 0;
 int i;
 %>
-<%
+                        <%
 //DB Bundle
 	cmR.connectJdbc6();
 //	Connection db = cmR.getJdbc();
@@ -374,7 +376,7 @@ int i;
 		}
 	}
 %>
-<%
+                            <%
     /* 文字列[検索]で検索 */
     if (sch_btn.equals("btnKeyword")) {
         query = new StringBuffer();
@@ -607,7 +609,7 @@ int i;
     }
     //out.print(query.toString());
 %>
-<%
+                                <%
 	/* [更新][追加]なら更新して再検索 */
 	if ((sch_btn.equals("btnMod")) ||
 	    (sch_btn.equals("btnAdd"))) {
@@ -697,7 +699,7 @@ int i;
 	}
 
 %>
-<%
+                                    <%
 	/* DBを読む */
 	if (useMainDB == true) {
 		//book_t 条件よみ
@@ -708,7 +710,7 @@ int i;
 		bkS.selectWK(parSelectW, parDistinct);
 	}
 %>
-<%
+                                        <%
 	//ヘッダ用に１件だけ抽出
 	try {
 	if (bkS.getResultCount() > 0) {
@@ -805,166 +807,143 @@ int i;
 		//out.println("bkS.getResultCount() is null");
 	}
 %>
-<form name="formBook">
-<table border="0" width="100%">
-	<tr><td width="50%">
-		<h2>BookDB管理</h2>
-	</td>
-	<td align="center" id="AjaxState">
-	</td>
-	<td>
-		<input align="right" name="outRow" type="text" readonly>
-	</td>
-	<td align="right">
-		<%= sch_comName %>
-	</td>
-	</tr>
-</table>
-<div id="divDebug"></div>
-<hr>
-<div id="divCalendar" class="div1"></div>
-<table border="1" id="tblId">
-<!-- VolID制御列 -->
-	<tr align="center" valign="middle">
-		<th bgcolor="#cccccc" width="80" id="thBkID">
-			<input type="button" onclick="javascript:openCalendarWindow('BkID')"
-				name="btnID" value="VolumeID">
-		</th>
-		<td>
-			<input size="7" type="text" maxlength="6"
- 				id="inpBkID"
-				name="inpID" value="<%= sch_id %>"></td>
-		<td>
-			<input type="button" name="btnIDEqual" onclick="javascript:sendQuery('btnID')"
-				value="検索">
-		</td>
-		<td>
-			<input type="button" name="btnIDPrev" onclick="javascript:sendQuery('btnIDPrev')"
-				value="前">
-		</td>
-		<td>
-			<input type="button" name="btnIDNext" onclick="javascript:sendQuery('btnIDNext')"
-				value="次">
-		</td>
-		<th bgcolor="#cccccc" rowspan="2">検<br>索</th>
-		<!--td bgcolor="#cccccc">書名/姓</td-->
-		<td align="left">
-			<input size="40" type="text" maxlength="255"
-				id="inpBkKeyword"
-				name="inpKeyword" value="<%= parKeyword %>">
-		</td>
-		<td>
-		<%
+                                            <form name="formBook">
+                                                <table border="0" width="100%">
+                                                    <tr>
+                                                        <td width="50%">
+                                                            <h2>BookDB管理</h2>
+                                                        </td>
+                                                        <td align="center" id="AjaxState">
+                                                        </td>
+                                                        <td>
+                                                            <input align="right" name="outRow" type="text" readonly>
+                                                        </td>
+                                                        <td align="right">
+                                                            <%= sch_comName %>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <div id="divDebug"></div>
+                                                <hr>
+                                                <div id="divCalendar" class="div1"></div>
+                                                <table border="1" id="tblId">
+                                                    <!-- VolID制御列 -->
+                                                    <tr align="center" valign="middle">
+                                                        <th bgcolor="#cccccc" width="80" id="thBkID">
+                                                            <input type="button" onclick="javascript:openCalendarWindow('BkID')" name="btnID" value="VolumeID">
+                                                        </th>
+                                                        <td>
+                                                            <input size="7" type="text" maxlength="6" id="inpBkID" name="inpID" value="<%= sch_id %>"></td>
+                                                        <td>
+                                                            <input type="button" name="btnIDEqual" onclick="javascript:sendQuery('btnID')" value="検索">
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" name="btnIDPrev" onclick="javascript:sendQuery('btnIDPrev')" value="前">
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" name="btnIDNext" onclick="javascript:sendQuery('btnIDNext')" value="次">
+                                                        </td>
+                                                        <th bgcolor="#cccccc" rowspan="2">検<br>索</th>
+                                                        <!--td bgcolor="#cccccc">書名/姓</td-->
+                                                        <td align="left">
+                                                            <input size="40" type="text" maxlength="255" id="inpBkKeyword" name="inpKeyword" value="<%= parKeyword %>">
+                                                        </td>
+                                                        <td>
+                                                            <%
 			out.println(cmF.makeSelectOption("selKeyword", "selKeyword", parKeywordM));
 		%>
-		</td>
-		<td>
-			<input type="button" name="btnKeyword"
-				onclick="javascript: sendQuery('btnKeyword')" value="検索">
-		</td>
-	</tr>
-<!-- VolSeq制御列 -->
-	<tr align="center" valign="middle">
-		<th bgcolor="#cccccc">SEQ</th>
-		<td class="fontSmall">
-			<a href="javascript: addSeq(-1,'id')">▽</a>
-			<input size="4" type="text" maxlength="3" name="inpSeq" value="<%= sch_seq %>">
-			<a href="javascript: addSeq(1,'id')">△</a>
-		</td>
-		<td>
-			<input type="button" name="btnIDSeq"
-				onclick="javascript:sendQuery('btnIDSeq')" value="検索">
-		</td>
-		<td>
-			<input type="button" name="btnIDSeqPrev"
-				onclick="javascript:sendQuery('btnIDSeqPrev')" value="前">
-		</td>
-		<td>
-			<input type="button" name="btnIDSeqNext"
-				onclick="javascript:sendQuery('btnIDSeqNext')" value="次">
-		</td>
-		<td class="fontSmall" id="thBkKeyword">
-		<%
-			strCo = new String[10];
-			if (parKeywordT.indexOf("T") >= 0) { strCo[0] = "checked"; }
-			if (parKeywordT.indexOf("P") >= 0) { strCo[1] = "checked"; }
-			if (parKeywordT.indexOf("H") >= 0) { strCo[2] = "checked"; }
-			if (parKeywordT.indexOf("D") >= 0) { strCo[3] = "checked"; }
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" name="btnKeyword" onclick="javascript: sendQuery('btnKeyword')" value="検索">
+                                                        </td>
+                                                    </tr>
+                                                    <!-- VolSeq制御列 -->
+                                                    <tr align="center" valign="middle">
+                                                        <th bgcolor="#cccccc">SEQ</th>
+                                                        <td class="fontSmall">
+                                                            <a href="javascript: addSeq(-1,'id')">▽</a>
+                                                            <input size="4" type="text" maxlength="3" name="inpSeq" value="<%= sch_seq %>">
+                                                            <a href="javascript: addSeq(1,'id')">△</a>
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" name="btnIDSeq" onclick="javascript:sendQuery('btnIDSeq')" value="検索">
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" name="btnIDSeqPrev" onclick="javascript:sendQuery('btnIDSeqPrev')" value="前">
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" name="btnIDSeqNext" onclick="javascript:sendQuery('btnIDSeqNext')" value="次">
+                                                        </td>
+                                                        <td class="fontSmall" id="thBkKeyword">
+                                                            <%
+//	if (parKeywordT.indexOf("T") >= 0) { strCo[0] = "checked"; }
 //			out.print(parKeywordT);
+			out.println("<input type=\"checkbox\" name=\"chkKeywordT\" id=\"chkKeywordT\"");
+			if (parKeywordT.indexOf("T") >= 0) { out.println(" checked"); }
+			out.println(" value=\"T\" onclick=\"javascript:setChkKeyword('T');\">書名");
+			
+			out.println("<input type=\"checkbox\" name=\"chkKeywordP\" id=\"chkKeywordP\"");
+			if (parKeywordT.indexOf("P") >= 0) { out.println(" checked"); }
+			out.println(" value=\"P\" onclick=\"javascript:setChkKeyword('P');\">著者");
+			
+			out.println("<input type=\"checkbox\" name=\"chkKeywordH\" id=\"chkKeywordH\"");
+			if (parKeywordT.indexOf("H") >= 0) { out.println(" checked"); }
+			out.println(" value=\"H\" onclick=\"javascript:setChkKeyword('H');\">出版社");
+			
+			out.println("<input type=\"checkbox\" name=\"chkKeywordD\" id=\"chkKeywordD\"");
+			if (parKeywordT.indexOf("D") >= 0) { out.println(" checked"); }
+			out.println(" value=\"D\" onclick=\"javascript:setChkKeyword('D');\">購入日");
+			
 		%>
-			<input type="checkbox" name="chkKeywordT" value="T"
-				 onclick="javascript:setChkKeyword('T');" <%= strCo[0] %> id="chkKeywordT">書名
-			<input type="checkbox" name="chkKeywordP" value="P"
-				 onclick="javascript:setChkKeyword('P');" <%= strCo[1] %> id="chkKeywordP">著者
-			<input type="checkbox" name="chkKeywordH" value="H"
-				 onclick="javascript:setChkKeyword('H');" <%= strCo[2] %> id="chkKeywordH">出版社
-			<input type="checkbox" name="chkKeywordD" value="D"
-                 onclick="javascript:setChkKeyword('D');" <%= strCo[3] %> id="chkKeywordD">購入日
-		</td>
-		<td align="center">
-			<input type="button" onclick="javascript:openCalendarWindow('BkKeyword')"
-				name="btnKeywordD" value="購入日">
-		</td>
-		<td>
-			<input type="button" name="btnKeywordClear"
-				onclick="javascript: clearInpData('Keyword')" value="クリア">
-		</td>
-    </tr>
-</table>
-<table border="1">
-<!-- タイトル制御列 -->
-	<tr>
-		<th bgcolor="#cccccc" width="80">書名</th>
-		<td>
-			<input size="70" type="text" maxlength="255" name="inpTitle"
-			 value="<%= sch_title  %>"
-			 id='title' onblur="javascript: assistKana(this, 'bk')";>
-		</td>
-		<td align="center">
-			<!-- input type="button" name="btnABSearch"
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" onclick="javascript:openCalendarWindow('BkKeyword')" name="btnKeywordD" value="購入日">
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" name="btnKeywordClear" onclick="javascript: clearInpData('Keyword')" value="クリア">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <table border="1">
+                                                    <!-- タイトル制御列 -->
+                                                    <tr>
+                                                        <th bgcolor="#cccccc" width="80">書名</th>
+                                                        <td>
+                                                            <input size="70" type="text" maxlength="255" name="inpTitle" value="<%= sch_title  %>" id='title' onblur="javascript: assistKana(this, 'bk')" ;>
+                                                        </td>
+                                                        <td align="center">
+                                                            <!-- input type="button" name="btnABSearch"
 				onclick="javascript: openSearchWindow()"
 				value="AB検索"	-->
-			<input type="button" name="btnABSearch"
-				onclick="javascript: searchAB()"
-				value="AB検索">
-		</td>
-		<td align="center">
-			<input type="button" name="btnTitleClear"
-				onclick="javascript: clearInpData('Title')" value="クリア">
-		</td>
-	</tr>
-<!-- 書名かな制御列 -->
-	<tr>
-		<%
-			strCo[4] = "";
-			if (sch_titleSeqC.equals("1")) { strCo[4] = "checked"; }
-		%>
-		<th bgcolor="#cccccc">書名かな</th>
-		<td>
-			<input size="63" type="text" maxlength="255" name="inpTitleSort"
-			 value="<%= sch_titleSort %>"
-			 id='titleSort' onblur="javascript: assistKana(this, 'bk')";>
-			<input type="button" name="btnTitleSort" value="再"
-				id="btnTitleSort" onclick="javascript: assistKana(this, 'xx')">
-			<div id="titleSortWork"></div>
-		</td>
-		<td align="center" class="fontSmall">
-			<a href="javascript: addSeq(-1,'title')">▽</a>
-            <input size="4" type="text" maxlength="3" name="inpTitleSeq"
-                id="titleSeq" value="<%= sch_titleSeq %>">
-			<a href="javascript: addSeq(1,'title')">△</a>
-			<input type="checkbox" name="chkTitleSeq" value="1" <%= strCo[4] %>>
-		</td>
-		<td align="center">
-			<input type="button" name="btnTitleClear"
-				onclick="javascript: clearInpData('TitleSort')" value="クリア">
-		</td>
-	</tr>
-</table>
-<table border="1">
-<!-- 演者１制御列 -->
-	<tr>
-		<%
+                                                            <input type="button" name="btnABSearch" onclick="javascript: searchAB()" value="AB検索">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnTitleClear" onclick="javascript: clearInpData('Title')" value="クリア">
+                                                        </td>
+                                                    </tr>
+                                                    <!-- 書名かな制御列 -->
+                                                    <tr>
+                                                        <th bgcolor="#cccccc">書名かな</th>
+                                                        <td>
+                                                            <input size="63" type="text" maxlength="255" name="inpTitleSort" value="<%= sch_titleSort %>" id='titleSort' onblur="javascript: assistKana(this, 'bk')" ;>
+                                                            <input type="button" name="btnTitleSort" value="再" id="btnTitleSort" onclick="javascript: assistKana(this, 'xx')">
+                                                            <div id="titleSortWork"></div>
+                                                        </td>
+                                                        <td align="center" class="fontSmall">
+                                                            <a href="javascript: addSeq(-1,'title')">▽</a>
+                                                            <input size="4" type="text" maxlength="3" name="inpTitleSeq" id="titleSeq" value="<%= sch_titleSeq %>">
+                                                            <a href="javascript: addSeq(1,'title')">△</a>
+                                                            <input type="checkbox" name="chkTitleSeq" id="chkTitleSeq" value="1" <% if (sch_titleSeqC.equals( "1")) { out.println( " checked"); } %> >
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnTitleClear" onclick="javascript: clearInpData('TitleSort')" value="クリア">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <table border="1">
+                                                    <!-- 演者１制御列 -->
+                                                    <tr>
+                                                        <%
 			//演者マスタDBから姓名１取得
 			if (sch_player1ID.equals("")) {
 				sch_player1 = "";
@@ -1004,97 +983,81 @@ int i;
 				sch_player3 = "";
 			}
 		}
-		//ほか著者チェックの設定
-		if (sch_player4.equals("1")) { strCo[5] = "checked"; }
-		//未所有チェックの設定
-		if (sch_getYet.equals("1")) {
-			strCo[6] = "bgcolor='red'";
-			strCo[7] = "checked";
-		}
 		%>
-		<th bgcolor="#cccccc" width="80px">
-			<input type="button" name="btnP1ID"
-				onclick="javascript: openPlayerWindow('inpP1ID')" value="著者1">
-		</th>
-		<td>
-			<input size="7" type="text" maxlength="6" name="inpP1ID"
-				value="<%= sch_player1ID %>">
-			<input size="24" type="text" name="inpP1"
-				id="author1" value="<%= sch_player1 %>">
-		<%
+                                                            <th bgcolor="#cccccc" width="80px">
+                                                                <input type="button" name="btnP1ID" onclick="javascript: openPlayerWindow('inpP1ID')" value="著者1">
+                                                            </th>
+                                                            <td>
+                                                                <input size="7" type="text" maxlength="6" name="inpP1ID" value="<%= sch_player1ID %>">
+                                                                <input size="24" type="text" name="inpP1" id="author1" value="<%= sch_player1 %>">
+                                                                <%
 			out.println(cmF.makePlayerPart("selP1", "", sch_player1Sin));
 		%>
-		</td>
-		<!--td align="center">
+                                                            </td>
+                                                            <!--td align="center">
 			<input type="button" name="btnP1Clear"
 				onclick="javascript: clearInpData('P1')" value="クリア">
 		</td-->
-		<th bgcolor="#cccccc">
-			<input type="button" name="btnP3ID"
-				onclick="javascript: openPlayerWindow('inpP3ID')" value="著者3">
-		</th>
-		<td colspan="3">
-			<input size="5" type="text" maxlength="6" name="inpP3ID"
-				value="<%= sch_player3ID %>">
-			<input size="15" type="text" name="inpP3"
-				value="<%= sch_player3 %>">
-		<%
+                                                            <th bgcolor="#cccccc">
+                                                                <input type="button" name="btnP3ID" onclick="javascript: openPlayerWindow('inpP3ID')" value="著者3">
+                                                            </th>
+                                                            <td colspan="3">
+                                                                <input size="5" type="text" maxlength="6" name="inpP3ID" value="<%= sch_player3ID %>">
+                                                                <input size="15" type="text" name="inpP3" value="<%= sch_player3 %>">
+                                                                <%
 			out.println(cmF.makePlayerPart("selP3", "", sch_player3Sin));
 		%>
-			他<input type="checkbox" name="chkP4" value="1" <%= strCo[5] %>>
-			<!--input type="button" name="btnP3Clear"
+                                                                    他<input type="checkbox" name="chkP4" value="1" <% //ほか著者チェックの設定 if (sch_player4.equals( "1")) { out.println( " checked"); } %>
+                                                                    <!--input type="button" name="btnP3Clear"
 				onclick="javascript: clearInpData('P3')" value="クリア"-->
-		</td>
-	</tr>
-<!-- 演者２制御列 -->
-	<tr>
-		<th bgcolor="#cccccc">
-			<input type="button" name="btnP2ID"
-				onclick="javascript: openPlayerWindow('inpP2ID')" value="著者2">
-		</th>
-		<td>
-			<input size="7" type="text" maxlength="6" name="inpP2ID"
-				value="<%= sch_player2ID %>">
-			<input size="24" type="text" name="inpP2"
-				value="<%= sch_player2 %>">
-		<%
+                                                                    ></td>
+                                                    </tr>
+                                                    <!-- 演者２制御列 -->
+                                                    <tr>
+                                                        <th bgcolor="#cccccc">
+                                                            <input type="button" name="btnP2ID" onclick="javascript: openPlayerWindow('inpP2ID')" value="著者2">
+                                                        </th>
+                                                        <td>
+                                                            <input size="7" type="text" maxlength="6" name="inpP2ID" value="<%= sch_player2ID %>">
+                                                            <input size="24" type="text" name="inpP2" value="<%= sch_player2 %>">
+                                                            <%
 			out.println(cmF.makePlayerPart("selP2", "", sch_player2Sin));
 		%>
-		</td>
-		<!--td align="center">
+                                                        </td>
+                                                        <!--td align="center">
 			<input type="button" name="btnP2Clear"
 				onclick="javascript: clearInpData('P2')" value="クリア">
 		</td-->
-		<%
-			//購入日チェックの設定
-			if (sch_getDateC.equals("1")) { strCo[8] = "checked"; }
-		%>
-		<th bgcolor="#cccccc" id="thGetDate">
-			<input type="button" name="btnGetDate"
-				onclick="javascript:openCalendarWindow('GetDate')" value="購入日">
-		</th>
-		<td>
-			<input type="checkbox"
-				id="chkGetDate"
-				name="chkGetDate"
-				onclick="javascript: clearInpData('getDate')" value="1" <%= strCo[8] %>>
-			<input size="8" type="text" maxlength="10"
-				id="inpGetDate"
-				name="inpGetDate" value="<%= sch_getDate %>">
-		</td>
-		<td class="divCenter" style="background-color:skyblue;">
-		<%
+                                                        <th bgcolor="#cccccc" id="thGetDate">
+                                                            <input type="button" name="btnGetDate" onclick="javascript:openCalendarWindow('GetDate')" value="購入日">
+                                                        </th>
+                                                        <td>
+                                                            <!-- input type="checkbox" id="chkGetDate" name="chkGetDate" onclick="javascript: clearInpData('getDate')" value="1"
+                                                            -->
+                                                            <% //購入日チェックの設定
+                                                           	out.print("<input type='checkbox' id='chkGetDate' name='chkGetDate'");
+                                                            if (sch_getDateC.equals("1")) { out.println(" checked"); }
+															out.print(" value='1' onclick=\"javascript:clearInpData('getDate');\">");
+ 															%><input type="text" size="8" maxlength="10" id="inpGetDate" name="inpGetDate" value="<%= sch_getDate %>">
+                                                        </td>
+                                                        <td class="divCenter" style="background-color:skyblue;">
+                                                            <%
 			//媒体セレクタの設定
 			out.println(cmF.makeMedia("selAttMed", "", sch_media));
 		%>
-		</td>
-		<td <%= strCo[6] %> class="divRight">未所有
-			<input type="checkbox" name="chkGetYet" value="1" <%= strCo[7] %>>
-		</td>
-	</tr>
-<!-- 出版社とISBN制御列 -->
-	<tr>
-		<%
+                                                        </td>
+                                                        <%
+		//未所有チェックの設定
+		out.println("<td class='divRight'");
+		if (sch_getYet.equals("1")) { out.println(" bgcolor='red'"); }
+		out.println(">未所有<input type='checkbox' name='chkGetYet' id='chkGetYet'");
+		if (sch_getYet.equals("1")) { out.println(" checked"); }
+		out.println(" value='1'></td>");
+		%>
+                                                    </tr>
+                                                    <!-- 出版社とISBN制御列 -->
+                                                    <tr>
+                                                        <%
 		//タイトル_マスタDBから局名取得
 			query2 = new StringBuffer();
 			query2.append("WHERE id = '");
@@ -1110,69 +1073,58 @@ int i;
 				//out.println("tms.getResultCount() is null");
 			}
 		%>
-		<th bgcolor="#cccccc">
-			<input type="button" name="btnSourceID"
-				onclick="javascript: openTitleWindow('inpSourceID')" value="出版社">
-		</th>
-		<td>
-			<input size="7" type="text" maxlength="6" name="inpSourceID"
-				value="<%= sch_sourceID %>">
-			<input size="22" type="text" name="inpSource"
-				value="<%= sch_source %>">
-			<input type="button" name="btnSourceClear"
-				onclick="javascript: clearInpData('Source')" value="クリア">
-		</td>
-		<th bgcolor="#cccccc">購入額</th>
-		<td colspan="3">
-			<!--
+                                                            <th bgcolor="#cccccc">
+                                                                <input type="button" name="btnSourceID" onclick="javascript: openTitleWindow('inpSourceID')" value="出版社">
+                                                            </th>
+                                                            <td>
+                                                                <input size="7" type="text" maxlength="6" name="inpSourceID" value="<%= sch_sourceID %>">
+                                                                <input size="22" type="text" name="inpSource" value="<%= sch_source %>">
+                                                                <input type="button" name="btnSourceClear" onclick="javascript: clearInpData('Source')" value="クリア">
+                                                            </td>
+                                                            <th bgcolor="#cccccc">購入額</th>
+                                                            <td colspan="3">
+                                                                <!--
 			<input size="2" type="text" maxlength="3" id="inpCur" class="divCenter"
 				name="inpCur" value="<%= sch_cur %>">
 			-->
-		<%
+                                                                <%
 			//通貨セレクタの設定
 			out.println(cmF.makeCurrency("selCurrency", "", sch_cur));
 		%>
-			<input size="5" type="text" maxlength="16" class="divRight" id="inpPrice"
-				name="inpPrice" value="<%= sch_price %>">
-			<input type="button" name="btnPrice10"
-				onclick="javascript: calInpData('price',1.1)" value="10%">
-			<input size="5" type="text" class="divRight" id="barePrice10"
-				name="barePrice10" value="<%= sch_priceZ10 %>" readonly>
-			<input type="button" name="btnPrice8"
-				onclick="javascript: calInpData('price',1.08)" value="8%">
-			<input size="5" type="text" class="divRight" id="barePrice"
-				name="barePrice" value="<%= sch_priceZ %>" readonly>
-		</td>
-	</tr>
-</table>
-<table border="1">
-<!-- bk1URL制御列 -->
-	<tr>
-		<td colspan="4">
-			<div id="divB" style="display:none;">
-				<iframe id='ifrB' src=''>loading...</iframe>
-			</div>
-			<div id="divF" style="display:none;">
-				<iframe id='ifrF' src=''>loading...</iframe>
-			<!--
+                                                                    <input type="text" id="inpPrice" name="inpPrice" class="divRight" size="5" maxlength="16" <% out.println( "value='" + sch_price + "'"); %>>
+                                                                    <input type="button" name="btnPrice10" onclick="javascript: calInpData('price',1.1)" value="10%">
+                                                                    <input type="text" id="barePrice10" name="barePrice10" class="divRight" size="5" readonly <% out.println( "value='" + sch_priceZ10 + "'"); %>>
+                                                                    <input type="button" name="btnPrice8" onclick="javascript: calInpData('price',1.08)" value="8%">
+                                                                    <input type="text" id="barePrice" name="barePrice" class="divRight" size="5" readonly <% out.println( "value='" + sch_priceZ + "'"); %>>
+                                                            </td>
+                                                    </tr>
+                                                </table>
+                                                <table border="1">
+                                                    <!-- bk1URL制御列 -->
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <div id="divB" style="display:none;">
+                                                                <iframe id='ifrB' src=''>loading...</iframe>
+                                                            </div>
+                                                            <div id="divF" style="display:none;">
+                                                                <iframe id='ifrF' src=''>loading...</iframe>
+                                                                <!--
 				<object id='objF' name='objF' data='' type='application/xml'></object>
 			-->
-			<input type="hidden" id="btnF" value="">
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th bgcolor="#cccccc" rowspan="2" width="80">bk1</th>
-		<td>
-			<input size="84" type="text" name="inpURLB"
-				id="urlB" value="<%= sch_urlB %>">
-		</td>
-		<td align="center">
-			<input type="button" id="btnB"
-				onclick="javascript: openIfr('bk1')" value="Open">
-		</td>
-		<td align="center" rowspan="2">
-			<%
+                                                                <input type="hidden" id="btnF" value="">
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th bgcolor="#cccccc" rowspan="2" width="80">bk1</th>
+                                                        <td>
+                                                            <input size="84" type="text" name="inpURLB" id="urlB" value="<%= sch_urlB %>">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" id="btnB" onclick="javascript: openIfr('bk1')" value="Open">
+                                                        </td>
+                                                        <td align="center" rowspan="2">
+                                                            <%
 				if (sch_urlB.equals("")) {
 					out.println("-");
 				} else {
@@ -1184,40 +1136,36 @@ int i;
 					}
 				}
 			%>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input size="76" type="text" name="inpImgB" value="<%= sch_imgB %>">
-			<input type="button" name="btnHmv" onclick="javascript: chgHmvImg();" value="HMV">
-		</td>
-		<td align="center">
-			<input type="button" name="btnURLBClear"
-				onclick="javascript: clearInpData('URLB')" value="クリア">
-		</td>
-	</tr>
-<!-- amazonURL制御列 -->
-	<tr>
-		<td colspan="4">
-			<div id="divA" style="display:none;">
-				<iframe id='ifrA' src=''>loading...</iframe>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th bgcolor="#cccccc" rowspan="2" width="80">amazon</th>
-		<td>
-			<input size="68" type="text" name="inpURLA"
-				id="urlA" value="<%= sch_urlA %>">
-			<input size="14" type="text" maxlength="32" name="inpISBN"
-				value="<%= sch_isbn %>">
-		</td>
-		<td align="center">
-			<input type="button" id="btnA"
-				onclick="javascript: openIfr('ama')" value="Open">
-		</td>
-		<td align="center" rowspan="2">
-			<%
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input size="76" type="text" name="inpImgB" value="<%= sch_imgB %>">
+                                                            <input type="button" name="btnHmv" onclick="javascript: chgHmvImg();" value="HMV">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnURLBClear" onclick="javascript: clearInpData('URLB')" value="クリア">
+                                                        </td>
+                                                    </tr>
+                                                    <!-- amazonURL制御列 -->
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <div id="divA" style="display:none;">
+                                                                <iframe id='ifrA' src=''>loading...</iframe>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th bgcolor="#cccccc" rowspan="2" width="80">amazon</th>
+                                                        <td>
+                                                            <input size="68" type="text" name="inpURLA" id="urlA" value="<%= sch_urlA %>">
+                                                            <input size="14" type="text" maxlength="32" name="inpISBN" value="<%= sch_isbn %>">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" id="btnA" onclick="javascript: openIfr('ama')" value="Open">
+                                                        </td>
+                                                        <td align="center" rowspan="2">
+                                                            <%
 				if (sch_urlA.equals("")) {
 					out.println("-");
 				} else {
@@ -1229,39 +1177,35 @@ int i;
 					}
 				}
 			%>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input size="75" type="text" name="inpImgA" value="<%= sch_imgA %>">
-			<input type="button" name="btnASIN" value="ASIN"
-				onclick="javascript: putASIN();">
-		</td>
-		<td align="center">
-			<input type="button" name="btnURLAClear"
-				onclick="javascript: clearInpData('URLA')" value="クリア">
-		</td>
-	</tr>
-<!-- 電子本URL制御列 -->
-	<tr>
-		<td colspan="4">
-			<div id="divE" style="display:none;">
-				<iframe id='ifrE' src=''>loading...</iframe>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th bgcolor="#cccccc" rowspan="2" width="80">eBook</th>
-		<td>
-			<input size="84" type="text" name="inpURLE"
-				id="urlE" value="<%= sch_urlE %>">
-		</td>
-		<td align="center">
-			<input type="button" id="btnE"
-				onclick="javascript: openIfr('ebk')" value="Open">
-		</td>
-		<td align="center" rowspan="2">
-			<%
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input size="75" type="text" name="inpImgA" value="<%= sch_imgA %>">
+                                                            <input type="button" name="btnASIN" value="ASIN" onclick="javascript: putASIN();">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnURLAClear" onclick="javascript: clearInpData('URLA')" value="クリア">
+                                                        </td>
+                                                    </tr>
+                                                    <!-- 電子本URL制御列 -->
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <div id="divE" style="display:none;">
+                                                                <iframe id='ifrE' src=''>loading...</iframe>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th bgcolor="#cccccc" rowspan="2" width="80">eBook</th>
+                                                        <td>
+                                                            <input size="84" type="text" name="inpURLE" id="urlE" value="<%= sch_urlE %>">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" id="btnE" onclick="javascript: openIfr('ebk')" value="Open">
+                                                        </td>
+                                                        <td align="center" rowspan="2">
+                                                            <%
 				if (sch_urlE.equals("")) {
 					out.println("-");
 				} else {
@@ -1273,41 +1217,38 @@ int i;
 					}
 				}
 			%>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input size="69" type="text" name="inpImgE" value="<%= sch_imgE %>">
-		<%
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input size="69" type="text" name="inpImgE" value="<%= sch_imgE %>">
+                                                            <%
 			//ストアセレクタの設定
 			out.println(cmF.makeStore("selStore", "", sch_storeS));
 		%>
-		</td>
-		<td align="center">
-			<input type="button" name="btnURLEClear"
-				onclick="javascript: clearInpData('URLE','1')" value="クリア">
-		</td>
-	</tr>
-<!-- その他URL制御列 -->
-	<tr>
-		<td colspan="4">
-			<div id="divC" style="display:none;">
-				<iframe id='ifrC' src=''>loading...</iframe>
-			</div>
-		</td>
-	</tr>
-	<tr>
-		<th bgcolor="#cccccc" rowspan="2" width="80">その他</th>
-		<td>
-			<input size="84" type="text" name="inpURLC"
-				id="urlC" value="<%= sch_urlC %>">
-		</td>
-		<td align="center">
-			<input type="button" id="btnC"
-				onclick="javascript: openIfr('oth')" value="Open">
-		</td>
-		<td align="center" rowspan="2">
-			<%
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnURLEClear" onclick="javascript: clearInpData('URLE','1')" value="クリア">
+                                                        </td>
+                                                    </tr>
+                                                    <!-- その他URL制御列 -->
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <div id="divC" style="display:none;">
+                                                                <iframe id='ifrC' src=''>loading...</iframe>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <th bgcolor="#cccccc" rowspan="2" width="80">その他</th>
+                                                        <td>
+                                                            <input size="84" type="text" name="inpURLC" id="urlC" value="<%= sch_urlC %>">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" id="btnC" onclick="javascript: openIfr('oth')" value="Open">
+                                                        </td>
+                                                        <td align="center" rowspan="2">
+                                                            <%
 				if (sch_urlC.equals("")) {
 					out.println("-");
 				} else {
@@ -1319,102 +1260,95 @@ int i;
 					}
 				}
 			%>
-		</td>
-	</tr>
-	<tr>
-		<td>
-			<input size="73" type="text" name="inpImgC" value="<%= sch_imgC %>">
-		<%
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>
+                                                            <input size="73" type="text" name="inpImgC" value="<%= sch_imgC %>">
+                                                            <%
 			//書影セレクタの設定
 			out.println(cmF.makeAssociate("selImg", "", sch_imgS));
 		%>
-		</td>
-		<td align="center">
-			<input type="button" name="btnURLCClear"
-				onclick="javascript: clearInpData('URLC')" value="クリア">
-		</td>
-	</tr>
-</table>
-<table border="1">
-<!-- Memo -->
-	<tr>
-		<th bgcolor="#cccccc" rowspan="2" width="80">Memo</th>
-		<td colspan="5" rowspan="2">
-			<textarea name="inpMemo" cols="72" rows="4"
-				class="fontSmall"><%= sch_memo %></textarea>
-		</td>
-		<td align="center">
-					<input type="button" name="btnMemo" value="クリア"
-				onclick="javascript:clearInpData('memo')">
-		</td>
-<!--		<td align="left" colspan="4" rowspan="3">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnURLCClear" onclick="javascript: clearInpData('URLC')" value="クリア">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <table border="1">
+                                                    <!-- Memo -->
+                                                    <tr>
+                                                        <th bgcolor="#cccccc" rowspan="2" width="80">Memo</th>
+                                                        <td colspan="5" rowspan="2">
+                                                            <textarea name="inpMemo" cols="72" rows="4" class="fontSmall"><%= sch_memo %></textarea>
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnMemo" value="クリア" onclick="javascript:clearInpData('memo')">
+                                                        </td>
+                                                        <!--		<td align="left" colspan="4" rowspan="3">
 			<textarea cols="48" name="inpMemo" rows="4">
 				<%= sch_memo %>
 			</textarea>
 		</td>	-->
-	</tr>
-	<tr valign="middle">
-		<!-- td colspan="5" class="fontSmall"><%= sch_memo %></td-->
-		<td class="divRight"><%= sch_memo.length() %></td>
-	</tr>
-<!-- 更新日表示列 -->
-	<tr>
-		<th bgcolor="#cccccc">更新日</th>
-		<td><%= sch_modDate %></td>
-<!-- 操作ボタン制御列 -->
-		<td align="center">
-			<input type="Button"
-				onclick="javascript:assistInpData(), sendQuery('btnMod')"
-				name="btnModTitle" value="更新">
-		</td>
-		<td align="center">
-			<input type="Button"
-				onclick="javascript:assistInpData(), sendQuery('btnAdd')"
-				name="btnModTitle" value="追加">
-		</td>
-		<td align="center">
-			<input type="Button"
-				onclick="javascript:sendQuery('btnDel')" name="btnModTitle" value="削除">
-		</td>
-		<td align="center">
-			<input type="button" name="btnInsID"
-				onclick="javascript:openViewWindow('<%= sch_id %>','<%= sch_seq %>')"
-					value="書影")>
-		</td>
-		<td align="center">
-			<input type="Button"
-				onclick="javascript:copyInpData()" name="btnCpyTitle" value="複写">
-		</td>
-	</tr>
-</table>
-<input name="formBtnType" type="hidden" value="<%= sch_btn %>">
-<input name="inpTitleBar" type="hidden" value="<%= sBfTitleBar.toString() %>">
-</form>
-<hr>
-<form name="formList">
-	<input name="inpModID" type="hidden" value="">
-	<table border="0">
-		<tr align="center" bgcolor="silver">
-			<th rowspan="2">No.</th>
-			<th rowspan="2">ID</th>
-			<th rowspan="2">SEQ</th>
-			<th>書名</th>
-			<th>出版社</th>
-			<th colspan="4">URL/image</th>
-			<th>採用/媒体</th>
-			<th>購入日</th>
-		</tr>
-		<tr align="center" bgcolor="silver">
-			<th>著者名</th>
-			<th>ISBN</th>
-			<th>bk1</th>
-			<th>ama</th>
-			<th>eBk</th>
-			<th>oth</th>
-			<th>購入額</th>
-			<th>更新日</th>
-		</tr>
-<%
+                                                    </tr>
+                                                    <tr valign="middle">
+                                                        <!-- td colspan="5" class="fontSmall"><%= sch_memo %></td-->
+                                                        <td class="divRight">
+                                                            <%= sch_memo.length() %>
+                                                        </td>
+                                                    </tr>
+                                                    <!-- 更新日表示列 -->
+                                                    <tr>
+                                                        <th bgcolor="#cccccc">更新日</th>
+                                                        <td>
+                                                            <%= sch_modDate %>
+                                                        </td>
+                                                        <!-- 操作ボタン制御列 -->
+                                                        <td align="center">
+                                                            <input type="Button" onclick="javascript:assistInpData(), sendQuery('btnMod')" name="btnModTitle" value="更新">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="Button" onclick="javascript:assistInpData(), sendQuery('btnAdd')" name="btnModTitle" value="追加">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="Button" onclick="javascript:sendQuery('btnDel')" name="btnModTitle" value="削除">
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnInsID" onclick="javascript:openViewWindow('<%= sch_id %>','<%= sch_seq %>')" value="書影" )>
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="Button" onclick="javascript:copyInpData()" name="btnCpyTitle" value="複写">
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                                <input name="formBtnType" type="hidden" value="<%= sch_btn %>">
+                                                <input name="inpTitleBar" type="hidden" value="<%= sBfTitleBar.toString() %>">
+                                            </form>
+                                            <hr>
+                                            <form name="formList">
+                                                <input name="inpModID" type="hidden" value="">
+                                                <table border="0">
+                                                    <tr align="center" bgcolor="silver">
+                                                        <th rowspan="2">No.</th>
+                                                        <th rowspan="2">ID</th>
+                                                        <th rowspan="2">SEQ</th>
+                                                        <th>書名</th>
+                                                        <th>出版社</th>
+                                                        <th colspan="4">URL/image</th>
+                                                        <th>採用/媒体</th>
+                                                        <th>購入日</th>
+                                                    </tr>
+                                                    <tr align="center" bgcolor="silver">
+                                                        <th>著者名</th>
+                                                        <th>ISBN</th>
+                                                        <th>bk1</th>
+                                                        <th>ama</th>
+                                                        <th>eBk</th>
+                                                        <th>oth</th>
+                                                        <th>購入額</th>
+                                                        <th>更新日</th>
+                                                    </tr>
+                                                    <%
 	int row = 0;
 	String strLine1 = "bgcolor=white";
 	String strLine2 = "bgcolor=lavender";
@@ -1463,14 +1397,11 @@ int i;
 //		sch_cur = cmR.convertCurLetter(bkS.getCurSin(i), "U$");
 		if (sch_cur.length() == 0) {
 			sch_price = "-";
-			strCo[9] = "divCenter";
 		} else {
 			try {
 				sch_price = sch_cur.concat(cmR.fixCurFormat(bkS.getPrice(i), sch_cur));
-				strCo[9] = "divRight";
 			} catch (Exception e) {
 				sch_price = "-";
-				strCo[9] = "divCenter";
 			}
 		}
 		sch_sourceID = bkS.getPublishId(i);
@@ -1663,41 +1594,73 @@ int i;
 			}
 		}
 %>
-		<tr <%= clsLine %>>
-			<td align="right"><%= row %></td>
- 			<td align="center"><%= sch_id %></td>
-			<td align="center"><%= sch_seq %></td>
-			<td><%= sch_title %></td>
-			<td><%= sch_source %></td>
-			<td align="center" rowspan="2" valign="center"><%= sch_urlB %></td>
-			<td align="center" rowspan="2" valign="center"><%= sch_urlA %></td>
-			<td align="center" rowspan="2" valign="center"><%= sch_urlE %></td>
-			<td align="center" rowspan="2" valign="center"><%= sch_urlC %></td>
-			<td align="center"><%= sch_media %></td>
-			<td><%= sch_getDate %></td>
-		</tr>
-		<tr <%= clsLine %>>
-			<td align="center">
-				<input type="button" name="btnModID"
-					onclick="javascript:openModWindow('<%= sch_id %>',
-						'<%= sch_seq %>')" value="Edit")>
-			</td>
-			<td align="center">
-				<input type="button" name="btnIDLine"
-					onclick="javascript:openSelWindow('<%= sch_id %>',
-						'<%= sch_seq %>')" value="Select")>
-			</td>
-			<td align="center">
-				<input type="button" name="btnInsID"
-					onclick="javascript:openViewWindow('<%= sch_id %>',
-						'<%= sch_seq %>')" value="書影")>
-			</td>
-			<td><%= sch_player1 %></td>	<!--３名連結済み-->
-			<td><%= sch_isbn %></td>
-			<td class="<%= strCo[9] %>"><%= sch_price %></td>
-		 	<td><%= sch_modDate %></td>
-		</tr>
-		<%
+                                                        <%
+														out.println("<tr " + clsLine + ">");
+%>
+                                                            <td align="right">
+                                                                <%= row %>
+                                                            </td>
+                                                            <td align="center">
+                                                                <%= sch_id %>
+                                                            </td>
+                                                            <td align="center">
+                                                                <%= sch_seq %>
+                                                            </td>
+                                                            <td>
+                                                                <%= sch_title %>
+                                                            </td>
+                                                            <td>
+                                                                <%= sch_source %>
+                                                            </td>
+                                                            <td align="center" rowspan="2" valign="center">
+                                                                <%= sch_urlB %>
+                                                            </td>
+                                                            <td align="center" rowspan="2" valign="center">
+                                                                <%= sch_urlA %>
+                                                            </td>
+                                                            <td align="center" rowspan="2" valign="center">
+                                                                <%= sch_urlE %>
+                                                            </td>
+                                                            <td align="center" rowspan="2" valign="center">
+                                                                <%= sch_urlC %>
+                                                            </td>
+                                                            <td align="center">
+                                                                <%= sch_media %>
+                                                            </td>
+                                                            <td>
+                                                                <%= sch_getDate %>
+                                                            </td>
+                                                            </tr>
+                                                            <%
+														out.println("<tr " + clsLine + ">");
+														%>
+                                                                <td align="center">
+                                                                    <input type="button" name="btnModID" onclick="javascript:openModWindow('<%= sch_id %>',
+						'<%= sch_seq %>')" value="Edit" )>
+                                                                </td>
+                                                                <td align="center">
+                                                                    <input type="button" name="btnIDLine" onclick="javascript:openSelWindow('<%= sch_id %>',
+						'<%= sch_seq %>')" value="Select" )>
+                                                                </td>
+                                                                <td align="center">
+                                                                    <input type="button" name="btnInsID" onclick="javascript:openViewWindow('<%= sch_id %>',
+						'<%= sch_seq %>')" value="書影" )>
+                                                                </td>
+                                                                <td>
+                                                                    <%= sch_player1 %>
+                                                                </td>
+                                                                <!--３名連結済み-->
+                                                                <td>
+                                                                    <%= sch_isbn %>
+                                                                </td>
+                                                                <% if (sch_price.equals( "-")) { out.println( "<td class='divCenter'>"); } else { out.println( "<td class='divRight'>"); } %>
+                                                                    <%= sch_price %>
+                                                                        </td>
+                                                                        <td>
+                                                                            <%= sch_modDate %>
+                                                                        </td>
+                                                                        </tr>
+                                                                        <%
 			if (!(sch_memo.equals(""))) {
 				out.print("<tr valign='top'");
 				out.print(clsLine);
@@ -1712,29 +1675,30 @@ int i;
 	}
 	cmR.closeJdbc();
 %>
-</table>
-<br>
-<%= row %>件
-<div align="center">
-<input type="button" name="btnClose" value="Close" onclick="javascript: window.close();">
-</div>
-</form>
-<script language="JavaScript" type="text/javascript">
-<!--
-	document.title = document.formBook.inpTitleBar.value;
-	document.formBook.outRow.value = <%= row %> + "件";
-	if (<%= row %> == 0) {
-		document.formBook.outRow.value = "no record!";
-	}
-	document.formBook.outRow.size = document.formBook.outRow.value.length + 1;
-	if (document.formBook.inpID.value == "") {
-		document.formBook.chkGetDate.checked = true;
-	}
-	if ("<%= dbMsg.toString() %>" != "") {
-		document.getElementById("AjaxState").innerHTML =
-			"<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
-	}
-// -->
-</script>
-</body>
-</html>
+                                                </table>
+                                                <br>
+                                                <%= row %>件
+                                                    <div align="center">
+                                                        <input type="button" name="btnClose" value="Close" onclick="javascript: window.close();">
+                                                    </div>
+                                            </form>
+                                            <script language="JavaScript" type="text/javascript">
+                                                <!--
+                                                document.title = document.formBook.inpTitleBar.value;
+                                                document.formBook.outRow.value = <%= row %> + "件";
+                                                if (<%= row %> == 0) {
+                                                    document.formBook.outRow.value = "no record!";
+                                                }
+                                                document.formBook.outRow.size = document.formBook.outRow.value.length + 1;
+                                                if (document.formBook.inpID.value == "") {
+                                                    document.formBook.chkGetDate.checked = true;
+                                                }
+                                                if ("<%= dbMsg.toString() %>" != "") {
+                                                    document.getElementById("AjaxState").innerHTML =
+                                                        "<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
+                                                }
+                                                // -->
+                                            </script>
+    </body>
+
+    </html>

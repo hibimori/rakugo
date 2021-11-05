@@ -1,79 +1,82 @@
 <%@ page buffer="128kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
-<!--
+    <!--
+	2021-10-22	VSCバグ対応 strCo[n]（<input>タグの入れ子）を廃止。
 	2020-11-01	ID［検索］時に明細部［Seq］を逆順表示するオプションを追加。
 	2019-10-10	演者名の後ろに［代目］を表示。
 -->
-<jsp:useBean id="rkS" class="jp.rakugo.nii.RakugoTableSelect" scope="page" />
-<jsp:useBean id="rkU" class="jp.rakugo.nii.RakugoTableUpdate" scope="page" />
-<jsp:useBean id="rwU" class="jp.rakugo.nii.RakugoWorkTableUpdate" scope="page" />
-<jsp:useBean id="tmS" class="jp.rakugo.nii.TitleMasterSelect" scope="page" />
-<jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
-<jsp:useBean id="cmF" class="jp.rakugo.nii.CommonForm" scope="page" />
-<jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
-<html lang="ja">
-<head>
-<title>落語DB管理</title>
-<link rel="stylesheet" type="text/css" href="makerakugo.css">
-<script language="JavaScript" src="assistinput.js"></script>
-<script language="JavaScript" src="openwindow_r.js"></script>
-<script language="JavaScript" src="assistinput_mr.js"></script>
-<script language="JavaScript" src="inpcalendar.js"></script>
-<script language="JavaScript" src="inpclock.js"></script>
-<script language="JavaScript">
-<!--
-function sendQuery(tarType) {
-/* マスタ rewrite */
-	var strMsg = "";
-	var goFlg = true;
-	if (tarType == "btnMod") {
-		strMsg = "Update OK?";
-	} else if (tarType == "btnAdd") {
-		strMsg = "Insert OK?";
-	} else if (tarType == "btnDel") {
-		strMsg = "Delete OK?";
-	}
-	if (strMsg != "") {								//更新系は確認Dialogを出す。
-		if (confirm(strMsg) == true) {
-			//［削除］なら入力チェックを無視して何でも消せる。
-			if (strMsg.indexOf("Delete") < 0) {
-				//IDの入力チェック
-				if ((document.formRakugo.inpID.value.length != 6   ) ||
-				    (isNaN(document.formRakugo.inpID.value) == true)) {
-					alert("ID is wrong.");
-					goFlg = false;
-				}
-				//Seqの入力チェック
-				while (document.formRakugo.inpSeq.value.length < 3) {
-					document.formRakugo.inpSeq.value = "0" + document.formRakugo.inpSeq.value;
-				}
-				if ((isNaN(document.formRakugo.inpSeq.value) == true ) ||
-				    (document.formRakugo.inpSeq.value        == "000") ||
-				    (document.formRakugo.inpSeq.value        >  "255")) {
-					alert("Seq is wrong.");
-					goFlg = false;
-				}
-			}
-		} else {
-			goFlg = false;
-		}
-	}
-	if (goFlg == true) {
-		document.formRakugo.formBtnType.value = tarType;
-		document.formRakugo.method = "post";
-		document.formRakugo.action = "makerakugo.jsp";
-		document.formRakugo.submit();
-	}
-}
-// -->
-</script>
-</head>
-<body bgcolor="#FFFFFF" text="#000000">
-<%
+    <jsp:useBean id="rkS" class="jp.rakugo.nii.RakugoTableSelect" scope="page" />
+    <jsp:useBean id="rkU" class="jp.rakugo.nii.RakugoTableUpdate" scope="page" />
+    <jsp:useBean id="rwU" class="jp.rakugo.nii.RakugoWorkTableUpdate" scope="page" />
+    <jsp:useBean id="tmS" class="jp.rakugo.nii.TitleMasterSelect" scope="page" />
+    <jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
+    <jsp:useBean id="cmF" class="jp.rakugo.nii.CommonForm" scope="page" />
+    <jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
+    <html lang="ja">
+
+    <head>
+        <title>落語DB管理</title>
+        <link rel="stylesheet" type="text/css" href="makerakugo.css">
+        <script language="JavaScript" src="assistinput.js"></script>
+        <script language="JavaScript" src="openwindow_r.js"></script>
+        <script language="JavaScript" src="assistinput_mr.js"></script>
+        <script language="JavaScript" src="inpcalendar.js"></script>
+        <script language="JavaScript" src="inpclock.js"></script>
+        <script language="JavaScript">
+            <!--
+            function sendQuery(tarType) {
+                /* マスタ rewrite */
+                var strMsg = "";
+                var goFlg = true;
+                if (tarType == "btnMod") {
+                    strMsg = "Update OK?";
+                } else if (tarType == "btnAdd") {
+                    strMsg = "Insert OK?";
+                } else if (tarType == "btnDel") {
+                    strMsg = "Delete OK?";
+                }
+                if (strMsg != "") { //更新系は確認Dialogを出す。
+                    if (confirm(strMsg) == true) {
+                        //［削除］なら入力チェックを無視して何でも消せる。
+                        if (strMsg.indexOf("Delete") < 0) {
+                            //IDの入力チェック
+                            if ((document.formRakugo.inpID.value.length != 6) ||
+                                (isNaN(document.formRakugo.inpID.value) == true)) {
+                                alert("ID is wrong.");
+                                goFlg = false;
+                            }
+                            //Seqの入力チェック
+                            while (document.formRakugo.inpSeq.value.length < 3) {
+                                document.formRakugo.inpSeq.value = "0" + document.formRakugo.inpSeq.value;
+                            }
+                            if ((isNaN(document.formRakugo.inpSeq.value) == true) ||
+                                (document.formRakugo.inpSeq.value == "000") ||
+                                (document.formRakugo.inpSeq.value > "255")) {
+                                alert("Seq is wrong.");
+                                goFlg = false;
+                            }
+                        }
+                    } else {
+                        goFlg = false;
+                    }
+                }
+                if (goFlg == true) {
+                    document.formRakugo.formBtnType.value = tarType;
+                    document.formRakugo.method = "post";
+                    document.formRakugo.action = "makerakugo.jsp";
+                    document.formRakugo.submit();
+                }
+            }
+            // -->
+        </script>
+    </head>
+
+    <body bgcolor="#FFFFFF" text="#000000">
+        <%
 	//キャラクタ_セット宣言
 	request.setCharacterEncoding("UTF-8");
 %>
-<%!
+            <%!
 	public String escapeString(String str) {
 	//',",\ をescapeする
 		try {
@@ -106,7 +109,7 @@ function sendQuery(tarType) {
 		}
 	}
 %>
-<%
+                <%
 	//いろいろフォーマット宣言
 	SimpleDateFormat timeFmt = new SimpleDateFormat("HH:mm:ss");
 	SimpleDateFormat timeFmt5 = new SimpleDateFormat("H:mm:ss");
@@ -215,9 +218,9 @@ String parKeywordW = "";				/* where句ワークエリア 演題 */
 String parKeywordW2 = "";				/* where句ワークエリア 演者 */
 String strTitleBar = "落語管理DB: ";	/* タイトルバー */
 StringBuffer sBfTitleBar = new StringBuffer("");	/* タイトルバー ワークエリア */
-String strCo[] = new String[1];		/* Combo要素選択用ワーク */
+//String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 %>
-<%
+                    <%
 /* 本日日付を生成 */
 	Calendar parToday = Calendar.getInstance();
 	String nowDate = dateFmt.format(parToday.getTime());
@@ -235,7 +238,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 	cmR.connectJdbc6();
 //	Connection db = cmR.getJdbc();
 %>
-<%
+                        <%
 /* Query組み立て */
 	/* 初期画面または押下ボタン不明なら Dummy空読み */
 	StringBuffer query = new StringBuffer();
@@ -341,7 +344,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
   }
 //  out.println(query.toString());
 %>
-<%
+                            <%
 	/* 文字列[検索]で検索 */
 	if (sch_btn.equals("btnKeyword")) {
 		//検索文字列が両方""なら空振りするよう条件をEQに強制リセット
@@ -531,7 +534,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		useMainDB = false;
 	}
 %>
-<%
+                                <%
 	/* [更新][追加]なら更新して再検索 */
 	if ((sch_btn.equals("btnMod")) ||
 	    (sch_btn.equals("btnAdd"))) {
@@ -622,7 +625,7 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		query.append("WHERE vol_id = 'Dummy'");
 	}
 %>
-<%
+                                    <%
 	/* DBを読む */
 	if (useMainDB == true) {
 		//rakugo_t 条件よみ
@@ -729,97 +732,83 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 		}
 	}
 %>
-<form name="formRakugo">
-<table border="0" width="100%">
-	<tr>
-	<td width="50%">
-		<h1>落語DB管理</h1>
-	</td>
-	<td align="center" id="AjaxState">
-	</td>
-	<td>
-		<input align="right" name="outRow" type="text" readonly>
-	</td>
-	<td align="right">
-		<%= sch_comName %>
-	</td>
-	</tr>
-</table>
-<div id="divDebug"></div>
-<hr>
-<div id="divCalendar" class="div1"></div>
-<table border="1" id="tblId">
-<!-- VolID制御列 -->
-    <tr align="center" valign="middle">
-      <th bgcolor="#cccccc" width="96" id="thRkID">
-  			<!--input type="button" onclick="javascript:openCalendarWindow('ID')" name="btnID" value="VolumeID"-->
-  			<input type="button" onclick="javascript:openCalendarWindow('RkID')" name="btnID" value="VolumeID">
-  		</th>
-      <td>
-  			<input size="7" type="text" maxlength="6"
-  				id="inpRkID"
-  				name="inpID" value="<%= sch_id %>">
-  		</td>
-      <td><input type="button" name="btnIDEqual" onclick="javascript:sendQuery('btnID')" value="検索"></td>
-      <td><input type="button" name="btnIDPrev" onclick="javascript:sendQuery('btnIDPrev')" value="前"></td>
-      <td><input type="button" name="btnIDNext" onclick="javascript:sendQuery('btnIDNext')" value="次"></td>
-      <!-- td><input type="button" name="btnIDFirst" onclick="javascript:sendQuery('btnIDFirst')" value="先頭"></td -->
-      <th bgcolor="#cccccc" rowspan="2">検<br>索</th>
-      <td bgcolor="#cccccc">演題</th>
-      <td>
-  			<input size="12" type="text" maxlength="255" name="inpKeyword" value="<%= parKeyword %>">
-  		</td>
-      <td align="left">
-			<%
+                                        <form name="formRakugo">
+                                            <table border="0" width="100%">
+                                                <tr>
+                                                    <td width="50%">
+                                                        <h1>落語DB管理</h1>
+                                                    </td>
+                                                    <td align="center" id="AjaxState">
+                                                    </td>
+                                                    <td>
+                                                        <input align="right" name="outRow" type="text" readonly>
+                                                    </td>
+                                                    <td align="right">
+                                                        <%= sch_comName %>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <div id="divDebug"></div>
+                                            <hr>
+                                            <div id="divCalendar" class="div1"></div>
+                                            <table border="1" id="tblId">
+                                                <!-- VolID制御列 -->
+                                                <tr align="center" valign="middle">
+                                                    <th bgcolor="#cccccc" width="96" id="thRkID">
+                                                        <!--input type="button" onclick="javascript:openCalendarWindow('ID')" name="btnID" value="VolumeID"-->
+                                                        <input type="button" onclick="javascript:openCalendarWindow('RkID')" name="btnID" value="VolumeID">
+                                                    </th>
+                                                    <td>
+                                                        <input size="7" type="text" maxlength="6" id="inpRkID" name="inpID" value="<%= sch_id %>">
+                                                    </td>
+                                                    <td><input type="button" name="btnIDEqual" onclick="javascript:sendQuery('btnID')" value="検索"></td>
+                                                    <td><input type="button" name="btnIDPrev" onclick="javascript:sendQuery('btnIDPrev')" value="前"></td>
+                                                    <td><input type="button" name="btnIDNext" onclick="javascript:sendQuery('btnIDNext')" value="次"></td>
+                                                    <!-- td><input type="button" name="btnIDFirst" onclick="javascript:sendQuery('btnIDFirst')" value="先頭"></td -->
+                                                    <th bgcolor="#cccccc" rowspan="2">検<br>索</th>
+                                                    <td bgcolor="#cccccc">演題</th>
+                                                        <td>
+                                                            <input size="12" type="text" maxlength="255" name="inpKeyword" value="<%= parKeyword %>">
+                                                        </td>
+                                                        <td align="left">
+                                                            <%
 				//検索条件セレクタ
 				out.println(cmF.makeSelectOption("selKeyword", "", parKeywordM));
 			%>
-			</td>
-      <td align="center">
-      	<input type="button" name="btnKeyword"
-      		onclick="javascript: sendQuery('btnKeyword')" value="検索">
-      </td>
-    </tr>
-<!-- VolSeq制御列 -->
-    <tr align="center" valign="middle">
-		<%
-			strCo = new String[1];
-			if (parKeywordSeq.equals("1")) { strCo[0] = "checked"; }
-		%>
-      <th bgcolor="#cccccc">SEQ<span style="font-size:66%">(<input type="checkbox" name="chkKeyword" value="1" <%= strCo[0] %>>逆順)</span></th>
-      <td><a href="javascript: addSeq(-1,'id')">▽</a><input size="4" type="text" maxlength="3" name="inpSeq" value="<%= sch_seq %>"><a href="javascript: addSeq(1,'id')">△</a></td>
-      <td><input type="button" name="btnIDSeq" onclick="javascript:sendQuery('btnIDSeq')" value="検索"></td>
-      <td><input type="button" name="btnIDSeqPrev" onclick="javascript:sendQuery('btnIDSeqPrev')" value="前"></td>
-      <td><input type="button" name="btnIDSeqNext" onclick="javascript:sendQuery('btnIDSeqNext')" value="次"></td>
-      <td bgcolor="#cccccc">演者</th>
-      <td>
-		<input size="12" type="text" maxlength="255" name="inpKeyword2" value="<%= parKeyword2 %>">
-      </td>
-			<td align="left">
-			<%
-				//題副・かなセレクタ
-//				out.println(cmF.makeSelectItemR("selKeywordT", "", parKeywordT));
-				strCo = new String[2];
-//				if (parKeywordT.equals("T")) { strCo[0] = "checked"; }
-//				if (parKeywordT.equals("P")) { strCo[1] = "checked"; }
-				if (parKeywordT.equals("A")) { strCo[0] = "checked"; }
-				if (parKeywordT.equals("O")) { strCo[1] = "checked"; }
-			%>
-<!--				<input type="radio" name="rdoKeyword" value="T" <%= strCo[0] %>>演題
-				<input type="radio" name="rdoKeyword" value="P" <%= strCo[1] %>>演者
-				-->
-				<input type="radio" name="rdoKeyword" value="A" <%= strCo[0] %>>and
-				<input type="radio" name="rdoKeyword" value="O" <%= strCo[1] %>>or
-			</td>
-			<td>
-				<input type="button" name="btnKeywordClear" onclick="javascript: clearKeyword()" value="クリア">
-			</td>
-    </tr>
-</table>
-<table border="1">
-<!-- タイトル制御列 -->
-    <tr>
-		<%
+                                                        </td>
+                                                        <td align="center">
+                                                            <input type="button" name="btnKeyword" onclick="javascript: sendQuery('btnKeyword')" value="検索">
+                                                        </td>
+                                                </tr>
+                                                <!-- VolSeq制御列 -->
+                                                <tr align="center" valign="middle">
+                                                    <th bgcolor="#cccccc">SEQ<span style="font-size:66%">
+														(<input type="checkbox" name="chkKeyword" value="1"
+ <%
+			if (parKeywordSeq.equals("1")) { out.print(" checked"); }
+%>
+														>逆順)</span></th>
+                                                    <td><a href="javascript: addSeq(-1,'id')">▽</a><input size="4" type="text" maxlength="3" name="inpSeq" value="<%= sch_seq %>"><a href="javascript: addSeq(1,'id')">△</a></td>
+                                                    <td><input type="button" name="btnIDSeq" onclick="javascript:sendQuery('btnIDSeq')" value="検索"></td>
+                                                    <td><input type="button" name="btnIDSeqPrev" onclick="javascript:sendQuery('btnIDSeqPrev')" value="前"></td>
+                                                    <td><input type="button" name="btnIDSeqNext" onclick="javascript:sendQuery('btnIDSeqNext')" value="次"></td>
+                                                    <td bgcolor="#cccccc">演者</th>
+                                                        <td>
+                                                            <input size="12" type="text" maxlength="255" name="inpKeyword2" value="<%= parKeyword2 %>">
+                                                        </td>
+                                                        <td align="left">
+                                                            <input type="radio" name="rdoKeyword" value="A" <% if (parKeywordT.equals( "A")) { out.print( " checked"); } %> >and
+                                                            <input type="radio" name="rdoKeyword" value="O" <% if (parKeywordT.equals( "O")) { out.print( " checked"); } %> >or
+                                                        </td>
+                                                        <td>
+                                                            <input type="button" name="btnKeywordClear" onclick="javascript: clearKeyword()" value="クリア">
+                                                        </td>
+                                                </tr>
+                                            </table>
+                                            <table border="1">
+                                                <!-- タイトル制御列 -->
+                                                <tr>
+                                                    <%
 			//タイトル_マスタDBからタイトル取得
 			if (sch_titleID.equals("")) {
 				sch_title = "";
@@ -847,34 +836,29 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				}
 			}
 		%>
-      <th bgcolor="#cccccc" width="96">
-        <input type="button" name="btnTitleID" onclick="javascript: openTitleWindow('inpTitleID')" value="Title">
-      </th>
-		<td><input size="7" type="text" maxlength="6" name="inpTitleID" value="<%= sch_titleID %>"></td>
-		<td><input size="60" type="text" maxlength="255" name="inpTitle" value="<%= sch_title %>" readonly></td>
-		<td align="center" colspan="2">
-			<a href="javascript: addSeq(-1,'title')">▽</a><input size="4" type="text" maxlength="3" name="inpTitleSeq" value="<%= sch_titleSeq %>"><a href="javascript: addSeq(1,'title')">△</a>
-		</td>
-    </tr>
-<!-- サブタイトル制御列 -->
-    <tr>
-      <th bgcolor="#cccccc"><input type="button" name="btnSubTitleID" onclick="javascript: openTitleWindow('inpSubID')" value="SubTitle"></th>
-      <td><input size="7" type="text" maxlength="6" name="inpSubID" value="<%= sch_subID %>"></td>
-      <td>
-      	<input size="60" type="text" maxlength="255" name="inpSub" value="<%= sch_sub %>" readonly>
-      </td>
-		<td align="center" colspan="2"><input type="checkbox" name="chkStrTitleSeqSin" value="1"
-			<%
-				if (sch_strTitleSeqSin.equals("1")) {
-					out.println(" checked ");
-				}
-			%>
-		 /><input type="text" size="8" maxlength="8" name="inpStrTitleSeq" value="<%= sch_strTitleSeq %>" />
-		</td>
-    </tr>
-<!-- 演者１制御列 -->
-    <tr>
-		<%
+                                                        <th bgcolor="#cccccc" width="96">
+                                                            <input type="button" name="btnTitleID" onclick="javascript: openTitleWindow('inpTitleID')" value="Title">
+                                                        </th>
+                                                        <td><input size="7" type="text" maxlength="6" name="inpTitleID" value="<%= sch_titleID %>"></td>
+                                                        <td><input size="60" type="text" maxlength="255" name="inpTitle" value="<%= sch_title %>" readonly></td>
+                                                        <td align="center" colspan="2">
+                                                            <a href="javascript: addSeq(-1,'title')">▽</a><input size="4" type="text" maxlength="3" name="inpTitleSeq" value="<%= sch_titleSeq %>"><a href="javascript: addSeq(1,'title')">△</a>
+                                                        </td>
+                                                </tr>
+                                                <!-- サブタイトル制御列 -->
+                                                <tr>
+                                                    <th bgcolor="#cccccc"><input type="button" name="btnSubTitleID" onclick="javascript: openTitleWindow('inpSubID')" value="SubTitle"></th>
+                                                    <td><input size="7" type="text" maxlength="6" name="inpSubID" value="<%= sch_subID %>"></td>
+                                                    <td>
+                                                        <input size="60" type="text" maxlength="255" name="inpSub" value="<%= sch_sub %>" readonly>
+                                                    </td>
+                                                    <td align="center" colspan="2"><input type="checkbox" name="chkStrTitleSeqSin" value="1" <% if (sch_strTitleSeqSin.equals( "1")) { out.println( " checked "); } %> />
+                                                        <input type="text" size="8" maxlength="8" name="inpStrTitleSeq" value="<%= sch_strTitleSeq %>" />
+                                                    </td>
+                                                </tr>
+                                                <!-- 演者１制御列 -->
+                                                <tr>
+                                                    <%
 			//演者マスタDBから姓名取得
 			if (sch_player1ID.equals("")) {
 				sch_player1 = "";
@@ -893,31 +877,25 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				}
 			}
 		%>
-      <th bgcolor="#cccccc"><input type="button" name="btnP1ID" onclick="javascript: openPlayerWindow('inpP1ID')" value="Player1"></th>
-      <td><input size="7" type="text" maxlength="6" name="inpP1ID" value="<%= sch_player1ID %>"></td>
-      <td>
-      	<input size="60" type="text" maxlength="255" name="inpP1" value="<%= sch_player1 %>" readonly>
-      </td>
-      <td>
-			<%
+                                                        <th bgcolor="#cccccc"><input type="button" name="btnP1ID" onclick="javascript: openPlayerWindow('inpP1ID')" value="Player1"></th>
+                                                        <td><input size="7" type="text" maxlength="6" name="inpP1ID" value="<%= sch_player1ID %>"></td>
+                                                        <td>
+                                                            <input size="60" type="text" maxlength="255" name="inpP1" value="<%= sch_player1 %>" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <%
 				//演者役割セレクタ
 				out.println(cmF.makePlayerPart("selP1", "", sch_player1Sin));
 			%>
-   		</td>
-			<td align="center" valign="bottom" rowspan="3">
-				他<br />
-				<input name="chkP4" type="checkbox" value="1"
-				<%
-					if (sch_player4.equals("1")) {
-						out.println(" checked");
-					}
-				%>
-					>
-			</td>
-    </tr>
-<!-- 演者２制御列 -->
-    <tr>
-		<%
+                                                        </td>
+                                                        <td align="center" valign="bottom" rowspan="3">
+                                                            他<br />
+                                                            <input name="chkP4" type="checkbox" value="1" <% if (sch_player4.equals( "1")) { out.println( " checked"); } %> >
+                                                        </td>
+                                                </tr>
+                                                <!-- 演者２制御列 -->
+                                                <tr>
+                                                    <%
 			//演者マスタDBから姓名取得
 			if (sch_player2ID.equals("")) {
 				sch_player2 = "";
@@ -936,21 +914,21 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				}
 			}
 		%>
-      <th bgcolor="#cccccc"><input type="button" name="btnP2ID" onclick="javascript: openPlayerWindow('inpP2ID')" value="Player2"></th>
-      <td><input size="7" type="text" maxlength="6" name="inpP2ID" value="<%= sch_player2ID %>"></td>
-      <td>
-      	<input size="60" type="text" maxlength="255" name="inpP2" value="<%= sch_player2 %>" readonly>
-      </td>
-      <td>
-			<%
+                                                        <th bgcolor="#cccccc"><input type="button" name="btnP2ID" onclick="javascript: openPlayerWindow('inpP2ID')" value="Player2"></th>
+                                                        <td><input size="7" type="text" maxlength="6" name="inpP2ID" value="<%= sch_player2ID %>"></td>
+                                                        <td>
+                                                            <input size="60" type="text" maxlength="255" name="inpP2" value="<%= sch_player2 %>" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <%
 				//演者役割セレクタ
 				out.println(cmF.makePlayerPart("selP2", "", sch_player2Sin));
 			%>
-      </td>
-    </tr>
-<!-- 演者３制御列 -->
-    <tr>
-		<%
+                                                        </td>
+                                                </tr>
+                                                <!-- 演者３制御列 -->
+                                                <tr>
+                                                    <%
 			//演者マスタDBから姓名取得
 			if (sch_player3ID.equals("")) {
 				sch_player3 = "";
@@ -969,25 +947,25 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				}
 			}
 		%>
-			<th bgcolor="#cccccc">
-				<input type="button" name="btnP3ID" onclick="javascript: openPlayerWindow('inpP3ID')" value="Player3">
-			</th>
-			<td>
-				<input size="7" type="text" maxlength="6" name="inpP3ID" value="<%= sch_player3ID %>">
-			</td>
-			<td>
-				<input size="60" type="text" maxlength="255" name="inpP3" value="<%= sch_player3 %>" readonly>
-      </td>
-      <td>
-			<%
+                                                        <th bgcolor="#cccccc">
+                                                            <input type="button" name="btnP3ID" onclick="javascript: openPlayerWindow('inpP3ID')" value="Player3">
+                                                        </th>
+                                                        <td>
+                                                            <input size="7" type="text" maxlength="6" name="inpP3ID" value="<%= sch_player3ID %>">
+                                                        </td>
+                                                        <td>
+                                                            <input size="60" type="text" maxlength="255" name="inpP3" value="<%= sch_player3 %>" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <%
 				//演者役割セレクタ
 				out.println(cmF.makePlayerPart("selP3", "", sch_player3Sin));
 			%>
-			</td>
-		</tr>
-<!-- プログラム制御列 -->
-		<tr>
-		<%
+                                                        </td>
+                                                </tr>
+                                                <!-- プログラム制御列 -->
+                                                <tr>
+                                                    <%
 			//タイトル_マスタDBからプログラム名取得
 			if (sch_programID.equals("")) {
 				sch_program = "";
@@ -1002,19 +980,19 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				}
 			}
 		%>
-      <th bgcolor="#cccccc"><input type="button" name="btnProgramID" onclick="javascript: openTitleWindow('inpProgramID')" value="Program"></th>
-      <td><input size="7" type="text" maxlength="6" name="inpProgramID" value="<%= sch_programID %>"></td>
-		  <td colspan="3">
-		  	<input size="72" type="text" maxlength="255" name="inpProgram" value="<%= sch_program %>" readonly>
-		  </td>
-    </td>
-		</tr>
-<!-- 放送局制御列 -->
-    <tr>
-      <th bgcolor="#cccccc"><input type="button" name="btnSourceID" onclick="javascript: openTitleWindow('inpSourceID')" value="BBS"></th>
-      <td><input size="7" type="text" maxlength="6" name="inpSourceID" value="<%= sch_sourceID %>"></td>
-      <td colspan="3">
-		<%
+                                                        <th bgcolor="#cccccc"><input type="button" name="btnProgramID" onclick="javascript: openTitleWindow('inpProgramID')" value="Program"></th>
+                                                        <td><input size="7" type="text" maxlength="6" name="inpProgramID" value="<%= sch_programID %>"></td>
+                                                        <td colspan="3">
+                                                            <input size="72" type="text" maxlength="255" name="inpProgram" value="<%= sch_program %>" readonly>
+                                                        </td>
+                                                        </td>
+                                                </tr>
+                                                <!-- 放送局制御列 -->
+                                                <tr>
+                                                    <th bgcolor="#cccccc"><input type="button" name="btnSourceID" onclick="javascript: openTitleWindow('inpSourceID')" value="BBS"></th>
+                                                    <td><input size="7" type="text" maxlength="6" name="inpSourceID" value="<%= sch_sourceID %>"></td>
+                                                    <td colspan="3">
+                                                        <%
 			//BBSセレクタ
 			String wkBbs1 = cmF.makeBbs("selSource1", "selBbs1", sch_sourceID);
 			String wkBbs2 = cmF.makeBbsBs("selSource2", "selBbs2", sch_sourceID);
@@ -1053,123 +1031,113 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 				out.println(wkBbs2);
 			}
 		%>
-			</td>
-    </tr>
-	</table>
-<!-- 録画日時制御列 -->
-	<div id="divClock" class="div1"></div>
-	<table border="1" id="tblDate">
-    <tr>
-		<%
-			strCo = new String[3];
-			if (sch_recDateC.equals("1")) { strCo[0] = "checked"; }
-			if (sch_recTimeC.equals("1")) { strCo[1] = "checked"; }
-			if (sch_recLenC.equals("1")) { strCo[2] = "checked"; }
-		%>
-      <th bgcolor="#cccccc" width="96" id="thRecDate">
-      	<input type="button" name="btnRecDate"
-      		onclick="javascript:openCalendarWindow('RecDate')" value="記録日">
-      </th>
-      <td>
-      	<input size="12" type="text" maxlength="10"
-      		id="inpRecDate"
-      		name="inpRecDate" value="<%= sch_recDate %>"><input type="checkbox"
-      		id="chkRecDate"
-      		name="chkRecDate" onclick="javascript: clearInpData('recDate')" value="1" <%= strCo[0] %>>
-      </td>
-      <th bgcolor="#cccccc" id="thRecTime">
-      	<input type="button" name="btnRecTime" onclick="javascript:openClockWindow('RecTime')" value="記録時">
-      </th>
-			<td>
-				<input size="6" type="text" maxlength="5"
-					id="inpRecTime"
-					name="inpRecTime" value="<%= sch_recTime %>"><input type="checkbox"
-					id="chkRecTime"
-				 	name="chkRecTime" onclick="javascript: clearInpData('recTime')" value="1" <%= strCo[1] %>>
-			</td>
-      <th bgcolor="#cccccc" id="thRecLen">
-      	<input type="button" name="btnRecLen" onclick="javascript:openClockWindow('RecLen')" value="時間">
-      </th>
-			<td>
-				<input size="9" type="text" maxlength="8"
-					id="inpRecLen"
-					name="inpRecLen" value="<%= sch_recLen %>"><input type="checkbox"
-					id="chkRecLen"
-					name="chkRecLen" onclick="javascript: clearInpData('recLen')" value="1" <%= strCo[2] %>>
-			</td>
-    </tr>
-<!-- 属性制御列 -->
-    <tr>
-      <th bgcolor="#cccccc">属性</th>
-      <td>
-			<%
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <!-- 録画日時制御列 -->
+                                            <div id="divClock" class="div1"></div>
+                                            <table border="1" id="tblDate">
+                                                <tr>
+                                                    <th bgcolor="#cccccc" width="96" id="thRecDate">
+                                                        <input type="button" name="btnRecDate" onclick="javascript:openCalendarWindow('RecDate')" value="記録日">
+                                                    </th>
+                                                    <td>
+                                                        <input size="12" type="text" maxlength="10" id="inpRecDate" name="inpRecDate" value="<%= sch_recDate %>"><input type="checkbox" id="chkRecDate" name="chkRecDate" onclick="javascript: clearInpData('recDate')"
+                                                            value="1" <% if (sch_recDateC.equals( "1")) { out.print( " checked"); } %> >
+                                                    </td>
+                                                    <th bgcolor="#cccccc" id="thRecTime">
+                                                        <input type="button" name="btnRecTime" onclick="javascript:openClockWindow('RecTime')" value="記録時">
+                                                    </th>
+                                                    <td>
+                                                        <input size="6" type="text" maxlength="5" id="inpRecTime" name="inpRecTime" value="<%= sch_recTime %>"><input type="checkbox" id="chkRecTime" name="chkRecTime" onclick="javascript: clearInpData('recTime')"
+                                                            value="1" <% if (sch_recTimeC.equals( "1")) { out.print( " checked"); } %> >
+                                                    </td>
+                                                    <th bgcolor="#cccccc" id="thRecLen">
+                                                        <input type="button" name="btnRecLen" onclick="javascript:openClockWindow('RecLen')" value="時間">
+                                                    </th>
+                                                    <td>
+                                                        <input size="9" type="text" maxlength="8" id="inpRecLen" name="inpRecLen" value="<%= sch_recLen %>"><input type="checkbox" id="chkRecLen" name="chkRecLen" onclick="javascript: clearInpData('recLen')"
+                                                            value="1" <% if (sch_recLenC.equals( "1")) { out.print( " checked"); } %> >
+                                                    </td>
+                                                </tr>
+                                                <!-- 属性制御列 -->
+                                                <tr>
+                                                    <th bgcolor="#cccccc">属性</th>
+                                                    <td>
+                                                        <%
 				//演題種別セレクタ
 				out.println(cmF.makeField("selAttCat", "", sch_AttCat));
 			%>
-			</td><td id="inpRecTimePos">
-			<%
+                                                    </td>
+                                                    <td id="inpRecTimePos">
+                                                        <%
 				//媒体種別セレクタ
 				out.println(cmF.makeMedia("selAttMed", "", sch_AttMed));
 			%>
-			</td><td>
-			<%
+                                                    </td>
+                                                    <td>
+                                                        <%
 				//チャンネル種別セレクタ
 				out.println(cmF.makeSurround("selAttCh", "", sch_AttCh));
 			%>
-			</td><td>
-			<%
+                                                    </td>
+                                                    <td>
+                                                        <%
 				//コピー世代セレクタ
 				out.println(cmF.makeGeneration("selAttCo", "", sch_AttCo));
 			%>
-			</td><td>
-			<%
+                                                    </td>
+                                                    <td>
+                                                        <%
 				//NoiseReductionセレクタ
 				out.println(cmF.makeNR("selAttNR", "", sch_AttNR));
 		%>
-      </td>
-    </tr>
-<!-- メモ制御列 -->
-    <tr>
-      <th bgcolor="#cccccc">Memo</th>
-      <td colspan="5">
-      	<input size="72" type="text" maxlength="255" name="inpMemo" value="<%= sch_memo %>">
-      </td>
-    </tr>
-<!-- 更新日表示列 -->
-    <tr>
-      <th bgcolor="#cccccc">更新日</th>
-      <td colspan="2"><%= sch_modDate %></td>
-<!-- 操作ボタン制御列 -->
-      <td align="center">
-      	<input type="Button" onclick="javascript:assistInpData(), sendQuery('btnMod')" name="btnModTitle" value="更新">
-      </td>
-      <td align="center">
-      	<input type="Button" onclick="javascript:assistInpData(), sendQuery('btnAdd')" name="btnModTitle" value="追加">
-      </td>
-      <td align="center">
-      	<input type="Button" onclick="javascript:sendQuery('btnDel')" name="btnModTitle" value="削除">
-      </td>
-    </tr>
-</table>
-<input name="formBtnType" type="hidden" value="<%= sch_btn %>">
-<input name="inpTitleBar" type="hidden" value="<%= sBfTitleBar.toString() %>">
-</form>
-<hr>
-<form name="formList">
-	<input name="inpModID" type="hidden" value="">
-	<table border="0">
-		<tr bgcolor=silver>
-			<th>No.</th>
-			<th>ID</th>
-			<th>SEQ</th>
-			<th>TITLE<br>PLAYER1</th>
-			<th>PROGRAM<br>PLAYER2</th>
-			<th>SOURCE<br>PLAYER3</th>
-			<th>REC DATE<br>Att1</th>
-			<th>LENGTH<br>Att2</th>
-			<th>MEMO<br>MOD DATE</th>
-		</tr>
-<%
+                                                    </td>
+                                                </tr>
+                                                <!-- メモ制御列 -->
+                                                <tr>
+                                                    <th bgcolor="#cccccc">Memo</th>
+                                                    <td colspan="5">
+                                                        <input size="72" type="text" maxlength="255" name="inpMemo" value="<%= sch_memo %>">
+                                                    </td>
+                                                </tr>
+                                                <!-- 更新日表示列 -->
+                                                <tr>
+                                                    <th bgcolor="#cccccc">更新日</th>
+                                                    <td colspan="2">
+                                                        <%= sch_modDate %>
+                                                    </td>
+                                                    <!-- 操作ボタン制御列 -->
+                                                    <td align="center">
+                                                        <input type="Button" onclick="javascript:assistInpData(), sendQuery('btnMod')" name="btnModTitle" value="更新">
+                                                    </td>
+                                                    <td align="center">
+                                                        <input type="Button" onclick="javascript:assistInpData(), sendQuery('btnAdd')" name="btnModTitle" value="追加">
+                                                    </td>
+                                                    <td align="center">
+                                                        <input type="Button" onclick="javascript:sendQuery('btnDel')" name="btnModTitle" value="削除">
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                            <input name="formBtnType" type="hidden" value="<%= sch_btn %>">
+                                            <input name="inpTitleBar" type="hidden" value="<%= sBfTitleBar.toString() %>">
+                                        </form>
+                                        <hr>
+                                        <form name="formList">
+                                            <input name="inpModID" type="hidden" value="">
+                                            <table border="0">
+                                                <tr bgcolor=silver>
+                                                    <th>No.</th>
+                                                    <th>ID</th>
+                                                    <th>SEQ</th>
+                                                    <th>TITLE<br>PLAYER1</th>
+                                                    <th>PROGRAM<br>PLAYER2</th>
+                                                    <th>SOURCE<br>PLAYER3</th>
+                                                    <th>REC DATE<br>Att1</th>
+                                                    <th>LENGTH<br>Att2</th>
+                                                    <th>MEMO<br>MOD DATE</th>
+                                                </tr>
+                                                <%
 	/* 明細用にまた読む。 */
 	if (useMainDB == true) {
 		//rakugo_t 条件よみ
@@ -1442,29 +1410,61 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 			}
 		}
 %>
-		<tr <%= clsLine %>>
-			<td align="right"><%= row %></td>
- 			<td align="center"><%= sch_id %></td>
-			<td align="center"><%= sch_seq %></td>
-			<td><%= sch_title %></td>
-			<td><%= sch_program %></td>
-			<td><%= sch_source %></td>
-			<td><%= sch_recDate %></td>
-			<td><%= sch_recLen %></td>
-			<td><%= sch_memo %></td>
-		</tr>
-		<tr <%= clsLine %>>
-			<td><input type="button" name="btnModID" onclick="javascript:openModWindow('<%= sch_id %>','<%= sch_seq %>')" value="Edit")></td>
-			<td><input type="button" name="btnIDLine" onclick="javascript:openSelWindow('<%= sch_id %>','<%= sch_seq %>')" value="Select")></td>
-			<td><input type="button" name="btnShowID" onclick="javascript:openViewWindow('<%= sch_id %>')" value="View")></td>
-			<td><%= sch_player1 %></td>
-			<td><%= sch_player2 %></td>
-			<td><%= sch_player3 %></td>
-			<td><%= sch_AttCat %></td>
-			<td><%= sch_AttMed %></td>
-		 	<td><%= sch_modDate %></td>
-		</tr>
-<%
+                                                    <tr <% out.println(clsLine); %>
+                                                        >
+                                                        <td align="right">
+                                                            <%= row %>
+                                                        </td>
+                                                        <td align="center">
+                                                            <%= sch_id %>
+                                                        </td>
+                                                        <td align="center">
+                                                            <%= sch_seq %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_title %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_program %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_source %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_recDate %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_recLen %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_memo %>
+                                                        </td>
+                                                    </tr>
+                                                    <tr <% out.println(clsLine); %>
+                                                        >
+                                                        <td><input type="button" name="btnModID" onclick="javascript:openModWindow('<%= sch_id %>','<%= sch_seq %>')" value="Edit" )></td>
+                                                        <td><input type="button" name="btnIDLine" onclick="javascript:openSelWindow('<%= sch_id %>','<%= sch_seq %>')" value="Select" )></td>
+                                                        <td><input type="button" name="btnShowID" onclick="javascript:openViewWindow('<%= sch_id %>')" value="View" )></td>
+                                                        <td>
+                                                            <%= sch_player1 %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_player2 %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_player3 %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_AttCat %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_AttMed %>
+                                                        </td>
+                                                        <td>
+                                                            <%= sch_modDate %>
+                                                        </td>
+                                                    </tr>
+                                                    <%
 	}
 	} catch (Exception e) {
 //		out.println("Catch Exception");
@@ -1481,28 +1481,29 @@ String strCo[] = new String[1];		/* Combo要素選択用ワーク */
 	//JDBC切断
 	cmR.closeJdbc();
 %>
-</table>
-<br>
-<%= row %>件
-<div align="center">
-<input type="button" name="btnClose" value="Close" onclick="javascript: window.close();">
-</div>
-</form>
-<script language="JavaScript" type="text/javascript">
-<!--
-    document.title = document.formRakugo.inpTitleBar.value;
-    document.formRakugo.outRow.value = <%= row %> + "件";
-    if (<%= row %> == 0) {
-        document.formRakugo.outRow.value = "no record!";
-    }
-    document.formRakugo.outRow.size = document.formRakugo.outRow.value.length + 1;
-    if ("<%= dbMsg.toString() %>" != "") {
-        document.getElementById("AjaxState").innerHTML =
-            "<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
-    }
-    document.getElementById("selBbs1").onchange = new Function("javascript: resetSourceID(1)");
-    document.getElementById("selBbs2").onchange = new Function("javascript: resetSourceID(2)");
-// -->
-</script>
-</body>
-</html>
+                                            </table>
+                                            <br>
+                                            <%= row %>件
+                                                <div align="center">
+                                                    <input type="button" name="btnClose" value="Close" onclick="javascript: window.close();">
+                                                </div>
+                                        </form>
+                                        <script language="JavaScript" type="text/javascript">
+                                            <!--
+                                            document.title = document.formRakugo.inpTitleBar.value;
+                                            document.formRakugo.outRow.value = <%= row %> + "件";
+                                            if (<%= row %> == 0) {
+                                                document.formRakugo.outRow.value = "no record!";
+                                            }
+                                            document.formRakugo.outRow.size = document.formRakugo.outRow.value.length + 1;
+                                            if ("<%= dbMsg.toString() %>" != "") {
+                                                document.getElementById("AjaxState").innerHTML =
+                                                    "<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
+                                            }
+                                            document.getElementById("selBbs1").onchange = new Function("javascript: resetSourceID(1)");
+                                            document.getElementById("selBbs2").onchange = new Function("javascript: resetSourceID(2)");
+                                            // -->
+                                        </script>
+    </body>
+
+    </html>

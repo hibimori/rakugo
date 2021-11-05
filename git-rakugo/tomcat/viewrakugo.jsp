@@ -1,186 +1,203 @@
 <%@ page buffer="255kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*, java.sql.*,java.text.*,org.apache.xerces.parsers.*,org.xml.sax.*,org.w3c.dom.*"
 %>
-<jsp:useBean id="rkS" class="jp.rakugo.nii.RakugoTableSelect" scope="page" />
-<jsp:useBean id="tmS" class="jp.rakugo.nii.TitleMasterSelect" scope="page" />
-<jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
-<jsp:useBean id="cmF" class="jp.rakugo.nii.CommonForm" scope="page" />
-<jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="ja">
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<head>
-<link rel="stylesheet" type="text/css" href="viewrakugo.css">
-<%
+    <!--
+	2021-10-22 VSCバグ対応 strCo[n]（<input>タグの入れ子）を廃止。
+	-->
+    <jsp:useBean id="rkS" class="jp.rakugo.nii.RakugoTableSelect" scope="page" />
+    <jsp:useBean id="tmS" class="jp.rakugo.nii.TitleMasterSelect" scope="page" />
+    <jsp:useBean id="pmS" class="jp.rakugo.nii.PlayerMasterSelect" scope="page" />
+    <jsp:useBean id="cmF" class="jp.rakugo.nii.CommonForm" scope="page" />
+    <jsp:useBean id="cmR" class="jp.rakugo.nii.CommonRakugo" scope="page" />
+    <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+    <html lang="ja">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <head>
+        <link rel="stylesheet" type="text/css" href="viewrakugo.css">
+        <%
 	//キャラクタ_セット宣言
 	request.setCharacterEncoding("UTF-8");
 /* タイトル用にIDを取得 */
 	String sch_id = request.getParameter("inpID");	/* ID */
 %>
-<script language="JavaScript" type="text/javascript">
-<!--
-	var titleWidth = 128;
-	var playerWidth = 64;
-function changeFontSize(c, x) {
-	var w = 100;
-	var div = document.getElementById("div" + c);
-	var obj = document.getElementById("inp" + c + "W");
-	var tbl = document.getElementById("tbl" + c);
-	try {
-		w = parseInt(obj.value, 10);
-  	if (isNaN(w) == true) {
-  		w = 100;
-  	} else {
-  		w = Math.floor(w + x);
-  	}
-	} catch (e) {
-	}
-	obj.value = w;
-	tbl.style.fontSize = w + "%";
-	div.style.width = "120mm";
-//	sendQuery("btnView");
-}
-function changeWidth(c, x) {
-	var w = 100;
-	var obj = document.getElementById("inp" + c + "W");
-	var col = document.getElementById("col" + c);
-	try {
-		w = parseInt(obj.value, 10);
-  	if (isNaN(w) == true) {
-  		w = 128;
-  	} else {
-  		w = Math.floor(w * x);
-  	}
-  	if (w == parseInt(obj.value, 10)) {
-  		if (x > 1) {
-  			w = parseInt(obj.value, 10) + 1;
-  		} else {
-  			w = parseInt(obj.value, 10) - 1;
-  		}
-  	}
-  	if (w < 1) { w = 1; }
-	} catch (e) {
-	}
-	obj.value = w;
-	col.style.width = w + "px";
-	sendQuery("btnView");
-}
-function checkAll(mode) {
-	var all = document.formRakugo.chkAll.checked;
-	var r = all;
-	var r1 = all;
-	var r2 = all;
-	if (mode.indexOf("r") >= 0) {
-		document.formRakugo.chkAll.checked = false;
-		r = true;
-		all = false;
-	}
-	if (mode == "r1") {
-		r1 = true;
-		r2 = false;
-		all = false;
-	}
-	if (mode == "r2") {
-		r1 = false;
-		r2 = true;
-		all = false;
-	}
-	document.formRakugo.chkID.checked = all;
-	document.formRakugo.chkSeq.checked = r;
-	document.formRakugo.chkTitle.checked = r;
-	document.formRakugo.chkSub.checked = r;
-	document.formRakugo.chkTSeq.checked = all;
-	document.formRakugo.chkPro.checked = r;
-	document.formRakugo.chkP1.checked = r;
-//	document.formRakugo.chkP2.checked = all;
-//	document.formRakugo.chkP3.checked = all;
-	document.formRakugo.chkMemo.checked = all;
-	document.formRakugo.chkSou.checked = all;
-	document.formRakugo.chkLen.checked = r1;
-	document.formRakugo.chkDate.checked = r;
-	document.formRakugo.chkTime.checked = all;
-	document.formRakugo.chkCat.checked = all;
-	document.formRakugo.chkMed.checked = all;
-	document.formRakugo.chkSur.checked = all;
-	document.formRakugo.chkCo.checked = all;
-	document.formRakugo.chkNR.checked = all;
-	document.formRakugo.chkMod.checked = all;
+            <script language="JavaScript" type="text/javascript">
+                <!--
+                var titleWidth = 128;
+                var playerWidth = 64;
 
-//	sendQuery("btnView");
-}
-function addSize(x) {
-	var wkDVD = document.formRakugo.inpSizeDVD.value;
-	var wkMD = document.formRakugo.inpSizeMD.value;
-	var wkAdd = parseInt(x);
-	if (isNaN(wkDVD)) {
-		wkDVD = 200;
-	} else {
-		wkDVD = parseInt(wkDVD);
-	}
-	if (isNaN(wkMD)) {
-		wkMD = 140;
-	} else {
-		wkMD = parseInt(wkMD);
-	}
-	wkDVD = wkDVD + wkAdd;
-	wkMD = wkMD + wkAdd;
-	if (x == 0) {
-		wkDVD = 200;
-		wkMD = 140;
-	}
-	if (wkDVD < 0) { wkDVD = 0; }
-	if (wkMD < 0) { wkMD = 0; }
-	document.formRakugo.inpSizeDVD.value = wkDVD;
-	document.formRakugo.inpSizeMD.value = wkMD;
-}
-function fitTitles(c) {
-/*
-	該当のカラムの修正値を印刷用テーブルに
-	反映させる。
-	c: カラム名
-*/
-	var i;
-	var tar, ref;
-	for (i = 0; i < 255; i++) {
-		tar = document.getElementById("cell" + c + i);
-		ref = document.getElementById("fit" + c + i);
-		if (tar == null) {
-			break;
-		}
-		tar.innerHTML = ref.value;
-	}
-}
-function sendQuery(tarType) {
-/* マスタ rewrite */
-	if (tarType == "btnView") {
-		document.formRakugo.method = "post";
-		document.formRakugo.action = "viewrakugo.jsp";
-		document.formRakugo.submit();
-	}
-}
-function ctrlVisible() {
-	var flg = "none";
-	var val = "元に戻す";
-	var i;
-	var arrDiv = new Array();
-	arrDiv[0] = document.getElementById("divComName");
-	arrDiv[1] = document.getElementById("divHeader");
-	arrDiv[2] = document.getElementById("divFontList");
-	if (arrDiv[0].style.display == "none") {
-		flg = "block";
-		val = "印刷リスト以外消去";
-	}
-	for (i = 0; i < arrDiv.length; i++) {
-		arrDiv[i].style.display = flg;
-	}
-	document.getElementById("btnCV").value = val;
-}
-// -->
-</script>
-<title>落語DB印刷(<%= sch_id %>)</title>
-</head>
-<body>
-<%!
+                function changeFontSize(c, x) {
+                    var w = 100;
+                    var div = document.getElementById("div" + c);
+                    var obj = document.getElementById("inp" + c + "W");
+                    var tbl = document.getElementById("tbl" + c);
+                    try {
+                        w = parseInt(obj.value, 10);
+                        if (isNaN(w) == true) {
+                            w = 100;
+                        } else {
+                            w = Math.floor(w + x);
+                        }
+                    } catch (e) {}
+                    obj.value = w;
+                    tbl.style.fontSize = w + "%";
+                    div.style.width = "120mm";
+                    //	sendQuery("btnView");
+                }
+
+                function changeWidth(c, x) {
+                    var w = 100;
+                    var obj = document.getElementById("inp" + c + "W");
+                    var col = document.getElementById("col" + c);
+                    try {
+                        w = parseInt(obj.value, 10);
+                        if (isNaN(w) == true) {
+                            w = 128;
+                        } else {
+                            w = Math.floor(w * x);
+                        }
+                        if (w == parseInt(obj.value, 10)) {
+                            if (x > 1) {
+                                w = parseInt(obj.value, 10) + 1;
+                            } else {
+                                w = parseInt(obj.value, 10) - 1;
+                            }
+                        }
+                        if (w < 1) {
+                            w = 1;
+                        }
+                    } catch (e) {}
+                    obj.value = w;
+                    col.style.width = w + "px";
+                    sendQuery("btnView");
+                }
+
+                function checkAll(mode) {
+                    var all = document.formRakugo.chkAll.checked;
+                    var r = all;
+                    var r1 = all;
+                    var r2 = all;
+                    if (mode.indexOf("r") >= 0) {
+                        document.formRakugo.chkAll.checked = false;
+                        r = true;
+                        all = false;
+                    }
+                    if (mode == "r1") {
+                        r1 = true;
+                        r2 = false;
+                        all = false;
+                    }
+                    if (mode == "r2") {
+                        r1 = false;
+                        r2 = true;
+                        all = false;
+                    }
+                    document.formRakugo.chkID.checked = all;
+                    document.formRakugo.chkSeq.checked = r;
+                    document.formRakugo.chkTitle.checked = r;
+                    document.formRakugo.chkSub.checked = r;
+                    document.formRakugo.chkTSeq.checked = all;
+                    document.formRakugo.chkPro.checked = r;
+                    document.formRakugo.chkP1.checked = r;
+                    //	document.formRakugo.chkP2.checked = all;
+                    //	document.formRakugo.chkP3.checked = all;
+                    document.formRakugo.chkMemo.checked = all;
+                    document.formRakugo.chkSou.checked = all;
+                    document.formRakugo.chkLen.checked = r1;
+                    document.formRakugo.chkDate.checked = r;
+                    document.formRakugo.chkTime.checked = all;
+                    document.formRakugo.chkCat.checked = all;
+                    document.formRakugo.chkMed.checked = all;
+                    document.formRakugo.chkSur.checked = all;
+                    document.formRakugo.chkCo.checked = all;
+                    document.formRakugo.chkNR.checked = all;
+                    document.formRakugo.chkMod.checked = all;
+
+                    //	sendQuery("btnView");
+                }
+
+                function addSize(x) {
+                    var wkDVD = document.formRakugo.inpSizeDVD.value;
+                    var wkMD = document.formRakugo.inpSizeMD.value;
+                    var wkAdd = parseInt(x);
+                    if (isNaN(wkDVD)) {
+                        wkDVD = 200;
+                    } else {
+                        wkDVD = parseInt(wkDVD);
+                    }
+                    if (isNaN(wkMD)) {
+                        wkMD = 140;
+                    } else {
+                        wkMD = parseInt(wkMD);
+                    }
+                    wkDVD = wkDVD + wkAdd;
+                    wkMD = wkMD + wkAdd;
+                    if (x == 0) {
+                        wkDVD = 200;
+                        wkMD = 140;
+                    }
+                    if (wkDVD < 0) {
+                        wkDVD = 0;
+                    }
+                    if (wkMD < 0) {
+                        wkMD = 0;
+                    }
+                    document.formRakugo.inpSizeDVD.value = wkDVD;
+                    document.formRakugo.inpSizeMD.value = wkMD;
+                }
+
+                function fitTitles(c) {
+                    /*
+                    	該当のカラムの修正値を印刷用テーブルに
+                    	反映させる。
+                    	c: カラム名
+                    */
+                    var i;
+                    var tar, ref;
+                    for (i = 0; i < 255; i++) {
+                        tar = document.getElementById("cell" + c + i);
+                        ref = document.getElementById("fit" + c + i);
+                        if (tar == null) {
+                            break;
+                        }
+                        tar.innerHTML = ref.value;
+                    }
+                }
+
+                function sendQuery(tarType) {
+                    /* マスタ rewrite */
+                    if (tarType == "btnView") {
+                        document.formRakugo.method = "post";
+                        document.formRakugo.action = "viewrakugo.jsp";
+                        document.formRakugo.submit();
+                    }
+                }
+
+                function ctrlVisible() {
+                    var flg = "none";
+                    var val = "元に戻す";
+                    var i;
+                    var arrDiv = new Array();
+                    arrDiv[0] = document.getElementById("divComName");
+                    arrDiv[1] = document.getElementById("divHeader");
+                    arrDiv[2] = document.getElementById("divFontList");
+                    if (arrDiv[0].style.display == "none") {
+                        flg = "block";
+                        val = "印刷リスト以外消去";
+                    }
+                    for (i = 0; i < arrDiv.length; i++) {
+                        arrDiv[i].style.display = flg;
+                    }
+                    document.getElementById("btnCV").value = val;
+                }
+                // -->
+            </script>
+            <title>落語DB印刷(
+                <%= sch_id %>)</title>
+    </head>
+
+    <body>
+        <%!
 public String escapeString(String strEsc) {
 //',",\ をescapeする
 	StringBuffer sbfResult = new StringBuffer();
@@ -211,7 +228,7 @@ public String escapeString(String strEsc) {
 	return sbfResult.toString().trim();
 }
 %>
-<%
+            <%
 	//いろいろフォーマット宣言
 	SimpleDateFormat timeFmt5 = new SimpleDateFormat("H'°'mm'′'ss'″'");
 	SimpleDateFormat timeFmt4 = new SimpleDateFormat("m'′'ss'″'");
@@ -291,47 +308,29 @@ public String escapeString(String strEsc) {
 //	if (parTitleW.equals("")) { parTitleW = "256"; }
 
 /* Checkbox要素選択用ワーク */
-	String strCo[] = new String[32];
+//	String strCo[] = new String[32];
 	if (parIDC.equals("")) { parIDC = "0"; }
-	if (parIDC.equals("1")) { strCo[0] = "checked"; }
 	if (parSeqC.equals("")) { parSeqC = "0"; }
-	if (parSeqC.equals("1")) { strCo[1] = "checked"; }
 	if (parTitleC.equals("")) { parTitleC = "0"; }
-	if (parTitleC.equals("1")) { strCo[2] = "checked"; }
 	if (parSubC.equals("")) { parSubC = "0"; }
-	if (parSubC.equals("1")) { strCo[3] = "checked"; }
 	if (parTSeqC.equals("")) { parTSeqC = "0"; }
-	if (parTSeqC.equals("1")) { strCo[4] = "checked"; }
 	if (parProC.equals("")) { parProC = "0"; }
-	if (parProC.equals("1")) { strCo[5] = "checked"; }
 	if (parSouC.equals("")) { parSouC = "0"; }
-	if (parSouC.equals("1")) { strCo[6] = "checked"; }
 	if (parP1C.equals("")) { parP1C = "0"; }
-	if (parP1C.equals("1")) { strCo[7] = "checked"; }
 	if (parP2C.equals("")) { parP2C = "0"; }
-	if (parP2C.equals("1")) { strCo[8] = "checked"; }
+//	if (parP2C.equals("1")) { strCo[8] = "checked"; }
 	if (parP3C.equals("")) { parP3C = "0"; }
-	if (parP3C.equals("1")) { strCo[9] = "checked"; }
+//	if (parP3C.equals("1")) { strCo[9] = "checked"; }
 	if (parLenC.equals("")) { parLenC = "0"; }
-	if (parLenC.equals("1")) { strCo[10] = "checked"; }
 	if (parDateC.equals("")) { parDateC = "0"; }
-	if (parDateC.equals("1")) { strCo[11] = "checked"; }
 	if (parTimeC.equals("")) { parTimeC = "0"; }
-	if (parTimeC.equals("1")) { strCo[12] = "checked"; }
 	if (parCatC.equals("")) { parCatC = "0"; }
-	if (parCatC.equals("1")) { strCo[13] = "checked"; }
 	if (parMedC.equals("")) { parMedC = "0"; }
-	if (parMedC.equals("1")) { strCo[14] = "checked"; }
 	if (parSurC.equals("")) { parSurC = "0"; }
-	if (parSurC.equals("1")) { strCo[15] = "checked"; }
 	if (parCoC.equals("")) { parCoC = "0"; }
-	if (parCoC.equals("1")) { strCo[16] = "checked"; }
 	if (parNRC.equals("")) { parNRC = "0"; }
-	if (parNRC.equals("1")) { strCo[17] = "checked"; }
 	if (parMemoC.equals("")) { parMemoC = "0"; }
-	if (parMemoC.equals("1")) { strCo[18] = "checked"; }
 	if (parModC.equals("")) { parModC = "0"; }
-	if (parModC.equals("1")) { strCo[19] = "checked"; }
 
 /* 表示用ワーク項目 */
 StringBuffer sBfTitle;	//Title・SubTitle連結
@@ -351,91 +350,123 @@ StringBuffer sBfCase;			//ケース背表紙タイトル
  	query.append("WHERE vol_id = '").append(sch_id).append("'");
 	query.append(" ORDER BY vol_id, seq");
 %>
-<div class="divFloatR" id="divComName">
-	<div "AjaxState">
-	</div>
-	<div>
-		<%= sch_comName %>
-	</div>
-</div>
-<div id="divHeader">
-<form name="formRakugo">
-<table border="1">
-  <tbody>
-    <tr align="center">
-      <td><input size="7" type="text" maxlength="6" readonly name="inpID" value="<%= sch_id %>"></td>
-      <td><input type="button" onclick="javaScript: sendQuery('btnView')" name="btnView" value="再検索"></td>
-      <td class="fontSmall" colspan="2">
-  			Title幅:<input type="text" id="inpTitleW" name="inpTitleW" size="4" maxlength="3"
-  				value="<%= parTitleW %>" style="text-align: right">px
-  			<a href="javascript: changeWidth('Title', 0.9)">＜</a>
-      	<a href="javascript: changeWidth('Title', 1.1)">＞</a>
-  		</td>
-      <td class="fontSmall" colspan="2">
-  			Player幅:<input type="text" id="inpPlayerW" name="inpPlayerW" size="4" maxlength="3"
-  				value="<%= parPlayerW %>" style="text-align: right">px
-  			<a href="javascript: changeWidth('Player', 0.9)">＜</a>
-      	<a href="javascript: changeWidth('Player', 1.1)">＞</a>
-  		</td>
-      <td class="fontSmall" colspan="2">
-  			Program幅:<input type="text" id="inpProgramW" name="inpProgramW" size="4" maxlength="3"
-  				value="<%= parProgramW %>" style="text-align: right">px
-  			<a href="javascript: changeWidth('Program', 0.9)">＜</a>
-      	<a href="javascript: changeWidth('Program', 1.1)">＞</a>
-  		</td>
-      <td><input type="checkbox" name="chkAll" onclick="javascript: checkAll('all')"></td>
-    </tr>
-    <tr>
-      <td><input type="checkbox" name="chkID" value="1" <%= strCo[0] %>>ID</td>
-      <td><input type="checkbox" name="chkSeq" value="1" <%= strCo[1] %>>Seq</td>
-      <td><input type="checkbox" name="chkTitle" value="1" <%= strCo[2] %>>Title</td>
-      <td><input type="checkbox" name="chkSub" value="1" <%= strCo[3] %>>SubTitle</td>
-      <td><input type="checkbox" name="chkTSeq" value="1" <%= strCo[4] %>>TSeq</td>
-      <td><input type="checkbox" name="chkPro" value="1" <%= strCo[5] %>>Program</td>
-      <td><input type="checkbox" name="chkP1" value="1" <%= strCo[7] %>>Player</td>
-<!--      <td><input type="checkbox" name="chkP2" value="1" <%= strCo[8] %>>Player2</td>
-      <td><input type="checkbox" name="chkP3" value="1" <%= strCo[9] %>>Player3</td>	-->
-      <td><input type="checkbox" name="chkLen" value="1" <%= strCo[10] %>>Length</td>
-      <td><input type="checkbox" name="chkDate" value="1" <%= strCo[11] %>>Date</td>
-      <td><a href="javascript: checkAll('r1')">reset1</a></td>
-    </tr>
-    <tr>
-      <td><input type="checkbox" name="chkSou" value="1" <%= strCo[6] %>>Source</td>
-      <td><input type="checkbox" name="chkCat" value="1" <%= strCo[13] %>>Category</td>
-      <td><input type="checkbox" name="chkMed" value="1" <%= strCo[14] %>>Media</td>
-      <td><input type="checkbox" name="chkSur" value="1" <%= strCo[15] %>>CH</td>
-      <td><input type="checkbox" name="chkCo" value="1" <%= strCo[16] %>>Copy</td>
-      <td><input type="checkbox" name="chkNR" value="1" <%= strCo[17] %>>NR</td>
-      <td><input type="checkbox" name="chkMemo" value="1" <%= strCo[18] %>>Memo</td>
-      <td><input type="checkbox" name="chkMod" value="1" <%= strCo[19] %>>Mod</td>
-      <td><input type="checkbox" name="chkTime" value="1" <%= strCo[12] %>>Time</td>
-      <td><a href="javascript: checkAll('r2')">reset2</a></td>
-    </tr>
-  </tbody>
-</table>
-<hr>
-</div>
-<!-- 印刷用ブロックの開始 -->
-<div>
-カード幅:<input type="text" id="inpCardW" name="inpCardW" size="4" maxlength="3"
-  				value="<%= parCardW %>" style="text-align: right" readonly>%
-  			<a href="javascript: changeFontSize('Card', -10)">-10</a>
-  			<a href="javascript: changeFontSize('Card', -1)">-1</a>
-      	<a href="javascript: changeFontSize('Card', 1)">+1</a>
-      	<a href="javascript: changeFontSize('Card', 10)">+10</a>
-</div>
-<!--
+                <div class="divFloatR" id="divComName">
+                    <div "AjaxState">
+                    </div>
+                    <div>
+                        <%= sch_comName %>
+                    </div>
+                </div>
+                <div id="divHeader">
+                    <form name="formRakugo">
+                        <table border="1">
+                            <tbody>
+                                <tr align="center">
+                                    <td><input size="7" type="text" maxlength="6" readonly name="inpID" value="<%= sch_id %>"></td>
+                                    <td><input type="button" onclick="javaScript: sendQuery('btnView')" name="btnView" value="再検索"></td>
+                                    <td class="fontSmall" colspan="2">
+                                        Title幅:<input type="text" id="inpTitleW" name="inpTitleW" size="4" maxlength="3" value="<%= parTitleW %>" style="text-align: right">px
+                                        <a href="javascript: changeWidth('Title', 0.9)">＜</a>
+                                        <a href="javascript: changeWidth('Title', 1.1)">＞</a>
+                                    </td>
+                                    <td class="fontSmall" colspan="2">
+                                        Player幅:<input type="text" id="inpPlayerW" name="inpPlayerW" size="4" maxlength="3" value="<%= parPlayerW %>" style="text-align: right">px
+                                        <a href="javascript: changeWidth('Player', 0.9)">＜</a>
+                                        <a href="javascript: changeWidth('Player', 1.1)">＞</a>
+                                    </td>
+                                    <td class="fontSmall" colspan="2">
+                                        Program幅:<input type="text" id="inpProgramW" name="inpProgramW" size="4" maxlength="3" value="<%= parProgramW %>" style="text-align: right">px
+                                        <a href="javascript: changeWidth('Program', 0.9)">＜</a>
+                                        <a href="javascript: changeWidth('Program', 1.1)">＞</a>
+                                    </td>
+                                    <td><input type="checkbox" name="chkAll" onclick="javascript: checkAll('all')"></td>
+                                </tr>
+                                <tr>
+                                    <%
+									String parInput = "<td><input type='checkbox' value='1' ";
+									out.println(parInput + "name='chkID'");
+									if (parIDC.equals("1")) { out.println(" checked"); }
+									out.println(">ID</td>");
+									out.println(parInput + "name='chkSeq'");
+									if (parSeqC.equals("1")) { out.println(" checked"); }
+									out.println(">Seq</td>");
+									out.println(parInput + "name='chkTitle'");
+									if (parTitleC.equals("1")) { out.println(" checked"); }
+									out.println(">Title</td>");
+									out.println(parInput + "name='chkSub'");
+									if (parSubC.equals("1")) { out.println(" checked"); }
+									out.println(">SubTitle</td>");
+									out.println(parInput + "name='chkTSeq'");
+									if (parTSeqC.equals("1")) { out.println(" checked"); }
+									out.println(">TSeq</td>");
+									out.println(parInput + "name='chkPro'");
+									if (parProC.equals("1")) { out.println(" checked"); }
+									out.println(">Program</td>");
+									out.println(parInput + "name='chkP1'");
+									if (parP1C.equals("1")) { out.println(" checked"); }
+									out.println(">Player</td>");
+									out.println(parInput + "name='chkLen'");
+									if (parLenC.equals("1")) { out.println(" checked"); }
+									out.println(">Length</td>");
+									out.println(parInput + "name='chkDate'");
+									if (parDateC.equals("1")) { out.println(" checked"); }
+									out.println(">Date</td>");
+ 								%>
+                                        <td><a href="javascript: checkAll('r1')">reset1</a></td>
+                                </tr>
+                                <tr>
+                                    <%
+									out.println(parInput + "name='chkSou'");
+									if (parSouC.equals("1")) { out.println(" checked"); }
+									out.println(">Source</td>");
+									out.println(parInput + "name='chkCat'");
+									if (parCatC.equals("1")) { out.println(" checked"); }
+									out.println(">Category</td>");
+									out.println(parInput + "name='chkMed'");
+									if (parMedC.equals("1")) { out.println(" checked"); }
+									out.println(">Media</td>");
+									out.println(parInput + "name='chkSur'");
+									if (parSurC.equals("1")) { out.println(" checked"); }
+									out.println(">CH</td>");
+									out.println(parInput + "name='chkNR'");
+									if (parNRC.equals("1")) { out.println(" checked"); }
+									out.println(">NR</td>");
+									out.println(parInput + "name='chkMemo'");
+									if (parMemoC.equals("1")) { out.println(" checked"); }
+									out.println(">Memo</td>");
+									out.println(parInput + "name='chkMod'");
+									if (parModC.equals("1")) { out.println(" checked"); }
+									out.println(">ModDate</td>");
+									out.println(parInput + "name='chkTime'");
+									if (parTimeC.equals("1")) { out.println(" checked"); }
+									out.println(">Time</td>");
+                                %>
+                                        <td><a href="javascript: checkAll('r2')">reset2</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <hr>
+                </div>
+                <!-- 印刷用ブロックの開始 -->
+                <div>
+                    カード幅:<input type="text" id="inpCardW" name="inpCardW" size="4" maxlength="3" value="<%= parCardW %>" style="text-align: right" readonly>%
+                    <a href="javascript: changeFontSize('Card', -10)">-10</a>
+                    <a href="javascript: changeFontSize('Card', -1)">-1</a>
+                    <a href="javascript: changeFontSize('Card', 1)">+1</a>
+                    <a href="javascript: changeFontSize('Card', 10)">+10</a>
+                </div>
+                <!--
 		  ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8
 -->
-<div class="indexCard" id="divCard">
-<div>
-<span class="volID">
+                <div class="indexCard" id="divCard">
+                    <div>
+                        <span class="volID">
 	<%= sch_id %>
 </span>
-</div>
-<table class="table1 fontSmall" id="tblCard" style="width:115mm">
-    <tr>
-		<%
+                    </div>
+                    <table class="table1 fontSmall" id="tblCard" style="width:115mm">
+                        <tr>
+                            <%
 			//補正用入力欄テーブル生成
 			StringBuffer sbfCard = new StringBuffer();
 			sbfCard.append("<table border='0'><tr>");
@@ -476,8 +507,8 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			if (parMemoC.equals("1")) { out.println("<th class='komidasi'>Memo</th>"); }
 			if (parModC.equals("1")) { out.println("<th class='komidasi'>Modify</th>"); }
 			 %>
-    </tr>
-<%
+                        </tr>
+                        <%
 /* DBを読む */
 	rkS.selectDB(query.toString(), "");
 //	out.println(query.toString());
@@ -488,15 +519,10 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 	String strBgcolor = "";
 	sBfCase = new StringBuffer("");
 %>
-<%
+                            <%
 	int i = 0;
   for (i = 0; i < rkS.getResultCount(); i++) {
 		row += 1;
-		if (row % 2 == 0) {
-			strBgcolor = parBgcolor2;
-		} else {
-			strBgcolor = parBgcolor1;
-		}
 		sch_id = rkS.getVolId(i);
 		sch_seq = decFmt3.format(rkS.getSeq(i));
 		//タイトルマスタDBからタイトル取得
@@ -526,7 +552,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			}
 		}
 %>
-<%
+                                <%
 		//タイトルマスタDBからサブタイトル取得
 		sch_subID = rkS.getSubtitleId(i);
 		if (! sch_subID.equals("")) {
@@ -566,7 +592,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			}
 		}
 %>
-<%
+                                    <%
 		//録画日時取得
 		sch_recDateC = rkS.getRecDateFlg(i);
 		try {
@@ -603,7 +629,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			sch_recLen = "";
 		}
 %>
-<%
+                                        <%
 		//属性取得
 		sch_attCat = rkS.getCategorySin(i);
 		cmF.makeField("", "", sch_attCat);
@@ -625,7 +651,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 		cmF.makeNR("", "", sch_attNR);
 		sch_attNR = cmF.getNR(sch_attNR);
 %>
-<%
+                                            <%
 		//タイトルSeq整形
 		sch_strTitleSeq = rkS.getStrTitleSeq(i);
 		sch_strTitleSeqSin = rkS.getStrTitleSeqSin(i);
@@ -651,7 +677,7 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			sch_modDate = "";
 		}
 %>
-<%
+                                                <%
 		//演者マスタDBから姓名１取得
 		sch_player1ID = rkS.getPlayer1Id(i);
 		if (sch_player1ID.equals("")) {
@@ -695,10 +721,17 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 			}
 		}
 		sch_player4 = rkS.getPlayer4Sin(i);
-%>
-		<tr <%= strBgcolor %> style="font-family:'メイリオ'">
-<%
-/* 項目連結 */
+
+		strBgcolor = "<tr style=\"font-family:'メイリオ'\" ";
+		if (row % 2 == 0) {
+			strBgcolor += parBgcolor2;
+		} else {
+			strBgcolor += parBgcolor1;
+		}
+		strBgcolor += ">";
+		out.println(strBgcolor);
+
+	/* 項目連結 */
 		//タイトル - サブタイトル - 連結
 		sBfTitle = new StringBuffer();
 		if (parTitleC.equals("1")) {
@@ -854,8 +887,8 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 		sbfCard.append(sch_program).append("'></td>");
 		sbfCard.append("</tr>");
 %>
-		</tr>
-<%
+                                                    </tr>
+                                                    <%
 	}
 	if (parCase.equals("")) {
 		parCase = sBfCase.toString();
@@ -882,9 +915,11 @@ if (parLenC.equals("1")) { out.println("<th class='komidasi' style='white-space:
 	}
 	sbfCard.append("</tr></table>");
 %>
-</table>
-</div>
-----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8----+----9----+---10
+                    </table>
+                </div>
+                ----+----1----+----2----+----3----+----4----+----5----+----6----+----7----+----8----+----9
+                <!--
+	----+---10
 <br />
 xx------------------17×79-------------------------------------------------------
 <br />
@@ -909,35 +944,36 @@ xx------------------ 7×72------------------------------------------------------
 -------------------5×77-----------------------------------------------------------------
 <br />
 -------------------4×79-----------------------------------------------------------------
-<hr>
-<%= row %>件
-<input id="btnCV" onclick="javascript: ctrlVisible()" type="button" value="印刷リスト以外消去">
-<div id="divFontList">
-<hr>
-<%
+-->
+                <hr>
+                <%= row %>件
+                    <input id="btnCV" onclick="javascript: ctrlVisible()" type="button" value="印刷リスト以外消去">
+                    <div id="divFontList">
+                        <hr>
+                        <%
 	out.println(sbfCard.toString());
 %>
-<hr>
-<input size="64" type="text" name="inpCase" value="<%= parCase %>">
-<table>
-	<tr>
-		<td><a href="javascript: addSize(-50)">-50</a></td>
-		<td><a href="javascript: addSize(-10)">-10</a></td>
-		<td><a href="javascript: addSize(-5)">-5</a></td>
-		<td><a href="javascript: addSize(-1)">-1</a></td>
-		<td><a href="javascript: addSize(0)">Default</a></td>
-		<td><a href="javascript: addSize(1)">+1</a></td>
-		<td><a href="javascript: addSize(5)">+5</a></td>
-		<td><a href="javascript: addSize(10)">+10</a></td>
-		<td><a href="javascript: addSize(50)">+50</a></td>
-		<td>DVD:<input type="text" name="inpSizeDVD" size="4" value="<%= parSizeDVD %>">%</td>
-		<td>MD:<input type="text" name="inpSizeMD" size="4" value="<%= parSizeMD %>">%</td>
-    <td><input type="button" onclick="javaScript: sendQuery('btnView')" name="btnView" value="再検索"></td>
-	</tr>
-</table>
-</form>
-<hr>
-<%
+                            <hr>
+                            <input size="64" type="text" name="inpCase" value="<%= parCase %>">
+                            <table>
+                                <tr>
+                                    <td><a href="javascript: addSize(-50)">-50</a></td>
+                                    <td><a href="javascript: addSize(-10)">-10</a></td>
+                                    <td><a href="javascript: addSize(-5)">-5</a></td>
+                                    <td><a href="javascript: addSize(-1)">-1</a></td>
+                                    <td><a href="javascript: addSize(0)">Default</a></td>
+                                    <td><a href="javascript: addSize(1)">+1</a></td>
+                                    <td><a href="javascript: addSize(5)">+5</a></td>
+                                    <td><a href="javascript: addSize(10)">+10</a></td>
+                                    <td><a href="javascript: addSize(50)">+50</a></td>
+                                    <td>DVD:<input type="text" name="inpSizeDVD" size="4" value="<%= parSizeDVD %>">%</td>
+                                    <td>MD:<input type="text" name="inpSizeMD" size="4" value="<%= parSizeMD %>">%</td>
+                                    <td><input type="button" onclick="javaScript: sendQuery('btnView')" name="btnView" value="再検索"></td>
+                                </tr>
+                            </table>
+                            </form>
+                            <hr>
+                            <%
 //実行PCのフォント一覧を fonts.txt として別途作成しておく（Tab区切）。
 java.util.ArrayList fontList = new java.util.ArrayList();
 String cssDVD = "border-right: 0px; height: 50px; padding-left: 1%;";
@@ -986,17 +1022,18 @@ out.println("</table>");
 	//JDBC切断
 	cmR.closeJdbc();
 %>
-</div>
-<div align="center">
-<input type="button" name="btnClose" value="Close" onclick="javascript: window.close()">
-</div>
-<script language="JavaScript" type="text/javascript">
-<!--
-	if ("<%= dbMsg.toString() %>" != "") {
-		document.getElementById("AjaxState").innerHTML =
-			"<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
-	}
-// -->
-</script>
-</body>
-</html>
+                    </div>
+                    <div align="center">
+                        <input type="button" name="btnClose" value="Close" onclick="javascript: window.close()">
+                    </div>
+                    <script language="JavaScript" type="text/javascript">
+                        <!--
+                        if ("<%= dbMsg.toString() %>" != "") {
+                            document.getElementById("AjaxState").innerHTML =
+                                "<font color='red'>" + "<%= dbMsg.toString() %>" + "</font>";
+                        }
+                        // -->
+                    </script>
+    </body>
+
+    </html>
