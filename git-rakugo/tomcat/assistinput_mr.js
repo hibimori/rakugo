@@ -1,5 +1,6 @@
 //*****************************************************************
 //	入力項目の補正とクリア for RakugoDB Tool
+//		1.10	2022-03-13	clearInpData()にmemo追加。
 //		1.00	05.2/5		本体から分離
 //*****************************************************************
 function addSeq(idx, ctrl) {
@@ -105,6 +106,9 @@ function clearInpData(tarBtn) {
 			document.formRakugo.inpRecLen.value = "";
 		}
 	}
+    if (tarBtn == "memo") { //Memoクリア
+        document.formRakugo.inpMemo.value = "";
+    }
 }
 function clearKeyword() {
 /* Keyword文字列クリア */

@@ -1,6 +1,7 @@
 <%@ page buffer="128kb" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 	import="java.io.*,java.util.*,java.util.regex.*,java.sql.*,java.text.*" %>
     <!--
+	2022-03-13	memo欄に［クリア］ボタン追加。
 	2021-10-22	VSCバグ対応 strCo[n]（<input>タグの入れ子）を廃止。
 	2020-11-01	ID［検索］時に明細部［Seq］を逆順表示するオプションを追加。
 	2019-10-10	演者名の後ろに［代目］を表示。
@@ -1042,21 +1043,21 @@ StringBuffer sBfTitleBar = new StringBuffer("");	/* タイトルバー ワーク
                                                         <input type="button" name="btnRecDate" onclick="javascript:openCalendarWindow('RecDate')" value="記録日">
                                                     </th>
                                                     <td>
-                                                        <input size="12" type="text" maxlength="10" id="inpRecDate" name="inpRecDate" value="<%= sch_recDate %>"><input type="checkbox" id="chkRecDate" name="chkRecDate" onclick="javascript: clearInpData('recDate')"
+                                                        <input size="7" type="text" maxlength="10" id="inpRecDate" name="inpRecDate" value="<%= sch_recDate %>"><input type="checkbox" id="chkRecDate" name="chkRecDate" onclick="javascript: clearInpData('recDate')"
                                                             value="1" <% if (sch_recDateC.equals( "1")) { out.print( " checked"); } %> >
                                                     </td>
                                                     <th bgcolor="#cccccc" id="thRecTime">
                                                         <input type="button" name="btnRecTime" onclick="javascript:openClockWindow('RecTime')" value="記録時">
                                                     </th>
                                                     <td>
-                                                        <input size="6" type="text" maxlength="5" id="inpRecTime" name="inpRecTime" value="<%= sch_recTime %>"><input type="checkbox" id="chkRecTime" name="chkRecTime" onclick="javascript: clearInpData('recTime')"
+                                                        <input size="4" type="text" maxlength="5" id="inpRecTime" name="inpRecTime" value="<%= sch_recTime %>"><input type="checkbox" id="chkRecTime" name="chkRecTime" onclick="javascript: clearInpData('recTime')"
                                                             value="1" <% if (sch_recTimeC.equals( "1")) { out.print( " checked"); } %> >
                                                     </td>
                                                     <th bgcolor="#cccccc" id="thRecLen">
                                                         <input type="button" name="btnRecLen" onclick="javascript:openClockWindow('RecLen')" value="時間">
                                                     </th>
                                                     <td>
-                                                        <input size="9" type="text" maxlength="8" id="inpRecLen" name="inpRecLen" value="<%= sch_recLen %>"><input type="checkbox" id="chkRecLen" name="chkRecLen" onclick="javascript: clearInpData('recLen')"
+                                                        <input size="5" type="text" maxlength="8" id="inpRecLen" name="inpRecLen" value="<%= sch_recLen %>"><input type="checkbox" id="chkRecLen" name="chkRecLen" onclick="javascript: clearInpData('recLen')"
                                                             value="1" <% if (sch_recLenC.equals( "1")) { out.print( " checked"); } %> >
                                                     </td>
                                                 </tr>
@@ -1097,8 +1098,11 @@ StringBuffer sBfTitleBar = new StringBuffer("");	/* タイトルバー ワーク
                                                 <!-- メモ制御列 -->
                                                 <tr>
                                                     <th bgcolor="#cccccc">Memo</th>
-                                                    <td colspan="5">
+                                                    <td colspan="4">
                                                         <input size="72" type="text" maxlength="255" name="inpMemo" value="<%= sch_memo %>">
+                                                    </td>
+                                                    <td align="center">
+                                                        <input type="button" name="btnMemo" value="クリア" onclick="javascript:clearInpData('memo')">
                                                     </td>
                                                 </tr>
                                                 <!-- 更新日表示列 -->
