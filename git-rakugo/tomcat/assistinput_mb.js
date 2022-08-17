@@ -1,5 +1,6 @@
 //*****************************************************************
 //  入力項目の補正とクリア for BookDB Tool
+//	  2.20 2022.8/14	HONTOのA8変換を廃止。
 //	  2.10 2020.6/19	http: を https:// に変更。
 //    2.00 2019.11/17	税込み価格の消費税10％対応
 //    1.90 2019.8/26	通貨コード３桁化・ドロップダウンリスト化
@@ -390,19 +391,19 @@ function copyInpData() {
 
 function getItemStore(s) {
     if (s.indexOf(".bk1.") > 0) {
-        if (s.indexOf(".a8.net/") > 0) {
-            return "8";
-        } else if (s.indexOf("/ad0.a20.jp/") > 0) {
-            return "8";
-        } else {
+//        if (s.indexOf(".a8.net/") > 0) {
+//            return "8";
+//        } else if (s.indexOf("/ad0.a20.jp/") > 0) {
+//            return "8";
+//        } else {
             return "B";
-        }
+//    }
     } else if (s.indexOf("honto.") > 0) {
-        if (s.indexOf(".a8.net/") > 0) {
-            return "8";
-        } else {
+//        if (s.indexOf(".a8.net/") > 0) {
+//            return "8";
+//        } else {
             return "H";
-        }
+//    }
     } else if (s.indexOf(".amazon.") > 0) {
         return "A";
     } else if (s.indexOf(".sony.") > 0) {
@@ -499,26 +500,32 @@ function getItemId(s, m) {
 function getItemUri(s, m) {
     var aryStore = "8ABIHRW?";
     var i = aryStore.indexOf(m);
-    var aryUri = ["https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=https://honto.jp/",
+    var aryUri = [
+        "https://honto.jp/",
         "https://www.amazon.co.jp/exec/obidos/ASIN/",
-        "https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http%3A%2F%2Fwww.bk1.jp%2Fproduct%2F",
-        "https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http%3A%2F%2Fwww.bk1.jp%2Fproduct%2F",
-        "https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=https://honto.jp/",
+        "https://honto.jp/netstore/pd-book_",
+        "https://honto.jp/netstore/",
+        "https://honto.jp/",
         "https://ebookstore.sony.jp/item/",
         "https://bookwalker.jp/pc/detail/",
-        ""
+        "",
+    	"https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=https://honto.jp/",
+        "https://px.a8.net/svt/ejp?a8mat=163J66+B1PKVM+10UY+HUSFL&a8ejpredirect=http%3A%2F%2Fwww.bk1.jp%2Fproduct%2F"
     ];
-    var aryUri2 = ["?partnerid=02a801",
+    var aryUri2 = [
+    	"",
         "/niin-22",
-        "%3Fpartnerid%3D02a801",
-        "%3Fpartnerid%3D02a801",
-        "?partnerid=02a801",
+        "",
+        "",
+        "",
         "/",
         "/",
-        ""
+        "",
+    	"?partnerid=02a801",
+        "%3Fpartnerid%3D02a801"
     ];
     if ((m === "8") || (m === "H")) {
-        //honto
+        //honto（A8附き）
         if ((s.indexOf("pd-book") >= 0) ||
             (s.indexOf("pd-cd")   >= 0) ||
             (s.indexOf("pd-dvd")  >= 0)) {

@@ -1,5 +1,6 @@
 //*****************************************************************
 //	各種Windowの表示 for BookDB Tool
+//		1.43	2022.6/14	[AB検索]条件の微調整（titleSeq）。
 //		1.42	2021.8/7	[AB検索]のダミー画面表示を追加。
 //		1.41	2020.7/18	[AB検索]条件の微調整（ebook）。
 //		1.40	2020.6/19	http: を https:// に変更。
@@ -208,11 +209,13 @@ function searchAB() {
 	var title = document.getElementById("title").value;
 	var author = document.getElementById("author1").value;
     var titleSeq = document.getElementById("titleSeq").value;
+    var chkTitleSeq = document.getElementById("chkTitleSeq").checked;
 	var kwd = title;
     var seq;
     var rtn;
     try {
-        if (titleSeq.length > 0) {
+        if ((titleSeq.length > 0) &&
+            (chkTitleSeq === true)) {
             kwd += " " + parseInt(titleSeq, 10);
         }
     } catch(e) {
@@ -233,13 +236,13 @@ function searchAB() {
 //		setIfr("aff", openIfrF + encodeURIComponent(title, true), true);
 		//iFrameはたいがいのブラウザが無効にするので別窓で開く
 		openStore("bk1", kwd);
-		setTimeout(openStore("ama", kwd), 1000);
-		setTimeout(openStore("ebk", title), 1000);	//ReaderStoreはSEQも著者もつけないほうがイイ
-		setTimeout(openStore("oth", kwd), 1000);
+		setTimeout(openStore("ama", kwd), 3000);
+		setTimeout(openStore("ebk", title), 3000);	//ReaderStoreはSEQも著者もつけないほうがイイ
+		setTimeout(openStore("oth", kwd), 3000);
 //		openStore("ebk", kwd);
 //		openStore("oth", kwd);
 		//Vivaldiが最後に開けたタブの内容で既存タブ内を上書き表示してしまう。最後のタブを閉じれば解消されるので，閉じ用のダミータブを開く。
-		setTimeout(openStore("DMY", kwd), 1000);
+		setTimeout(openStore("DMY", kwd), 3000);
 	}
 }
 function openIfr(tar) {
